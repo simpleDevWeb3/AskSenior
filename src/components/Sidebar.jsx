@@ -106,19 +106,25 @@ function Sidebar() {
   ]);
 
   if (!isSidebarOpen) return;
+
+  function handleNavigate() {
+    if (isManualOpenResize !== true) return;
+    closeSidebar();
+    setIsManualOpenResize(false);
+  }
   return (
     <StyledSidebar>
-      <StyledNavLink to="/">
+      <StyledNavLink onClick={handleNavigate} to="/">
         <HiOutlineHome />
         <span>Home</span>
       </StyledNavLink>
 
-      <StyledNavLink to="/popular">
+      <StyledNavLink onClick={handleNavigate} to="/popular">
         <HiOutlineFire />
         <span>Popular</span>
       </StyledNavLink>
 
-      <StyledNavLink to="/communitiest">
+      <StyledNavLink onClick={handleNavigate} to="/communitiest">
         <HiOutlineUserGroup />
         <span>Communities</span>
       </StyledNavLink>

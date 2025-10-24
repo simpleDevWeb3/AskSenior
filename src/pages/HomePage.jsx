@@ -1,9 +1,6 @@
+import HomePosts from "../features/Home/HomePosts";
 function HomePage() {
-  return (
-    <div>
-      <h1>HomePage</h1>
-    </div>
-  );
+  return <HomePosts />;
 }
 
 export default HomePage;

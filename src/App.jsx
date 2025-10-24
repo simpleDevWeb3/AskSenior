@@ -17,13 +17,20 @@ const Layout = styled.div`
   position: relative;
   height: 100%;
   position: relative;
-  grid-template-columns: ${({ $isSidebarOpen }) =>
-    $isSidebarOpen ? "250px 1fr" : "1fr"};
+  overflow-y: hidden;
+  @media (min-width: 1300px) {
+    grid-template-columns: ${({ $isSidebarOpen }) =>
+      $isSidebarOpen ? "250px 1fr" : "1fr"};
+  }
+
+  @media (max-width: 1300px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const OverlayDiv = styled.div`
   display: ${({ $isSidebarOpen }) => ($isSidebarOpen ? "block" : "none")};
-  position: fixed;
+  position: absolute;
 
   width: 100%;
   height: 100%;
@@ -37,7 +44,12 @@ const OverlayDiv = styled.div`
 
 const Content = styled.main`
   padding: 1rem;
+  padding-top: 0px;
+  padding-bottom: 0px;
   overflow-y: auto;
+  height: 100%;
+  width: 100%;
+ 
 `;
 
 function App() {

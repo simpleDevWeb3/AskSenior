@@ -16,7 +16,7 @@ function SidebarProvider({ children }) {
     //Manual toggle when normal size
     if (window.innerWidth > 1300) {
       //Track manual toggle for normal size and mobile
-      setIsManualOpen(true); // track manual toggle
+      setIsManualOpen((prev) => !prev); // track manual toggle
       setIsManualOpenResize(false);
     } else {
       //Track manual toggle for normal size and mobile

@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "table/:community",
+        path: "community/:community",
         element: <CommunityPage />,
       },
       {

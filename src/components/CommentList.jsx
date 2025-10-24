@@ -9,7 +9,7 @@ const StyledPosts = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center; /* center posts horizontally */
-
+  padding: 1rem;
   @media (max-width: 1300px) {
     max-width: 100%;
     padding: 0;
@@ -18,15 +18,6 @@ const StyledPosts = styled.div`
 
 const PostWrapper = styled.div`
   width: 100%;
-  max-width: 700px; /* limit width for each post */
-  margin-bottom: 1rem;
-  border: solid 1px rgba(0, 0, 0, 0.2);
-  border-radius: 25px;
-  padding: 1rem 1rem 0.5rem 1rem;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  transition: background-color 0.15s;
 
   cursor: pointer;
   @media (max-width: 1300px) {
@@ -36,16 +27,18 @@ const PostWrapper = styled.div`
 
 const SocialFeatures = styled.div`
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 0.6rem;
+  gap: 0.7rem;
 `;
 
-function PostList({ posts }) {
+function CommentList({ comments }) {
+  console.log(comments);
+
   return (
     <StyledPosts>
-      {posts.map((post) => (
-        <PostWrapper key={post.id}>
-          <Post post={post} toComment={true}>
+      {comments.map((comment) => (
+        <PostWrapper key={comment.id}>
+          <Post post={comment} type={"comment"} variant="comment">
             <Post.Title />
             <SocialFeatures>
               <Post.Vote />
@@ -59,4 +52,4 @@ function PostList({ posts }) {
   );
 }
 
-export default PostList;
+export default CommentList;

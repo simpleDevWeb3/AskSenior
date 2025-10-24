@@ -12,7 +12,9 @@ function Menu() {
   console.log(isSidebarOpen, " ,Menu");
   return (
     <ButtonIcon
-      type={"round"}
+      size="rounded"
+      variant="text"
+      shape={"round"}
       icon={<StyledMenu />}
       action={() => toggleSidebar()}
     />

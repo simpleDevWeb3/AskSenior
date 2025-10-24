@@ -13,12 +13,24 @@
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
+
+
+  --hover-regular:rgba(0,0,0,0.1)
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Hide scrollbar for Chrome, Safari and Edge */
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* optional: just to be safe */
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 
 @media (max-width: 768px) {
@@ -26,7 +38,6 @@
   html,
   body {
     overflow-x: hidden; /* hide horizontal scroll */
-    overflow-y: hidden; /* hide vertical scroll if you want */
   }
 }
 

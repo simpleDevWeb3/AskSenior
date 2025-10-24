@@ -68,15 +68,21 @@ function Navbar() {
 
       <Grouped>
         <ButtonIcon
+          variant="text"
           icon={<CreatePostIcon />}
           action={() => navigate("/create")}
         >
           <IconText>Create</IconText>
         </ButtonIcon>
 
-        <ButtonIcon icon={<Notification />} />
+        <ButtonIcon size="rounded" variant="text" icon={<Notification />} />
 
-        <ButtonIcon icon={<User />} />
+        <ButtonIcon
+          size="rounded"
+          shape="circle"
+          variant="text"
+          icon={<User />}
+        />
       </Grouped>
     </StyledNavbar>
   );
