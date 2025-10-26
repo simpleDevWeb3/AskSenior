@@ -12,6 +12,7 @@ import CommunityPage from "./pages/CommunityPage.jsx";
 import PopularPage from "./pages/PopularPage.jsx";
 import CreatePostPage from "./pages/CreatePostPage.jsx";
 import { SidebarProvider } from "./context/SidebarContext.jsx";
+import { FieldTextProvider } from "./context/FieldTextContext.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,7 +53,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <SidebarProvider>
-      <RouterProvider router={router} />
+      <FieldTextProvider>
+        <RouterProvider router={router} />
+      </FieldTextProvider>
     </SidebarProvider>
   </StrictMode>
 );

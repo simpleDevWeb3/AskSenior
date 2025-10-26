@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import CommentPost from "../features/Comment/CommentPost";
 import Comments from "../features/Comment/Comments";
+import { HiArrowLeft } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import ButtonIcon from "../components/ButtonIcon";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -22,10 +25,21 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   gap: 1rem;
 `;
-
+const NavigateBack = styled.div`
+  margin-right: 0.2rem;
+`;
 function CommentPage() {
+  const navigate = useNavigate();
   return (
     <StyledContainer>
+      <NavigateBack>
+        <ButtonIcon
+          action={() => navigate(-1)}
+          variant="text"
+          size="rounded_small"
+          icon={<HiArrowLeft />}
+        />
+      </NavigateBack>
       <ContentWrapper>
         <CommentPost />
         <Comments />

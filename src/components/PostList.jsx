@@ -3,6 +3,7 @@
 import styled from "styled-components";
 import PostCard from "./PostCard";
 
+
 const PostWrapper = styled.div`
   width: 100%;
   max-width: 700px; /* limit width for each post */
@@ -38,12 +39,13 @@ function PostList({
   onClickComment,
   onClickShare,
 }) {
+
+
   return (
     <>
       {postData.map((post) => (
         <PostWrapper>
           <PostCard
-           
             key={post.id}
             postData={post}
             variant="post"
@@ -53,6 +55,7 @@ function PostList({
             onClickComment={() => onClickComment?.(post.id)}
             onClickShare={() => onClickShare?.(post.id)}
           />
+         
         </PostWrapper>
       ))}
     </>

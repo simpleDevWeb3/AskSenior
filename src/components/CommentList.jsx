@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import PostCard from "./PostCard";
+import TextFields from "./TextFields";
+import { useFieldText } from "../hook/useFieldText";
 
 const CommentWrapper = styled.div`
   width: 100%;
@@ -22,19 +24,24 @@ const CommentWrapper = styled.div`
 `;
 
 function CommentList({ comments, onClickVote, onClickComment, onClickShare }) {
+  const { isShowTextField, toggleTextField } = useFieldText();
+
   return (
     <>
       {comments.map((comment) => (
         <CommentWrapper key={comment.id}>
           <PostCard
-            showCommentField={true}
             postData={comment}
             variant="comment"
             avatarSize="small"
             onClickVote={(voteType) => onClickVote?.(comment.id, voteType)}
-            onClickComment={() => onClickComment?.(comment.id)}
+            onClickComment={() => {
+              onClickComment?.(comment.id);
+              toggleTextField(comment.id);
+            }}
             onClickShare={() => onClickShare?.(comment.id)}
           />
+          {isShowTextField === comment.id && <TextFields />}
         </CommentWrapper>
       ))}
     </>

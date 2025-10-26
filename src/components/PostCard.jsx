@@ -5,24 +5,10 @@ import VoteBtn from "./VoteBtn";
 import CommentBtn from "./CommentBtn";
 import ShareBtn from "./ShareBtn";
 import Avatar from "./Avatar";
-import { useState } from "react";
+
 import TextFields from "./TextFields";
 
-const ShareYourThougt = styled.div`
-  border: solid 1px rgba(0, 0, 0, 0.1);
-  border-radius: 25px;
 
-  padding: 0.5rem;
-  padding-left: 1rem;
-  color: rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  transition: background-color 0.15s;
-`;
 
 const StyledPost = styled.div`
   width: 100%;
@@ -90,7 +76,6 @@ const SocialFeatures = styled.div`
 // Main Post component
 function PostCard({
   postData,
-  showCommentField = false,
   variant = "post",
   avatarSize = "small",
   onClickPost,
@@ -98,17 +83,11 @@ function PostCard({
   onClickVote,
   onClickShare,
 }) {
-  const { id, title, content, votes, postComments } = postData;
-  const [isShowTextField, setIsShowTextField] = useState(false);
+  const {  title, content, votes, postComments } = postData;
 
-  function toggleCommentField(postId) {
-    console.log("Comment clicked for post", postId);
-    setIsShowTextField((show) => !show);
-  }
-  console.log(showCommentField);
-  console.log(postData);
+
   return (
-    <>
+  
       <StyledPost $variant={variant} onClick={() => onClickPost?.()}>
         <ProfileContainer>
           <AvatarContainer $size={avatarSize}>
@@ -133,23 +112,13 @@ function PostCard({
             commentCount={postComments?.length}
             onComment={() => {
               onClickComment?.();
-              toggleCommentField(id);
             }}
           />
           <ShareBtn variant={variant} onShare={() => onClickShare?.()} />
         </SocialFeatures>
       </StyledPost>
-      {showCommentField &&
-        (isShowTextField ? (
-          <TextFields />
-        ) : (
-          variant === "post" && (
-            <ShareYourThougt onClick={toggleCommentField}>
-              Share Your Thought
-            </ShareYourThougt>
-          )
-        ))}
-    </>
+     
+   
   );
 }
 export default PostCard;
