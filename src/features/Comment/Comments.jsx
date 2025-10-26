@@ -21,7 +21,7 @@ const CommentSection = styled.div`
 
 function Comments() {
   const { postId } = useParams();
-  const id = Number(postId);
+  const id =postId;
 
   //Find comment
   const comments = forumData.comments.filter(

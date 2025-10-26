@@ -13,6 +13,7 @@ import PopularPage from "./pages/PopularPage.jsx";
 import CreatePostPage from "./pages/CreatePostPage.jsx";
 import { SidebarProvider } from "./context/SidebarContext.jsx";
 import { FieldTextProvider } from "./context/FieldTextContext.jsx";
+import Menus from "./components/Menus.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -53,9 +54,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <SidebarProvider>
-      <FieldTextProvider>
-        <RouterProvider router={router} />
-      </FieldTextProvider>
+      <Menus>
+        <FieldTextProvider>
+          <RouterProvider router={router} />
+        </FieldTextProvider>
+      </Menus>
     </SidebarProvider>
   </StrictMode>
 );

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import PostCard from "./PostCard";
+import PostCard from "./PostComponent/PostCard";
 import TextFields from "./TextFields";
 import { useFieldText } from "../hook/useFieldText";
 

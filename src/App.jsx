@@ -5,6 +5,8 @@ import styled from "styled-components";
 import Navbar from "./components/Navbar";
 
 import useSidebar from "./hook/useSidebar";
+import Menus from "./components/Menus";
+//import { Menus } from "./components/Menus";
 
 const StyledApp = styled.div`
   display: grid;
@@ -49,7 +51,6 @@ const Content = styled.main`
   overflow-y: auto;
   height: 100%;
   width: 100%;
- 
 `;
 
 function App() {
@@ -57,14 +58,16 @@ function App() {
 
   return (
     <StyledApp>
-      <Navbar />
-      <Layout $isSidebarOpen={isSidebarOpen}>
-        <Sidebar />
-        <OverlayDiv $isSidebarOpen={isSidebarOpen} />
-        <Content>
-          <Outlet />
-        </Content>
-      </Layout>
+   
+        <Navbar />
+        <Layout $isSidebarOpen={isSidebarOpen}>
+          <Sidebar />
+          <OverlayDiv $isSidebarOpen={isSidebarOpen} />
+          <Content>
+            <Outlet />
+          </Content>
+        </Layout>
+    
     </StyledApp>
   );
 }

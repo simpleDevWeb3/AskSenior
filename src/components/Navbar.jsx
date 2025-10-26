@@ -11,7 +11,7 @@ import {
 import ButtonIcon from "./ButtonIcon";
 import Search from "./Search";
 import { useNavigate } from "react-router-dom";
-import Menu from "./Menu";
+import Hamburger from "./Hamburger";
 
 const StyledNavbar = styled.nav`
   display: flex;
@@ -61,7 +61,7 @@ function Navbar() {
   return (
     <StyledNavbar>
       <Grouped>
-        <Menu />
+        <Hamburger />
         <Logo />
       </Grouped>
       <Search />

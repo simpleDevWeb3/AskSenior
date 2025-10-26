@@ -5,6 +5,7 @@ import { HiArrowLeft } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import ButtonIcon from "../components/ButtonIcon";
 
+
 const StyledContainer = styled.div`
   display: flex;
   justify-content: center;

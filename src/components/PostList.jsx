@@ -1,8 +1,7 @@
 //Display recommended Post
 
 import styled from "styled-components";
-import PostCard from "./PostCard";
-
+import PostCard from "./PostComponent/PostCard";
 
 const PostWrapper = styled.div`
   width: 100%;
@@ -39,14 +38,12 @@ function PostList({
   onClickComment,
   onClickShare,
 }) {
-
-
+  console.log(postData);
   return (
     <>
       {postData.map((post) => (
-        <PostWrapper>
+        <PostWrapper key={post.id}>
           <PostCard
-            key={post.id}
             postData={post}
             variant="post"
             avatarSize="medium"
@@ -55,7 +52,6 @@ function PostList({
             onClickComment={() => onClickComment?.(post.id)}
             onClickShare={() => onClickShare?.(post.id)}
           />
-         
         </PostWrapper>
       ))}
     </>

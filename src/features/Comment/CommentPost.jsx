@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import forumData from "../../data/post";
-import PostCard from "../../components/PostCard";
+import PostCard from "../../components/PostComponent/PostCard";
 import styled from "styled-components";
 import TextFields from "../../components/TextFields";
 import { useFieldText } from "../../hook/useFieldText";
@@ -25,7 +25,7 @@ function CommentPost() {
   const { isShowTextField, toggleTextField } = useFieldText();
 
   const { postId } = useParams();
-  const id = Number(postId);
+  const id = postId;
 
   //Find POST
   const post = forumData.posts.find((post) => post.id === id);
@@ -62,7 +62,8 @@ function CommentPost() {
         onClickVote={(voteType) => handleVote(post.id, voteType)}
         onClickShare={() => handleShare(post.id)}
         onClickComment={() => toggleTextField(post.id)}
-      />
+      ></PostCard>
+
       {isShowTextField === post.id ? (
         <TextFields onSend={handlePost} />
       ) : (
