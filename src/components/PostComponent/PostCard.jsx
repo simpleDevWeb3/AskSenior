@@ -1,5 +1,3 @@
-
-
 //SubComponent
 
 import PostMenusOther from "./PostMenusOther";
@@ -26,7 +24,7 @@ function PostCard({
     <StyledPost $variant={variant} onClick={() => onClickPost?.()}>
       <PostHeader>
         <PostProfile avatarSize={avatarSize} />
-        <PostMenusOther id={id} />
+        {variant === "post" && <PostMenusOther id={id} />}
       </PostHeader>
       <PostContent variant={variant} title={title} content={content} />
       <PostSocialFeatures

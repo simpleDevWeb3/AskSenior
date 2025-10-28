@@ -2,6 +2,7 @@ import styled from "styled-components";
 import PostMenusShare from "./PostMenusShare";
 import VoteBtn from "../VoteBtn";
 import CommentBtn from "../CommentBtn";
+import PostMenusOther from "./PostMenusOther";
 
 function PostSocialFeatures({
   variant,
@@ -14,7 +15,7 @@ function PostSocialFeatures({
 }) {
   return (
     <SocialFeatures>
-      <VoteBtn variant={variant} votes={votes} onVote={() => onClickVote?.()} />
+      <VoteBtn variant={variant} votes={votes} onVote={onClickVote} />
       <CommentBtn
         variant={variant}
         commentCount={postComments?.length}
@@ -24,6 +25,7 @@ function PostSocialFeatures({
       />
 
       <PostMenusShare variant={variant} onClickShare={onClickShare} id={id} />
+      {variant === "comment" && <PostMenusOther variant={"comment"} />}
     </SocialFeatures>
   );
 }

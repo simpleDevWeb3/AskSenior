@@ -1,4 +1,4 @@
-export const forumData = {
+ export const forumData = {
   users: [
     { id: "u101", username: "kopifan88", avatar: "👤" },
     { id: "u102", username: "barista_joe", avatar: "☕" },
@@ -46,7 +46,8 @@ export const forumData = {
     {
       id: "p302",
       title: "Cold brew recipe?",
-      content: "Trying to make smooth cold brew at home. Share yours!",
+      content:
+        "Trying to make smooth cold brew at home. Share yours! Trying to make smooth cold brew at home. Share yours! Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!",
       authorId: "u101",
       communityId: "c201",
       createdAt: "2025-10-20T11:00:00Z",
@@ -58,7 +59,8 @@ export const forumData = {
     {
       id: "p303",
       title: "SvelteKit vs Next.js?",
-      content: "Anyone switched to SvelteKit recently?",
+      content:
+        "Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently?",
       authorId: "u103",
       communityId: "c202",
       createdAt: "2025-10-18T14:45:00Z",
@@ -67,7 +69,8 @@ export const forumData = {
     {
       id: "p304",
       title: "How do you stay productive?",
-      content: "I’m constantly distracted while coding. Tips?",
+      content:
+        "I’m constantly distracted while coding. Tips? I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips? ",
       authorId: "u105",
       communityId: "c202",
       createdAt: "2025-10-17T10:20:00Z",
@@ -93,7 +96,7 @@ export const forumData = {
       createdAt: "2025-10-19T09:00:00Z",
       parentId: null,
       votes: [{ userId: "u102", type: "up" }],
-    },
+    }, //level 0
     {
       id: "cm402",
       postId: "p301",
@@ -111,7 +114,7 @@ export const forumData = {
       createdAt: "2025-10-19T09:30:00Z",
       parentId: "cm401",
       votes: [{ userId: "u101", type: "up" }],
-    },
+    }, //level1
     {
       id: "cm404",
       postId: "p301",
@@ -119,7 +122,7 @@ export const forumData = {
       content: "Is it good for beginners?",
       createdAt: "2025-10-19T09:45:00Z",
       parentId: "cm403",
-      votes: [],
+      votes: [], //level 2
     },
     {
       id: "cm405",

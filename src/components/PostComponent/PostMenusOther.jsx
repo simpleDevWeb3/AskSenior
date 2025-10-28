@@ -1,16 +1,19 @@
 import styled from "styled-components";
 import Menus from "../Menus";
-import { HiEllipsisVertical } from "react-icons/hi2";
+import { HiEllipsisHorizontal, HiEllipsisVertical } from "react-icons/hi2";
 import ButtonIcon from "../ButtonIcon";
 import { BiBell, BiBookmark } from "react-icons/bi";
 import { BsEyeSlash } from "react-icons/bs";
 import { MdReportProblem } from "react-icons/md";
 
-function PostMenusOther({ id }) {
+function PostMenusOther({ id, variant }) {
   return (
     <MenusContainer>
       <Menus.MenuToggle id={`other-${id}`}>
-        <ButtonIcon variant="text" icon={<HiEllipsisVertical />} />
+        <ButtonIcon
+          variant="text"
+          icon={variant ? <HiEllipsisHorizontal /> : <HiEllipsisVertical />}
+        />
       </Menus.MenuToggle>
       <Menus.MenuList placement={"left"} id={`other-${id}`}>
         <Menus.MenuBtn>

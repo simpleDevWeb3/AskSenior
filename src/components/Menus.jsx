@@ -131,34 +131,21 @@ const StyledMenu = styled.ul`
 
   /* Animation styles */
   opacity: 0;
-  transform: translateY(-8px);
+
   animation: fadeSlideIn 0.2s ease-in;
 
   @keyframes fadeSlideIn {
     from {
       opacity: 0;
-      transform: translateY(-8px);
+    
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+    
     }
   }
 
-  @keyframes fadeSlideOut {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-  }
-
-  @media (max-width: 468px) {
-    width: 7rem;
-  }
+  
 `;
 
 const StyledItem = styled.li`
