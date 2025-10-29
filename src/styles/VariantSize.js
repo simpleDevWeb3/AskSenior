@@ -1,7 +1,7 @@
 import { css } from "styled-components";
 
 /**
- * Styles for post and comment 
+ * Styles for post and comment
  */
 export const variantSize = {
   post: css`
@@ -64,4 +64,3 @@ export const variantSize = {
     }
   `,
 };
-

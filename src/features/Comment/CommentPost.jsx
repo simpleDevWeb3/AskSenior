@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import forumData from "../../data/post";
-import PostCard from "../../components/PostComponent/PostCard";
+import PostCard from "../Post/PostCard";
 import styled from "styled-components";
 import TextFields from "../../components/TextFields";
 import { useFieldText } from "../../hook/useFieldText";
+
 
 const ShareYourThougt = styled.div`
   border: solid 1px rgba(0, 0, 0, 0.1);
@@ -40,18 +41,7 @@ function CommentPost() {
   //Join table
   const postData = { ...post, postComments: comments };
 
-  const handleVote = (postId, voteType) => {
-    console.log("Post", postId, "voted:", voteType);
-    // call API or update state
-  };
-
-  const handleShare = (postId) => {
-    console.log("Share clicked for post", postId);
-  };
-
-  const handlePost = () => {
-    console.log("posting...");
-  };
+ 
 
   return (
     <>
@@ -59,13 +49,12 @@ function CommentPost() {
         postData={postData}
         variant="post"
         avatarSize="medium"
-        onClickVote={(voteType) => handleVote(post.id, voteType)}
-        onClickShare={() => handleShare(post.id)}
         onClickComment={() => toggleTextField(post.id)}
+
       ></PostCard>
 
       {isShowTextField === post.id ? (
-        <TextFields onSend={handlePost} />
+        <TextFields/>
       ) : (
         <ShareYourThougt onClick={() => toggleTextField(post.id)}>
           Share Your Thought

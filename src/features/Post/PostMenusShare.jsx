@@ -1,6 +1,6 @@
 import { HiLink, HiUpload } from "react-icons/hi";
-import Menus from "../Menus";
-import ShareBtn from "../ShareBtn";
+import Menus from "../../components/Menus";
+import ShareBtn from "../../components/ShareBtn";
 import styled from "styled-components";
 function PostMenusShare({ variant, onClickShare, id }) {
   return (

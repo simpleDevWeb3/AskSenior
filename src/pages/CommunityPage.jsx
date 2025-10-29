@@ -1,9 +1,11 @@
+import CommunityPosts from "../features/Community/CommunityPosts"
+
 function CommunityPage() {
   return (
     <div>
-      <h1>Community</h1>
+      <CommunityPosts />
     </div>
-  )
+  );
 }
 
-export default CommunityPage
+export default CommunityPage;

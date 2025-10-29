@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 
 import useSidebar from "./hook/useSidebar";
 import Menus from "./components/Menus";
+import { SidebarProvider } from "./context/SidebarContext";
 //import { Menus } from "./components/Menus";
 
 const StyledApp = styled.div`
@@ -58,16 +59,17 @@ function App() {
 
   return (
     <StyledApp>
-   
-        <Navbar />
-        <Layout $isSidebarOpen={isSidebarOpen}>
-          <Sidebar />
-          <OverlayDiv $isSidebarOpen={isSidebarOpen} />
+      <Navbar />
+      <Layout $isSidebarOpen={isSidebarOpen}>
+        <Sidebar />
+        <OverlayDiv $isSidebarOpen={isSidebarOpen} />
+
+        <Menus>
           <Content>
             <Outlet />
           </Content>
-        </Layout>
-    
+        </Menus>
+      </Layout>
     </StyledApp>
   );
 }

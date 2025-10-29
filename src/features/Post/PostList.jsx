@@ -1,11 +1,11 @@
 //Display recommended Post
 
 import styled from "styled-components";
-import PostCard from "./PostComponent/PostCard";
+import PostCard from "./PostCard";
 
 const PostWrapper = styled.div`
   width: 100%;
-  max-width: 700px; /* limit width for each post */
+
 
   display: flex;
   flex-direction: column;
@@ -37,6 +37,7 @@ function PostList({
   onClickVote,
   onClickComment,
   onClickShare,
+  onClickProfile,
 }) {
   console.log(postData);
   return (
@@ -51,6 +52,7 @@ function PostList({
             onClickVote={(voteType) => onClickVote?.(post.id, voteType)}
             onClickComment={() => onClickComment?.(post.id)}
             onClickShare={() => onClickShare?.(post.id)}
+            onClickProfile={(e) => onClickProfile?.(e, post.communityId)}
           />
         </PostWrapper>
       ))}

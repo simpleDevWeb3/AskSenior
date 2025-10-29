@@ -19,7 +19,7 @@ export default function Menus({ children }) {
     <MenusContext.Provider
       value={{ openId, position, setPosition, open, close }}
     >
-      <StyledMenuContainer>{children}</StyledMenuContainer>
+      {children}
     </MenusContext.Provider>
   );
 }
@@ -99,8 +99,6 @@ Menus.MenuList = MenuList;
 Menus.MenuBtn = MenuBtn;
 /* ---------- styled-components ---------- */
 
-const StyledMenuContainer = styled.div``;
-
 const StyledToggle = styled.span`
   border: none;
   display: flex;
@@ -137,15 +135,11 @@ const StyledMenu = styled.ul`
   @keyframes fadeSlideIn {
     from {
       opacity: 0;
-    
     }
     to {
       opacity: 1;
-    
     }
   }
-
-  
 `;
 
 const StyledItem = styled.li`

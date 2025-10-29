@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import PostCard from "./PostComponent/PostCard";
-import TextFields from "./TextFields";
-import { useFieldText } from "../hook/useFieldText";
+import PostCard from "../../features/Post/PostCard";
+import TextFields from "../../components/TextFields";
+import { useFieldText } from "../../hook/useFieldText";
 
-function CommentList({ comments, onClickVote, onClickComment, onClickShare }) {
+function CommentList({ comments}) {
   const { isShowTextField, toggleTextField } = useFieldText();
 
   /*
@@ -69,12 +69,12 @@ function CommentList({ comments, onClickVote, onClickComment, onClickShare }) {
               postData={comment}
               variant="comment"
               avatarSize="small"
-              onClickVote={(voteType) => onClickVote?.(comment.id, voteType)}
+          
               onClickComment={() => {
-                onClickComment?.(comment.id);
+            
                 toggleTextField(comment.id);
               }}
-              onClickShare={() => onClickShare?.(comment.id)}
+           
             />
             {isShowTextField === comment.id && <TextFields />}
             {comment.commentLvl > 0 && <CommentRoot />}
@@ -115,7 +115,7 @@ const CommentRoot = styled.span`
 const CommentWrapper = styled.div`
   position: relative;
   width: 100%;
-  max-width: 700px; /* Match post width */
+
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -126,7 +126,7 @@ const CommentWrapper = styled.div`
   gap: 0.5rem;
 
   @media (max-width: 1300px) {
-    max-width: 100%;
+    max-width: 95%;
   }
 
   //Comment positioning

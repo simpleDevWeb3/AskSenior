@@ -1,9 +1,17 @@
 import styled, { css } from "styled-components";
-import Avatar from "../Avatar";
-function PostProfile({ avatarSize }) {
+import Avatar from "../../components/Avatar";
+import { usePost } from "./PostContext";
+import { usePostNavigation } from "./usePostNavigation";
+function PostProfile() {
+  const { avatarSize, postData } = usePost();
+  const { handleClickProfile } = usePostNavigation();
+
   return (
     <ProfileContainer>
-      <AvatarContainer $size={avatarSize}>
+      <AvatarContainer
+        $size={avatarSize}
+        onClick={(e) => handleClickProfile(e, postData.communityId)}
+      >
         <Avatar src="/avatar.jpg" />
       </AvatarContainer>
       <UserName $size={avatarSize}>@c/MalaysiaKini</UserName>
@@ -42,6 +50,12 @@ const AvatarContainer = styled.div`
   ${({ $size }) => avatarSizes[$size] || avatarSizes.small};
   border-radius: 50%;
   overflow: hidden;
+  cursor: pointer;
+  padding: 0.2rem;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: background-color 0.15s;
+  }
 `;
 
 const ProfileContainer = styled.div`

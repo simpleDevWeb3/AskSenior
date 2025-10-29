@@ -1,12 +1,15 @@
 import styled from "styled-components";
-import Menus from "../Menus";
+import Menus from "../../components/Menus";
 import { HiEllipsisHorizontal, HiEllipsisVertical } from "react-icons/hi2";
-import ButtonIcon from "../ButtonIcon";
+import ButtonIcon from "../../components/ButtonIcon";
 import { BiBell, BiBookmark } from "react-icons/bi";
 import { BsEyeSlash } from "react-icons/bs";
 import { MdReportProblem } from "react-icons/md";
+import { usePost } from "./PostContext";
 
-function PostMenusOther({ id, variant }) {
+function PostMenusOther() {
+  const { postData, variant } = usePost();
+  const { id } = postData;
   return (
     <MenusContainer>
       <Menus.MenuToggle id={`other-${id}`}>

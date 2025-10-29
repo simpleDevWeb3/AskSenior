@@ -4,30 +4,33 @@ import Comments from "../features/Comment/Comments";
 import { HiArrowLeft } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import ButtonIcon from "../components/ButtonIcon";
+import { FieldTextProvider } from "../context/FieldTextContext";
 
 function CommentPage() {
   const navigate = useNavigate();
   return (
-    <StyledContainer>
-      <NavigateBack>
-        <ButtonIcon
-          action={() => navigate(-1)}
-          variant="text"
-          size="rounded_small"
-          icon={<HiArrowLeft />}
-        />
-      </NavigateBack>
-      <ContentGrid>
-        <ContentWrapper>
-          <CommentPost />
+    <FieldTextProvider>
+      <StyledContainer>
+        <NavigateBack>
+          <ButtonIcon
+            action={() => navigate(-1)}
+            variant="text"
+            size="rounded_small"
+            icon={<HiArrowLeft />}
+          />
+        </NavigateBack>
+        <ContentGrid>
+          <ContentWrapper>
+            <CommentPost />
 
-          <Comments />
-        </ContentWrapper>
-        <ContentWrapper>
-          <Card />
-        </ContentWrapper>
-      </ContentGrid>
-    </StyledContainer>
+            <Comments />
+          </ContentWrapper>
+          <ContentWrapper>
+            <Card />
+          </ContentWrapper>
+        </ContentGrid>
+      </StyledContainer>
+    </FieldTextProvider>
   );
 }
 

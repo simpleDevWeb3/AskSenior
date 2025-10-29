@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import { variantSize } from "../../styles/VariantSize";
-import Text from "../Text";
+import Text from "../../components/Text";
+import { usePost } from "./PostContext";
 
-function PostContent({ variant, title, content }) {
+function PostContent() {
+  const { postData, variant } = usePost();
+  const { title, content } = postData;
   return (
     <TextWrapper $vertical={true} $variant={variant}>
       {title && <Text as="Title">{title}</Text>}

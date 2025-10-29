@@ -12,8 +12,7 @@ import CommunityPage from "./pages/CommunityPage.jsx";
 import PopularPage from "./pages/PopularPage.jsx";
 import CreatePostPage from "./pages/CreatePostPage.jsx";
 import { SidebarProvider } from "./context/SidebarContext.jsx";
-import { FieldTextProvider } from "./context/FieldTextContext.jsx";
-import Menus from "./components/Menus.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,7 +23,7 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "community/:community",
+        path: "community/:communityId",
         element: <CommunityPage />,
       },
       {
@@ -34,10 +33,6 @@ const router = createBrowserRouter([
       {
         path: "search",
         element: <SearchPage />,
-      },
-      {
-        path: "communitiest",
-        element: <CommunityPage />,
       },
       {
         path: "popular",
@@ -53,12 +48,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    
     <SidebarProvider>
-      <Menus>
-        <FieldTextProvider>
-          <RouterProvider router={router} />
-        </FieldTextProvider>
-      </Menus>
+      <RouterProvider router={router} />
     </SidebarProvider>
   </StrictMode>
 );

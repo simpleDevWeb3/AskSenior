@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import forumData from "../../data/post";
 import { useParams } from "react-router-dom";
-import CommentList from "../../components/CommentList";
+import CommentList from "./CommentList";
 
 function Comments() {
   const { postId } = useParams();

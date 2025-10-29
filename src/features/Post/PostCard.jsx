@@ -8,34 +8,37 @@ import PostSocialFeatures from "./PostSocialFeatures";
 //css
 import { variantSize } from "../../styles/VariantSize";
 import styled from "styled-components";
+import PostContext from "./PostContext";
+import { usePostNavigation } from "./usePostNavigation";
 
 function PostCard({
   postData,
   variant = "post",
   avatarSize = "small",
-  onClickPost,
   onClickComment,
-  onClickVote,
-  onClickShare,
 }) {
-  const { id, title, content, votes, postComments } = postData;
+  const { handleClickPost } = usePostNavigation();
+  const contextValue = {
+    postData,
+    variant,
+    avatarSize,
+    onClickComment,
+  };
 
   return (
-    <StyledPost $variant={variant} onClick={() => onClickPost?.()}>
-      <PostHeader>
-        <PostProfile avatarSize={avatarSize} />
-        {variant === "post" && <PostMenusOther id={id} />}
-      </PostHeader>
-      <PostContent variant={variant} title={title} content={content} />
-      <PostSocialFeatures
-        variant={variant}
-        onClickComment={onClickComment}
-        onClickVote={onClickVote}
-        onClickShare={onClickShare}
-        votes={votes}
-        postComments={postComments}
-      />
-    </StyledPost>
+    <PostContext.Provider value={contextValue}>
+      <StyledPost
+        $variant={variant}
+        onClick={() => (variant !== "post" ? "" : handleClickPost(postData.id))}
+      >
+        <PostHeader>
+          <PostProfile />
+          {variant === "post" && <PostMenusOther />}
+        </PostHeader>
+        <PostContent />
+        <PostSocialFeatures />
+      </StyledPost>
+    </PostContext.Provider>
   );
 }
 

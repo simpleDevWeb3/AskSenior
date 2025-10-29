@@ -1,4 +1,4 @@
- export const forumData = {
+export const forumData = {
   users: [
     { id: "u101", username: "kopifan88", avatar: "👤" },
     { id: "u102", username: "barista_joe", avatar: "☕" },
@@ -47,7 +47,7 @@
       id: "p302",
       title: "Cold brew recipe?",
       content:
-        "Trying to make smooth cold brew at home. Share yours! Trying to make smooth cold brew at home. Share yours! Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!Trying to make smooth cold brew at home. Share yours!",
+        "Trying to make smooth cold brew at home. Share yours! Trying to make smooth cold brew at home. Share yours! Trying to make smooth cold brew at home. Share yours!",
       authorId: "u101",
       communityId: "c201",
       createdAt: "2025-10-20T11:00:00Z",
@@ -60,7 +60,7 @@
       id: "p303",
       title: "SvelteKit vs Next.js?",
       content:
-        "Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently? Anyone switched to SvelteKit recently?",
+        "Anyone switched to SvelteKit recently? How’s the developer experience compared to Next.js?",
       authorId: "u103",
       communityId: "c202",
       createdAt: "2025-10-18T14:45:00Z",
@@ -70,7 +70,7 @@
       id: "p304",
       title: "How do you stay productive?",
       content:
-        "I’m constantly distracted while coding. Tips? I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips?I’m constantly distracted while coding. Tips? ",
+        "I’m constantly distracted while coding. Tips? What’s your go-to strategy for deep work?",
       authorId: "u105",
       communityId: "c202",
       createdAt: "2025-10-17T10:20:00Z",
@@ -85,6 +85,34 @@
       createdAt: "2025-10-22T12:00:00Z",
       votes: [],
     },
+    // 🆕 New for Books & Brews
+    {
+      id: "p306",
+      title: "Best coffee-themed novels?",
+      content:
+        "Looking for books that pair well with coffee ☕📖 Any favorites that give that café vibe?",
+      authorId: "u104",
+      communityId: "c203",
+      createdAt: "2025-10-21T09:00:00Z",
+      votes: [
+        { userId: "u101", type: "up" },
+        { userId: "u102", type: "up" },
+      ],
+    },
+    // 🆕 New for Off Topic
+    {
+      id: "p307",
+      title: "What’s your current random obsession?",
+      content:
+        "Mine’s organizing my cable drawer. What’s something weirdly satisfying you’ve been doing lately?",
+      authorId: "u105",
+      communityId: "c204",
+      createdAt: "2025-10-21T14:00:00Z",
+      votes: [
+        { userId: "u103", type: "up" },
+        { userId: "u104", type: "up" },
+      ],
+    },
   ],
 
   comments: [
@@ -96,7 +124,7 @@
       createdAt: "2025-10-19T09:00:00Z",
       parentId: null,
       votes: [{ userId: "u102", type: "up" }],
-    }, //level 0
+    },
     {
       id: "cm402",
       postId: "p301",
@@ -114,7 +142,7 @@
       createdAt: "2025-10-19T09:30:00Z",
       parentId: "cm401",
       votes: [{ userId: "u101", type: "up" }],
-    }, //level1
+    },
     {
       id: "cm404",
       postId: "p301",
@@ -122,7 +150,7 @@
       content: "Is it good for beginners?",
       createdAt: "2025-10-19T09:45:00Z",
       parentId: "cm403",
-      votes: [], //level 2
+      votes: [],
     },
     {
       id: "cm405",
@@ -244,6 +272,55 @@
       content: "Standalone posts should have their own vibe 😎",
       createdAt: "2025-10-22T13:00:00Z",
       parentId: null,
+      votes: [],
+    },
+
+    // 🆕 Comments for Books & Brews (p306)
+    {
+      id: "cm418",
+      postId: "p306",
+      authorId: "u102",
+      content: "Try 'The Coffeehouse Mysteries' series — fun and cozy!",
+      createdAt: "2025-10-21T09:30:00Z",
+      parentId: null,
+      votes: [{ userId: "u104", type: "up" }],
+    },
+    {
+      id: "cm419",
+      postId: "p306",
+      authorId: "u103",
+      content: "I’d add 'Before the Coffee Gets Cold' — really touching.",
+      createdAt: "2025-10-21T09:45:00Z",
+      parentId: "cm418",
+      votes: [],
+    },
+
+    // 🆕 Comments for Off Topic (p307)
+    {
+      id: "cm420",
+      postId: "p307",
+      authorId: "u101",
+      content: "I’ve been watching restoration videos non-stop lately 😂",
+      createdAt: "2025-10-21T14:30:00Z",
+      parentId: null,
+      votes: [{ userId: "u104", type: "up" }],
+    },
+    {
+      id: "cm421",
+      postId: "p307",
+      authorId: "u104",
+      content: "Cleaning keyboards is my current obsession. So satisfying!",
+      createdAt: "2025-10-21T14:45:00Z",
+      parentId: null,
+      votes: [],
+    },
+    {
+      id: "cm422",
+      postId: "p307",
+      authorId: "u105",
+      content: "Same! There’s something magical about before-and-after shots.",
+      createdAt: "2025-10-21T15:00:00Z",
+      parentId: "cm420",
       votes: [],
     },
   ],
