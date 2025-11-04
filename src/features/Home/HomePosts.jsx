@@ -4,13 +4,14 @@ import styled from "styled-components";
 import forumData from "../../data/post";
 import PostList from "../Post/PostList";
 import { usePostNavigation } from "../Post/usePostNavigation";
+import useSidebar from "../../hook/useSidebar";
 
 function HomePosts() {
   const { handleClickPost, handleClickProfile } = usePostNavigation();
-
+  const { isSidebarOpen } = useSidebar();
   //fetch data api example
   const { posts, comments } = forumData;
-
+  console.log("🏠 HomePosts mounted");
   // join post and comment table
   const postData = posts.map((post) => {
     return {
@@ -20,7 +21,7 @@ function HomePosts() {
   });
 
   return (
-    <StyledContainer>
+    <StyledContainer isSidebarOpen={isSidebarOpen}>
       <PostWrapper>
         <PostList
           postData={postData}
@@ -36,12 +37,17 @@ const StyledContainer = styled.div`
   min-height: 100%;
   overflow-y: auto;
   display: flex;
-  flex-direction: column;
-  align-items: center; /* center posts horizontally */
 
+  margin: auto;
+  padding: 1rem;
+  transform: ${(props) =>
+    props.isSidebarOpen ? "translateX(18rem)" : "translateX(13rem)"};
+  transition: all 0.3s ease;
   @media (max-width: 1300px) {
     max-width: 100%;
-    padding: 0;
+    padding: 1rem;
+
+    transform: translateX(0rem);
   }
 `;
 
@@ -53,13 +59,13 @@ const PostWrapper = styled.div`
   flex-direction: column;
   align-items: start;
   border-radius: 25px;
-
+  justify-content: start;
   cursor: pointer;
   @media (max-width: 1300px) {
     max-width: 100%;
   }
 
-  gap: 0.5rem;
+  gap: 1rem;
 `;
 
 const BreakLine = styled.hr`

@@ -12,6 +12,11 @@ import CommunityPage from "./pages/CommunityPage.jsx";
 import PopularPage from "./pages/PopularPage.jsx";
 import CreatePostPage from "./pages/CreatePostPage.jsx";
 import { SidebarProvider } from "./context/SidebarContext.jsx";
+import { ModalProvider } from "./context/ModalContext.jsx";
+import NotificationPage from "./pages/NotificationPage.jsx";
+import CommunitiesPage from "./pages/CommunitiesPage.jsx";
+import { AuthProvider } from "./features/Auth/AuthContext.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "community/:communityId",
         element: <CommunityPage />,
+      },
+      {
+        path: "Communities",
+        element: <CommunitiesPage />,
       },
       {
         path: "comment/:postId",
@@ -42,15 +51,26 @@ const router = createBrowserRouter([
         path: "create",
         element: <CreatePostPage />,
       },
+      {
+        path: "notification",
+        element: <NotificationPage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    
-    <SidebarProvider>
-      <RouterProvider router={router} />
-    </SidebarProvider>
+    <AuthProvider>
+      <ModalProvider>
+        <SidebarProvider>
+          <RouterProvider router={router} />
+        </SidebarProvider>
+      </ModalProvider>
+    </AuthProvider>
   </StrictMode>
 );

@@ -12,8 +12,11 @@ import ButtonIcon from "./ButtonIcon";
 import Search from "./Search";
 import { useNavigate } from "react-router-dom";
 import Hamburger from "./Hamburger";
+import { useModal } from "../context/ModalContext";
+import { useAuth } from "../features/Auth/AuthContext";
 
 const StyledNavbar = styled.nav`
+  position: fixed;
   display: flex;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -25,6 +28,9 @@ const StyledNavbar = styled.nav`
   padding-top: 1rem;
   padding-bottom: 1rem;
   gap: 0.5rem;
+  background-color: white;
+  max-height: 4rem;
+  z-index: 1000;
 `;
 const IconText = styled.span`
   @media (max-width: 468px) {
@@ -57,6 +63,8 @@ const User = styled(HiOutlineUserCircle)`
 
 function Navbar() {
   const navigate = useNavigate();
+  const { toggleModal } = useModal();
+  const { isAuth } = useAuth();
 
   return (
     <StyledNavbar>
@@ -67,22 +75,35 @@ function Navbar() {
       <Search />
 
       <Grouped>
-        <ButtonIcon
-          variant="text"
-          icon={<CreatePostIcon />}
-          action={() => navigate("/create")}
-        >
-          <IconText>Create</IconText>
-        </ButtonIcon>
+        {!isAuth ? (
+          <ButtonIcon action={() => toggleModal()}>
+            <span>Log In</span>
+          </ButtonIcon>
+        ) : (
+          <>
+            <ButtonIcon
+              variant="text"
+              icon={<CreatePostIcon />}
+              action={() => navigate("/create")}
+            >
+              <IconText>Create</IconText>
+            </ButtonIcon>
 
-        <ButtonIcon size="rounded" variant="text" icon={<Notification />} />
-
-        <ButtonIcon
-          size="rounded"
-          shape="circle"
-          variant="text"
-          icon={<User />}
-        />
+            <ButtonIcon
+              size="rounded"
+              variant="text"
+              icon={<Notification />}
+              action={() => navigate("/notification")}
+            />
+            <ButtonIcon
+              size="rounded"
+              shape="circle"
+              variant="text"
+              icon={<User />}
+              action={() => navigate("/profile")}
+            />
+          </>
+        )}
       </Grouped>
     </StyledNavbar>
   );

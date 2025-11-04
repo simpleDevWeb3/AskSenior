@@ -3,85 +3,53 @@ import PostCard from "../../features/Post/PostCard";
 import TextFields from "../../components/TextFields";
 import { useFieldText } from "../../hook/useFieldText";
 
-function CommentList({ comments}) {
-  const { isShowTextField, toggleTextField } = useFieldText();
+function buildCommentTree(comments, parentId = null, level = 0) {
+  return comments
+    .filter((comment) => comment.parentId === parentId)
+    .map((comment) => ({
+      ...comment,
+      commentLvl: level,
+      repliesCount: comments.filter((c) => c.parentId === comment.id).length,
+      replies: buildCommentTree(comments, comment.id, level + 1),
+    }));
+}
 
-  /*
-  comments: [
-    {
-      id: "cm401",
-      postId: "p301",
-      authorId: "u101",
-      content: "Breville Bambino Plus is great!",
-      createdAt: "2025-10-19T09:00:00Z",
-      parentId: null,
-      votes: [{ userId: "u102", type: "up" }],
-    },//level 0
- 
-    {
-      id: "cm403",
-      postId: "p301",
-      authorId: "u102",
-      content: "Second this! I own it too.",
-      createdAt: "2025-10-19T09:30:00Z",
-      parentId: "cm401",
-      votes: [{ userId: "u101", type: "up" }],
-    }, //level1  replies  commentLvl :1 
-    {
-      id: "cm404",
-      postId: "p301",
-      authorId: "u103",
-      content: "Is it good for beginners?",
-      createdAt: "2025-10-19T09:45:00Z",
-      parentId: "cm403",
-      votes: [],//level 2  replies replies   commentLvl :2
-    },
-
-     {
-      id: "cm404",
-      postId: "p301",
-      authorId: "u103",
-      content: "Is it good for beginners?",
-      createdAt: "2025-10-19T09:45:00Z",
-      parentId: "cm403",
-      votes: [],//level 2  replies replies   commentLvl :2
-    },
-  */
-
-  const commentsWithLvL = comments.map((comment) => {
-    comment.commentLvl = 0;
-    if (comment.parentId) {
-      const parentComment = comments.find(
-        (parent) => parent.id === comment.parentId
-      );
-
-      comment.commentLvl = parentComment.commentLvl + 1;
-    }
-    return comment;
-  });
+function CommentList({ comments }) {
+  const tree = buildCommentTree(comments);
+  const commentsWithLvl = tree;
+  console.log(tree);
 
   return (
     <CommentsContainer>
-      {commentsWithLvL.map((comment) => (
-        <>
-          <CommentWrapper commentLvl={comment.commentLvl} key={comment.id}>
-            <PostCard
-              postData={comment}
-              variant="comment"
-              avatarSize="small"
-          
-              onClickComment={() => {
-            
-                toggleTextField(comment.id);
-              }}
-           
-            />
-            {isShowTextField === comment.id && <TextFields />}
-            {comment.commentLvl > 0 && <CommentRoot />}
-          </CommentWrapper>
-        </>
+      {commentsWithLvl.map((comment) => (
+        <CommentItem comment={comment} />
       ))}
     </CommentsContainer>
+  );
+}
+
+function CommentItem({ comment }) {
+  const { isShowTextField, toggleTextField } = useFieldText();
+  return (
+    <CommentWrapper commentLvl={comment.commentLvl} key={comment.id}>
+      <PostCard
+        postData={comment}
+        variant="comment"
+        avatarSize="small"
+        onClickComment={() => toggleTextField(comment.id)}
+      >
+        {comment.repliesCount > 0 && (
+          <CommentRootLevel0 repliesCount={comment.repliesCount} />
+        )}
+      </PostCard>
+
+      {isShowTextField === comment.id && <TextFields />}
+      {comment.replies.map((comment) => (
+        <CommentItem comment={comment} />
+      ))}
+
+      {comment.commentLvl > 0 && <CommentRootNested />}
+    </CommentWrapper>
   );
 }
 
@@ -92,30 +60,42 @@ const CommentsContainer = styled.div`
   align-items: left;
 `;
 
-const CommentRoot = styled.span`
+export const CommentRootLevel0 = styled.span`
   position: absolute;
-  left: 0;
-  top: 0;
-  height: 4rem; /* adjust per comment height */
+  display: block;
+  left: 2rem;
+  top: 2rem;
+  bottom: 0rem;
+  border-right: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+`;
+
+export const CommentRootNested = styled.span`
+  position: absolute;
+  display: block;
+  left: 0rem;
+  top: 2rem;
+
   border-right: 1.5px solid rgba(0, 0, 0, 0.1);
   border-radius: 25px;
 
-  /* draw the bottom "_" */
   &::after {
     content: "";
     position: absolute;
-    bottom: 0; /* attach at bottom */
-    left: 1px; /* align with vertical line */
-    width: 10px; /* length of horizontal part */
+    bottom: 0;
+    left: 1px;
+    width: 10px;
     height: 2px;
     border-radius: 25px;
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
-const CommentWrapper = styled.div`
-  position: relative;
-  width: 100%;
 
+const CommentWrapper = styled.div`
+  padding-right: 1rem;
+  position: relative;
+
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -124,13 +104,11 @@ const CommentWrapper = styled.div`
   transition: background-color 0.15s;
   cursor: pointer;
   gap: 0.5rem;
+  margin-left: ${(props) => (props.commentLvl > 0 ? "1" : "0")}rem;
 
   @media (max-width: 1300px) {
     max-width: 95%;
   }
-
-  //Comment positioning
-  margin-left: ${(props) => props.commentLvl * 2}rem;
 `;
 
 export default CommentList;

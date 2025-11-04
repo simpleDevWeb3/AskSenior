@@ -6,7 +6,8 @@ import PostCard from "./PostCard";
 const PostWrapper = styled.div`
   width: 100%;
 
-
+  border: solid 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 6px 0px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: start;

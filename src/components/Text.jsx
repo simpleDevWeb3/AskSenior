@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 // Text type (color + weight)
 const textType = {
   Title: css`
-    font-weight: 700;
+    font-weight: 600;
     color: var(--primary-color);
   `,
   Subhead: css`

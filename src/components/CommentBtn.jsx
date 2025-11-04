@@ -1,15 +1,20 @@
 import styled from "styled-components";
 import ButtonIcon from "./ButtonIcon";
 import { HiChatAlt2 } from "react-icons/hi";
+import {
+  HiOutlineChatBubbleLeft,
+  HiOutlineChatBubbleOvalLeft,
+} from "react-icons/hi2";
 
-const IComment = styled(HiChatAlt2)``;
+const IComment = styled(HiOutlineChatBubbleOvalLeft)``;
 const CountComment = styled.span`
-  color: white;
+  color: var(--secondary-color);
 `;
 
 function CommentBtn({ variant, commentCount, onComment }) {
   return (
     <ButtonIcon
+      data-allowpostclick
       action={onComment}
       variant={variant === "comment" ? "text" : ""}
       size="small"

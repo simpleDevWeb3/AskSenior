@@ -26,7 +26,7 @@ const CommentSection = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+
   @media (max-width: 1300px) {
     max-width: 100%;
     padding: 0;

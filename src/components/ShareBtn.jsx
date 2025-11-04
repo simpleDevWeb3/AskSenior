@@ -1,8 +1,9 @@
-import { FaShare } from "react-icons/fa";
 import styled from "styled-components";
 import ButtonIcon from "./ButtonIcon";
 
-const IShare = styled(FaShare)``;
+import { PiShareFat } from "react-icons/pi";
+
+const IShare = styled(PiShareFat)``;
 
 function ShareBtn({ variant, onShare }) {
   return (

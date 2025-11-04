@@ -1,10 +1,13 @@
 /* styles/global.css */
 
 :root {
-  --primary-color: #6f4e37; /* dark coffee */
-  --secondary-color: #c8a165; /* caramel latte */
-  --background-color: #f3ece4; /* light cream */
-  --text-color: #824120; /* roasted text */
+  --primary-color: #0e1014; /* dark coffee */
+  --secondary-color: #191818; /* 
+  caramel latte */
+  --tertiary-color: rgb(234, 237, 240);
+  --button-color: rgb(232, 230, 230);
+  --background-color: #f4f4f4; /* light cream */
+  --text-color: #161210; /* roasted text */
 
   --font-size-base: 16px;
   --border-radius: 6px;
@@ -14,8 +17,7 @@
   --spacing-md: 16px;
   --spacing-lg: 24px;
 
-
-  --hover-regular:rgba(0,0,0,0.1)
+  --hover-color: rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -45,6 +47,7 @@ body {
   font-family: "Segoe UI", sans-serif;
   background-color: #f9f9f9;
   color: #222;
+  
 }
 
 a {

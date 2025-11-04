@@ -10,18 +10,27 @@ import useSidebar from "../hook/useSidebar";
 import { useEffect } from "react";
 
 const StyledSidebar = styled.aside`
-  background-color: whitesmoke;
+  position: fixed;
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   padding: 1rem;
+
   gap: 0.2rem;
   border-right: 1px solid rgba(0, 0, 0, 0.2);
-  height: 100%;
+  top: 4rem;
+  bottom: 0;
+  z-index: 99;
+  width: 100%;
+  max-width: 17rem;
 
+  transform: ${(props) =>
+    props.isSidebarOpen ? "translateX(0rem)" : "translateX(-20rem)"};
+  transition: all 0.3s ease;
   /* For screens smaller than 1300px, allow toggle */
   @media (max-width: 1300px) {
     position: absolute; /* overlay content */
-    top: 0; /* adjust if you have header */
+    top: 4rem; /* adjust if you have header */
     bottom: 0;
     left: 0;
     width: 250px;
@@ -43,7 +52,7 @@ const StyledNavLink = styled(NavLink)`
   transition: background 0.2s;
 
   &.active {
-    background-color: var(--secondary-color);
+    background-color: var(--hover-color);
 
     color: var(--primary-color);
   }
@@ -54,7 +63,7 @@ const StyledNavLink = styled(NavLink)`
 
   &:hover {
     background-color: var(
-      --secondary-color
+      --hover-color
     ); /* soft hover or use var(--background-color) */
   }
 `;
@@ -104,15 +113,13 @@ function Sidebar() {
     setIsManualOpenResize,
   ]);
 
-  if (!isSidebarOpen) return;
-
   function handleNavigate() {
     if (isManualOpenResize !== true) return;
     closeSidebar();
     setIsManualOpenResize(false);
   }
   return (
-    <StyledSidebar>
+    <StyledSidebar isSidebarOpen={isSidebarOpen}>
       <StyledNavLink onClick={handleNavigate} to="/">
         <HiOutlineHome />
         <span>Home</span>
@@ -123,7 +130,7 @@ function Sidebar() {
         <span>Popular</span>
       </StyledNavLink>
 
-      <StyledNavLink onClick={handleNavigate} to="/communitiest">
+      <StyledNavLink onClick={handleNavigate} to="/communities">
         <HiOutlineUserGroup />
         <span>Communities</span>
       </StyledNavLink>

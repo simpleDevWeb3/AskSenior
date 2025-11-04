@@ -1,12 +1,14 @@
-import { HiOutlineArrowDown, HiOutlineArrowUp } from "react-icons/hi";
 import styled from "styled-components";
-
 import { variantSize } from "../styles/VariantSize";
 import ButtonIcon from "./ButtonIcon";
 import { useState } from "react";
+import {
+  BiDownvote,
+  BiSolidDownvote,
+  BiSolidUpvote,
+  BiUpvote,
+} from "react-icons/bi";
 
-const UpVote = styled(HiOutlineArrowUp)``;
-const DownVote = styled(HiOutlineArrowDown)``;
 const CountVote = styled.span`
   color: var(--primary-color);
 `;
@@ -16,11 +18,10 @@ const VoteWrapper = styled.div`
   flex-direction: ${({ $vertical }) => ($vertical ? "column" : "row")};
   align-items: ${({ $center }) => ($center ? "center" : "stretch")};
   ${({ $variant }) => variantSize[$variant] || ""}
+  text-align: center;
 `;
 
 function VoteBtn({ variant, votes, userVote = null, onVote }) {
-  const [currentVote, setCurrentVote] = useState(userVote);
-
   const { numUpvote, numDownvote } = votes.reduce(
     (acc, curr) => {
       if (curr.type === "up") acc.numUpvote += 1;
@@ -29,29 +30,50 @@ function VoteBtn({ variant, votes, userVote = null, onVote }) {
     },
     { numUpvote: 0, numDownvote: 0 }
   );
-  const totalVote = numUpvote - numDownvote;
+
+  const baseVote = numUpvote - numDownvote;
+
+  const [currentVote, setCurrentVote] = useState(userVote);
+  const [totalVote, setTotalVote] = useState(baseVote);
 
   function handleVote(e, type) {
-    //onVote -> backend logic  pass from parent component 
-
     e.stopPropagation();
+
+    let newTotal = totalVote;
+
     if (currentVote === type) {
+      // undo vote
+      newTotal += type === "up" ? -1 : 1;
       setCurrentVote(null);
       onVote?.(null);
+    } else if (currentVote === "up" && type === "down") {
+      // switch from up → down
+      newTotal -= 2;
+      setCurrentVote("down");
+      onVote?.("down");
+    } else if (currentVote === "down" && type === "up") {
+      // switch from down → up
+      newTotal += 2;
+      setCurrentVote("up");
+      onVote?.("up");
     } else {
+      // first vote
+      newTotal += type === "up" ? 1 : -1;
       setCurrentVote(type);
       onVote?.(type);
     }
+
+    setTotalVote(newTotal);
   }
 
   return (
     <VoteWrapper $center={true} $variant={variant}>
       <ButtonIcon
         action={(e) => handleVote(e, "up")}
-        variant="outline"
+        variant={variant === "comment" ? "text" : ""}
         size="rounded_small"
         hover="outline"
-        icon={<UpVote />}
+        icon={currentVote === "up" ? <BiSolidUpvote /> : <BiUpvote />}
         active={currentVote === "up"}
       />
 
@@ -59,10 +81,10 @@ function VoteBtn({ variant, votes, userVote = null, onVote }) {
 
       <ButtonIcon
         action={(e) => handleVote(e, "down")}
-        variant="outline"
+        variant={variant === "comment" ? "text" : ""}
         size="rounded_small"
         hover="icon"
-        icon={<DownVote />}
+        icon={currentVote === "down" ? <BiSolidDownvote /> : <BiDownvote />}
         active={currentVote === "down"}
       />
     </VoteWrapper>

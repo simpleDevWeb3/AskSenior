@@ -45,22 +45,22 @@ const sizeStyles = {
     }
   `,
   rounded: css`
-    padding: 0.6rem;
+    padding: 0.5rem;
     font-size: 1.1rem;
 
     @media (max-width: 600px) {
-      padding: 0.45rem;
+      padding: 0.5rem;
       font-size: 1rem;
     }
 
     @media (min-width: 1200px) {
-      padding: 0.7rem;
+      padding: 0.5rem;
       font-size: 1.15rem;
     }
   `,
   rounded_small: css`
-    padding: 0.3rem;
-    font-size: 1rem;
+    padding: 0.5rem;
+    font-size: 2rem;
 
     @media (max-width: 600px) {
       padding: 0.25rem;
@@ -76,12 +76,12 @@ const sizeStyles = {
 
 const variantStyles = {
   primary: css`
-    background-color: var(--primary-color);
-    color: #fff;
+    background-color: var(--button-color);
+    color: var(--secondary-color, #f5f5f5);
     border: none;
 
     &:hover {
-      background-color: var(--primary-color-hover, #5a382a);
+      background-color: var(--hover-color);
     }
   `,
   secondary: css`
@@ -95,12 +95,12 @@ const variantStyles = {
   `,
   outline: css`
     background: none;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
+    color: var(--secondary-color);
+    border: 1px solid var(--hover-color);
+    box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.1);
 
     &:hover {
-      background-color: var(--primary-color);
-      color: #fff;
+      box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.4);
     }
   `,
   text: css`
@@ -109,7 +109,7 @@ const variantStyles = {
     color: var(--primary-color);
 
     &:hover {
-      background-color: var(--hover-regular);
+      background-color: var(--hover-color);
     }
   `,
 };
@@ -130,15 +130,7 @@ const StyledButton = styled.button`
   ${({ $active }) =>
     $active &&
     css`
-      background-color: var(--primary-color);
-      color: #fff;
-      border: 2px solid var(--primary-color);
-
-      /* Keep hover consistent */
-      &:hover {
-        background-color: var(--primary-color-hover, #5a382a);
-        color: #fff;
-      }
+      color: var(--primary-color);
     `}
 
   /* Optional icon hover effect */
@@ -148,7 +140,7 @@ const StyledButton = styled.button`
   }
 
   span {
-    font-weight: 700;
+    font-weight: 600;
   }
 `;
 
@@ -162,6 +154,7 @@ function ButtonIcon({
   hoverIcon,
   margin,
   active,
+  ...props
 }) {
   return (
     <StyledButton
@@ -172,6 +165,7 @@ function ButtonIcon({
       $hoverIcon={hoverIcon}
       $margin={margin}
       $active={active}
+      {...props}
     >
       {icon} {children}
     </StyledButton>

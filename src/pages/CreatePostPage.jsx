@@ -1,7 +1,9 @@
+import PostForm from "../features/Post/PostForm";
+
 function CreatePostPage() {
   return (
     <div>
-      <h1>Create Post</h1>
+      <PostForm />
     </div>
   );
 }

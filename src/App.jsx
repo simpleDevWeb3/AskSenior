@@ -7,6 +7,9 @@ import Navbar from "./components/Navbar";
 import useSidebar from "./hook/useSidebar";
 import Menus from "./components/Menus";
 import { SidebarProvider } from "./context/SidebarContext";
+import Modal from "./components/Modal";
+import LoginForm from "./features/Auth/LoginForm";
+
 //import { Menus } from "./components/Menus";
 
 const StyledApp = styled.div`
@@ -19,12 +22,7 @@ const Layout = styled.div`
   display: grid;
   position: relative;
   height: 100%;
-  position: relative;
-  overflow-y: hidden;
-  @media (min-width: 1300px) {
-    grid-template-columns: ${({ $isSidebarOpen }) =>
-      $isSidebarOpen ? "250px 1fr" : "1fr"};
-  }
+  
 
   @media (max-width: 1300px) {
     grid-template-columns: 1fr;
@@ -32,7 +30,7 @@ const Layout = styled.div`
 `;
 
 const OverlayDiv = styled.div`
-  display: ${({ $isSidebarOpen }) => ($isSidebarOpen ? "block" : "none")};
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
   position: absolute;
 
   width: 100%;
@@ -47,11 +45,15 @@ const OverlayDiv = styled.div`
 
 const Content = styled.main`
   padding: 1rem;
-  padding-top: 0px;
+  padding-top: 4rem;
   padding-bottom: 0px;
   overflow-y: auto;
   height: 100%;
   width: 100%;
+
+  @media (max-width: 800px) {
+    padding: 0rem;
+  }
 `;
 
 function App() {
@@ -60,9 +62,15 @@ function App() {
   return (
     <StyledApp>
       <Navbar />
-      <Layout $isSidebarOpen={isSidebarOpen}>
+
+      <Layout>
         <Sidebar />
-        <OverlayDiv $isSidebarOpen={isSidebarOpen} />
+
+        <OverlayDiv $isOpen={isSidebarOpen} />
+
+        <Modal>
+          <LoginForm />
+        </Modal>
 
         <Menus>
           <Content>

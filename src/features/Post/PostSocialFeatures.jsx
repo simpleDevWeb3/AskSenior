@@ -10,15 +10,15 @@ function PostSocialFeatures() {
   const { postData, variant, onClickComment } = usePost();
   const { id, votes, postComments } = postData;
   const { handleVote, handleShare } = usePostHandler();
+
   const commentNum = postComments?.length;
   return (
-    <SocialFeatures>
+    <SocialFeatures $variant={variant}>
       <VoteBtn variant={variant} votes={votes} onVote={() => handleVote(id)} />
       <CommentBtn
         variant={variant}
         commentCount={commentNum}
-        onComment={(e) => {
-          variant === "comment" ? e.stopPropagation() : "";
+        onComment={() => {
           onClickComment();
         }}
       />
@@ -37,6 +37,12 @@ const SocialFeatures = styled.div`
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
+
+  margin-top: ${({ $variant }) => ($variant === "comment" ? "0.5rem" : "1rem")};
+
+
+
+  text-align: center;
 `;
 
 export default PostSocialFeatures;
