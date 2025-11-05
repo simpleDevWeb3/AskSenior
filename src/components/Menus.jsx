@@ -40,8 +40,9 @@ function MenuToggle({ children, id }) {
     const rect = e.target.closest("button").getBoundingClientRect();
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
-      y: rect.y + rect.height + 8,
+      y: rect.y + window.scrollY + rect.height + 8,
     });
+
     console.log(openId);
     openId === "" || openId !== id ? open(id) : close(); //
   }

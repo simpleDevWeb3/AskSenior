@@ -47,7 +47,7 @@ const Content = styled.main`
   padding: 1rem;
   padding-top: 4rem;
   padding-bottom: 0px;
-  overflow-y: auto;
+
   height: 100%;
   width: 100%;
 

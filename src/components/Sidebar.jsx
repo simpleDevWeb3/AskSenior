@@ -26,15 +26,10 @@ const StyledSidebar = styled.aside`
 
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(0rem)" : "translateX(-20rem)"};
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   /* For screens smaller than 1300px, allow toggle */
   @media (max-width: 1300px) {
-    position: absolute; /* overlay content */
-    top: 4rem; /* adjust if you have header */
-    bottom: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
+ 
     z-index: 1000;
   }
 `;

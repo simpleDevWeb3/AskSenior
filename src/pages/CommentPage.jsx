@@ -7,10 +7,12 @@ import ButtonIcon from "../components/ButtonIcon";
 import { FieldTextProvider } from "../context/FieldTextContext";
 import CommunityInfo from "../components/CommunityInfo";
 import useSidebar from "../hook/useSidebar";
+import { useScrollRestore } from "../hook/useScrollRestore";
 
 function CommentPage() {
   const navigate = useNavigate();
   const { isSidebarOpen } = useSidebar();
+  useScrollRestore();
   return (
     <FieldTextProvider>
       <StyledContainer isSidebarOpen={isSidebarOpen}>
@@ -43,7 +45,7 @@ const StyledContainer = styled.div`
   display: flex;
 
   width: 80%;
-  height: 100vh;
+
   justify-content: center;
   padding: 2rem 1rem;
   transform: ${(props) =>
@@ -51,7 +53,7 @@ const StyledContainer = styled.div`
   transition: all 0.3s ease;
 
   box-sizing: border-box;
-  overflow-y: scroll;
+ 
 
   @media (max-width: 1300px) {
     justify-content: left;

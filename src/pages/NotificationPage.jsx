@@ -1,11 +1,23 @@
+import styled from "styled-components";
 import NotificationLayout from "../features/Notification/NotificationLayout";
+import useSidebar from "../hook/useSidebar";
+import { useScrollRestore } from "../hook/useScrollRestore";
 
 function NotificationPage() {
+  const { isSidebarOpen } = useSidebar();
+  useScrollRestore();
   return (
-    <div>
+    <PageContainer isSidebarOpen={isSidebarOpen}>
       <NotificationLayout />
-    </div>
+    </PageContainer>
   );
 }
 
 export default NotificationPage;
+const PageContainer = styled.div`
+  height: 100vh;
+  max-width: 80%;
+  transform: ${(props) =>
+    props.isSidebarOpen ? "translateX(18rem)" : "15rem"};
+  transition: transform 0.3s ease-in-out;
+`;

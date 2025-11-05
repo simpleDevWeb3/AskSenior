@@ -32,23 +32,22 @@ function HomePosts() {
     </StyledContainer>
   );
 }
-const PageContainer = styled.div``;
+
 const StyledContainer = styled.div`
-  min-height: 100%;
-  overflow-y: auto;
   display: flex;
+  width: 80%;
 
-  margin: auto;
-  padding: 1rem;
+  justify-content: center;
+  padding: 2rem 1rem;
   transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(18rem)" : "translateX(13rem)"};
+    props.isSidebarOpen ? "translateX(17rem)" : "translateX(5rem)"};
   transition: all 0.3s ease;
+  box-sizing: border-box;
+  overflow-y: visible;
   @media (max-width: 1300px) {
-    max-width: 100%;
-    padding: 1rem;
-
-    transform: translateX(0rem);
+    justify-content: left;
   }
+  align-items: start;
 `;
 
 const PostWrapper = styled.div`

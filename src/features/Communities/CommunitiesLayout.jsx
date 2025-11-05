@@ -48,7 +48,7 @@ export default CommunitiesLayout;
 
 const Container = styled.div`
   padding: 1.5rem;
-
+  height: 100%;
   margin: 2rem auto;
 `;
 
@@ -85,6 +85,7 @@ const CommunityItem = styled.li`
   &:hover {
     background: var(--hover-color);
   }
+  border: 1px solid var(--hover-color);
 `;
 
 const Rank = styled.span`
