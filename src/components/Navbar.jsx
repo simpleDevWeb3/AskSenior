@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import Logo from "./Logo";
-
 import {
+  HiArrowLeft,
   HiOutlineBell,
-  HiOutlineMenu,
   HiOutlinePlusCircle,
   HiOutlineUser,
   HiOutlineUserCircle,
@@ -15,10 +14,10 @@ import Hamburger from "./Hamburger";
 import { useModal } from "../context/ModalContext";
 import { useAuth } from "../features/Auth/AuthContext";
 import { Dropdown } from "./Dropdown";
-import { BiMoon, BiSolidDoorOpen } from "react-icons/bi";
+import { BiMoon, BiSearch, BiSolidDoorOpen } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
 import { useDarkTheme } from "../context/DarkThemeContext";
-import { LiaDoorOpenSolid } from "react-icons/lia";
+import { useState, useEffect } from "react";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -28,42 +27,43 @@ const StyledNavbar = styled.nav`
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  padding-left: 1rem;
-  padding-right: 2rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem 1rem;
   gap: 0.7rem;
   background-color: var(--background-color);
   max-height: 3.5rem;
   z-index: 99;
   transition: background-color 0.15s ease-in;
+
+  @media (max-width: 800px) {
+    justify-content: center;
+  }
 `;
+
 const IconText = styled.span`
   @media (max-width: 468px) {
     display: none;
   }
 `;
+
 const CreatePostIcon = styled(HiOutlinePlusCircle)`
   color: var(--primary-color);
-  text-align: center;
   font-size: 1.5rem;
 `;
 
 const Notification = styled(HiOutlineBell)`
   color: var(--primary-color);
-  text-align: center;
   font-size: 1.5rem;
 `;
+
 const Grouped = styled.div`
   display: flex;
-
+  align-items: center;
   text-align: center;
   justify-content: center;
-  align-items: center;
 `;
+
 const User = styled(HiOutlineUserCircle)`
   color: var(--primary-color);
-  text-align: center;
   font-size: 1.7rem;
 `;
 
@@ -71,110 +71,11 @@ const SearchContainer = styled.div`
   display: flex;
   max-width: 30rem;
   width: 100%;
+  @media (max-width: 800px) {
+    justify-content: end;
+  }
 `;
-function Navbar() {
-  const navigate = useNavigate();
-  const { toggleModal } = useModal();
-  const { isAuth } = useAuth();
-  const { isDarkMode, toggleMode } = useDarkTheme();
-  const { logOut } = useAuth();
-  return (
-    <StyledNavbar>
-      <Grouped>
-        <Hamburger />
-        <Logo />
-      </Grouped>
 
-      <SearchContainer>
-        <Dropdown position="center">
-          <Search />
-        </Dropdown>
-      </SearchContainer>
-
-      <Grouped>
-        {!isAuth ? (
-          <ButtonIcon action={() => toggleModal()}>
-            <IconText>Log In</IconText>
-          </ButtonIcon>
-        ) : (
-          <>
-            <ButtonIcon
-              variant="text"
-              icon={<CreatePostIcon />}
-              action={() => navigate("/create")}
-            >
-              <IconText>Create</IconText>
-            </ButtonIcon>
-
-            <ButtonIcon
-              size="rounded"
-              variant="text"
-              icon={<Notification />}
-              action={() => navigate("/notification")}
-            />
-            <Dropdown>
-              <Dropdown.Trigger>
-                <ButtonIcon
-                  size="rounded"
-                  shape="circle"
-                  variant="text"
-                  icon={<User />}
-                />
-              </Dropdown.Trigger>
-              <Dropdown.List position="right">
-                <Dropdown.Item onClick={() => navigate("/profile")}>
-                  <HiOutlineUser
-                    style={{
-                      fontSize: "1.2rem",
-
-                      cursor: "pointer",
-                    }}
-                  />
-                  view profile
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <BiMoon
-                    style={{
-                      fontSize: "1.4rem",
-
-                      cursor: "pointer",
-                    }}
-                  />
-                  <ItemWrapper>
-                    <span>Dark Mode</span>
-                    <ToggleWrapper onClick={toggleMode} isDark={isDarkMode}>
-                      <Circle isDark={isDarkMode} />
-                    </ToggleWrapper>
-                  </ItemWrapper>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <FiSettings
-                    style={{
-                      fontSize: "1.2rem",
-
-                      cursor: "pointer",
-                    }}
-                  />
-                  settings
-                </Dropdown.Item>
-                <Dropdown.Item onClick={logOut}>
-                  <BiSolidDoorOpen
-                    style={{
-                      fontSize: "1.4rem",
-
-                      cursor: "pointer",
-                    }}
-                  />{" "}
-                  Log out
-                </Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </>
-        )}
-      </Grouped>
-    </StyledNavbar>
-  );
-}
 const ToggleWrapper = styled.div`
   position: relative;
   width: 50px;
@@ -191,6 +92,7 @@ const ToggleWrapper = styled.div`
 const ItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+
   width: 100%;
 `;
 
@@ -203,8 +105,134 @@ const Circle = styled.div`
   background-color: white;
   border-radius: 50%;
   transition: left 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
+
+function Navbar() {
+  const navigate = useNavigate();
+  const { toggleModal } = useModal();
+  const { isAuth, logOut } = useAuth();
+  const { isDarkMode, toggleMode } = useDarkTheme();
+
+  const [mobileSearch, setMobileSearch] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 800);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 800);
+      if (window.innerWidth >= 800) setMobileSearch(false); // reset search bar
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <StyledNavbar>
+      {!mobileSearch ? (
+        <Grouped>
+          <Hamburger />
+          <Logo />
+        </Grouped>
+      ) : (
+        <Grouped>
+          <HiArrowLeft
+            onClick={() => setMobileSearch(false)}
+            style={{ color: "var(--primary-color)", fontSize: "1.5rem" }}
+          />
+        </Grouped>
+      )}
+
+      <SearchContainer>
+        {isDesktop ? (
+          <Dropdown position="center">
+            <Search />
+          </Dropdown>
+        ) : !mobileSearch ? (
+          <BiSearch
+            onClick={() => setMobileSearch(true)}
+            style={{
+              color: "var(--primary-color)",
+              fontSize: "1.5rem",
+              cursor: "pointer",
+            }}
+          />
+        ) : (
+          <Dropdown position="center">
+            <Search />
+          </Dropdown>
+        )}
+      </SearchContainer>
+
+      {!mobileSearch && (
+        <Grouped>
+          {!isAuth ? (
+            <ButtonIcon action={() => toggleModal()}>
+              <IconText>Log In</IconText>
+            </ButtonIcon>
+          ) : (
+            <>
+              <ButtonIcon
+                variant="text"
+                icon={<CreatePostIcon />}
+                action={() => navigate("/create")}
+              >
+                <IconText>Create</IconText>
+              </ButtonIcon>
+
+              <ButtonIcon
+                size="rounded"
+                variant="text"
+                icon={<Notification />}
+                action={() => navigate("/notification")}
+              />
+
+              <Dropdown>
+                <Dropdown.Trigger>
+                  <ButtonIcon
+                    size="rounded"
+                    shape="circle"
+                    variant="text"
+                    icon={<User />}
+                  />
+                </Dropdown.Trigger>
+                <Dropdown.List position="right">
+                  <Dropdown.Item onClick={() => navigate("/profile")}>
+                    <HiOutlineUser
+                      style={{ fontSize: "1.2rem", cursor: "pointer" }}
+                    />
+                    view profile
+                  </Dropdown.Item>
+
+                  <Dropdown.Item>
+                    <BiMoon style={{ fontSize: "1.4rem", cursor: "pointer" }} />
+                    <ItemWrapper>
+                      <span>Dark Mode</span>
+                      <ToggleWrapper onClick={toggleMode} isDark={isDarkMode}>
+                        <Circle isDark={isDarkMode} />
+                      </ToggleWrapper>
+                    </ItemWrapper>
+                  </Dropdown.Item>
+
+                  <Dropdown.Item>
+                    <FiSettings
+                      style={{ fontSize: "1.2rem", cursor: "pointer" }}
+                    />
+                    settings
+                  </Dropdown.Item>
+
+                  <Dropdown.Item onClick={logOut}>
+                    <BiSolidDoorOpen
+                      style={{ fontSize: "1.4rem", cursor: "pointer" }}
+                    />
+                    Log out
+                  </Dropdown.Item>
+                </Dropdown.List>
+              </Dropdown>
+            </>
+          )}
+        </Grouped>
+      )}
+    </StyledNavbar>
+  );
+}
+
 export default Navbar;

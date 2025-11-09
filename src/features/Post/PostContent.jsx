@@ -17,7 +17,6 @@ function PostContent() {
           <Image src={image} alt={title || "Post image"} />
         </ImageContainer>
       )}
-      
     </TextWrapper>
   );
 }
@@ -31,6 +30,8 @@ const TextWrapper = styled.div`
   align-items: ${({ $center }) => ($center ? "center" : "stretch")};
   gap: 0.5rem;
   ${({ $variant }) => variantSize[$variant] || ""}
+
+
 `;
 
 const ImageContainer = styled.div`

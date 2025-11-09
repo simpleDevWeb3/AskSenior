@@ -154,7 +154,5 @@ const StyledItem = styled.li`
     background-color: var(--hover-color);
   }
   font-size: 0.8rem;
-  @media (max-width: 468px) {
-    font-size: 0.6rem;
-  }
+ 
 `;

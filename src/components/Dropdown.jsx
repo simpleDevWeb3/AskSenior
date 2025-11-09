@@ -92,6 +92,11 @@ const ListContainer = styled.ul`
   z-index: 1000;
   color: var(--text-color);
   text-align: left;
+
+  @media (max-width: 368px) {
+    width: 100%;
+  }
+
 `;
 
 const ListItem = styled.li`

@@ -202,7 +202,10 @@ const ActionContainer = styled.div`
   gap: 0.5rem;
 `;
 const SearchBarContainer = styled.div`
-  width: 30%;
+  width: 50%;
+  @media (max-width: 1000px) {
+    width: 70%;
+  }
 `;
 const FileInput = styled.input`
   display: none;
@@ -253,6 +256,10 @@ const FormContainer = styled.form`
   width: 60%;
   max-width: 50rem;
   color: var(--text-color);
+
+  @media (max-width: 1000px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.h2`

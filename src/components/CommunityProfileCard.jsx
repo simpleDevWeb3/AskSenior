@@ -144,7 +144,7 @@ const FeatureRows = styled.div`
   display: flex;
   gap: 0.5rem;
 
-  margin-top: 0.2rem;
+  margin-top: 1rem;
 
   & span {
     font-size: 0.8rem;

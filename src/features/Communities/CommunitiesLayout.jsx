@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FiUsers } from "react-icons/fi";
 import { HiOutlineArrowTrendingUp } from "react-icons/hi2";
 import ButtonIcon from "../../components/ButtonIcon";
+import Avatar from "../../components/Avatar";
 
 // Sample community data
 const initialCommunities = [
@@ -19,22 +20,26 @@ function CommunitiesLayout() {
   return (
     <Container>
       <Header>
-        <HiOutlineArrowTrendingUp />
-        <h2>Top Communities</h2>
+        <Title as={"h3"}>Explore Communities</Title>
       </Header>
 
       <List>
         {communities.map((community, index) => (
           <CommunityItem key={community.id}>
-            <Rank>{index + 1}</Rank>
-            <Info>
-              <Name>{community.name}</Name>
-              <Members>
-                <FiUsers />
-                {community.members.toLocaleString()} members
-              </Members>
-            </Info>
-            <JoinButton>Join</JoinButton>
+            <Group>
+              <AvatarContainer>
+                <Avatar src={"/avatar.jpg"} />
+              </AvatarContainer>
+              <Info>
+                <Name>{community.name}</Name>
+                <Stats>{community.members} member</Stats>
+              </Info>
+
+              <ButtonIcon>Join</ButtonIcon>
+            </Group>
+            <Description>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde,
+            </Description>
           </CommunityItem>
         ))}
       </List>
@@ -49,11 +54,22 @@ export default CommunitiesLayout;
 const Container = styled.div`
   padding: 1.5rem;
   padding-top: 0rem;
-  height: 100%;
+  height: 100vh;
   margin: 2rem auto;
   max-width: 80rem;
-`;
 
+  @media (max-width: 1000px) {
+    height: 100%;
+  }
+`;
+const AvatarContainer = styled.div`
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px solid var(--tertiary-color);
+  overflow: hidden;
+  flex-shrink: 0;
+`;
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -68,18 +84,30 @@ const Header = styled.div`
   }
 `;
 
+const Title = styled.h3`
+  font-weight: 600;
+`;
+
 const List = styled.ul`
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.8rem;
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
 `;
-
-const CommunityItem = styled.li`
+const Group = styled.div`
   display: flex;
   align-items: center;
-  background: white;
-  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+`;
+const CommunityItem = styled.li`
+  display: flex;
+
+  flex-direction: column;
+  background: var(--background-color);
+  box-shadow: 4px 4px 0px var(--tertiary-color);
   padding: 1rem;
   border-radius: 10px;
   justify-content: space-between;
@@ -88,44 +116,23 @@ const CommunityItem = styled.li`
     background: var(--hover-color);
   }
   border: 1px solid var(--hover-color);
-`;
-
-const Rank = styled.span`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--primary-color);
-  width: 2rem;
+  gap: 0.5rem;
 `;
 
 const Info = styled.div`
   flex: 1;
   margin-left: 0.5rem;
 `;
-
+const Stats = styled.div`
+  color: var(--text-color);
+`;
 const Name = styled.h3`
   font-size: 1.1rem;
   font-weight: 600;
-  color: #3e2c21;
+  color: var(--text-color);
 `;
 
-const Members = styled.p`
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  color: #8a7c6f;
-`;
-
-const JoinButton = styled.button`
-  background: #6f4e37;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  &:hover {
-    background: #553926;
-  }
+const Description = styled.p`
+  color: var(--text-color);
+  opacity: 0.7;
 `;

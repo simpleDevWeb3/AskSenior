@@ -62,8 +62,8 @@ const CommentsContainer = styled.div`
 export const CommentRootLevel0 = styled.span`
   position: absolute;
   display: block;
-  left: 2rem;
-  top: 3rem;
+  left: 1rem;
+  top: 2rem;
   bottom: 0rem;
   border-right: 1.5px solid var(--tertiary-color);
   border-radius: 25px;
@@ -81,9 +81,9 @@ export const CommentRootNested = styled.span`
   &::after {
     content: "";
     position: absolute;
-    bottom: 0;
-    left: 1px;
-    width: 10px;
+    bottom: 15px;
+    left: -8px;
+    width: 8px;
     height: 2px;
     border-radius: 25px;
     background-color: var(--tertiary-color);
@@ -94,20 +94,16 @@ const CommentWrapper = styled.div`
   padding-right: 1rem;
   position: relative;
 
-  width: 100%;
   display: flex;
   flex-direction: column;
+
   align-items: start;
   border-radius: 25px;
-  padding: 1rem 1rem 0rem 1rem;
+
   transition: background-color 0.15s;
   cursor: pointer;
   gap: 0.5rem;
-  margin-left: ${(props) => (props.commentLvl > 0 ? "1" : "0")}rem;
-
-  @media (max-width: 1300px) {
-    max-width: 95%;
-  }
+  margin-left: ${(props) => (props.commentLvl > 0 ? "1.5" : "0")}rem;
 `;
 
 export default CommentList;

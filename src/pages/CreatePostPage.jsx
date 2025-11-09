@@ -20,4 +20,9 @@ const PageContainer = styled.div`
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(6rem)" : "translateX(3rem)"};
   transition: transform 0.3s ease-in-out;
+  @media (max-width: 1000px) {
+    padding-top: 3rem;
+    max-width: 100%;
+    transform: translateX(0rem);
+  }
 `;

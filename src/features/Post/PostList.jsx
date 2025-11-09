@@ -10,6 +10,7 @@ const PostWrapper = styled.div`
   flex-direction: column;
   align-items: start;
   border-radius: 25px;
+
   padding: 1rem 1rem 0rem 1rem;
   &:hover {
     background-color: rgba(160, 158, 158, 0.1);
@@ -19,6 +20,9 @@ const PostWrapper = styled.div`
   cursor: pointer;
   @media (max-width: 1300px) {
     max-width: 100%;
+  }
+  @media (max-width: 800px) {
+    border-radius: 0px;
   }
 
   gap: 0.5rem;

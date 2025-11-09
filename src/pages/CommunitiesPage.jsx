@@ -16,9 +16,15 @@ function CommunitiesPage() {
 export default CommunitiesPage;
 
 const PageContainer = styled.div`
-  height: 100vh;
+
   max-width: 80%;
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(18rem)" : "15rem"};
   transition: transform 0.3s ease-in-out;
+
+  @media (max-width: 1000px) {
+    transform: none;
+    padding-top: 2rem;
+    max-width: 100%;
+  }
 `;

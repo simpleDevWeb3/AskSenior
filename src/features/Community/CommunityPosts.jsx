@@ -60,6 +60,12 @@ const PageContainer = styled.div`
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(17rem)" : "translateX(10rem)"};
   transition: transform 0.3s ease;
+
+  @media (max-width: 800px) {
+    transform: translateX(0rem);
+    width: 100%;
+    padding-top: 3rem;
+  }
 `;
 
 const BannerWrapper = styled.div`
@@ -70,6 +76,9 @@ const BannerWrapper = styled.div`
   & > * {
     width: 90%;
     max-width: 80rem;
+    @media (max-width: 800px) {
+      width: 100%;
+    }
   }
 `;
 
@@ -80,6 +89,10 @@ const ContentContainer = styled.div`
   max-width: 80rem;
   margin-top: 1rem;
   transition: all 0.3s ease;
+
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const HorizontalContainer = styled.div`
@@ -94,7 +107,7 @@ const MainSection = styled.div`
   max-width: 60rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+
 `;
 
 const Sidebar = styled.div`

@@ -110,7 +110,7 @@ const NotificationList = styled.div`
 `;
 
 const NotificationItem = styled.div`
-  background: ${({ $isRead }) => ($isRead ? "inherit" : "rgba(0,0,0,0.1)")};
+  background: ${({ $isRead }) => ($isRead ? "inherit" : "var(--hover-color)")};
 
   padding: 1rem;
 

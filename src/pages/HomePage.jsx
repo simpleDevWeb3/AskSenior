@@ -1,4 +1,4 @@
-  import HomePosts from "../features/Home/HomePosts";
+import HomePosts from "../features/Home/HomePosts";
 function HomePage() {
   return <HomePosts />;
 }

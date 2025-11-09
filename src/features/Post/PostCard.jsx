@@ -91,6 +91,8 @@ const AvatarContainer = styled.div`
     background-color: rgba(0, 0, 0, 0.2);
     transition: background-color 0.15s;
   }
+
+ 
 `;
 const StyledPost = styled.div`
   width: 100%;

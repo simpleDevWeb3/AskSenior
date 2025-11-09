@@ -48,13 +48,19 @@ const StyledContainer = styled.div`
   padding: 2rem 1rem;
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(17rem)" : "translateX(5rem)"};
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   box-sizing: border-box;
   align-items: flex-start;
   min-height: 100vh; /* 👈 ensures full screen height */
 
   @media (max-width: 1300px) {
     justify-content: left;
+  }
+
+  @media (max-width: 800px) {
+    transform: none;
+    padding-top: 4rem;
+    width: 100%;
   }
 `;
 const ContentGrid = styled.div`
@@ -72,7 +78,7 @@ const ContentGrid = styled.div`
 const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
-  max-width: 740px; /* Reddit post column width */
+  min-width: 340px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -80,6 +86,9 @@ const ContentWrapper = styled.div`
 const NavigateBack = styled.div`
   margin-top: 0.1rem;
   margin-right: 0.2rem;
+  @media (max-width: 800px) {
+    display: none;
+  }
 `;
 const Sidebar = styled.div`
   top: 5rem;
