@@ -29,6 +29,7 @@ const StyledFilter = styled.div`
   display: flex;
   gap: 1rem;
   color: var(--text-color);
+  flex-wrap: wrap;
 `;
 const Underline = styled.span`
   width: 100%;

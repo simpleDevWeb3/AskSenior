@@ -202,7 +202,7 @@ function Navbar() {
                     view profile
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item onClose={false}>
                     <BiMoon style={{ fontSize: "1.4rem", cursor: "pointer" }} />
                     <ItemWrapper>
                       <span>Dark Mode</span>
@@ -212,7 +212,7 @@ function Navbar() {
                     </ItemWrapper>
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate("/Settings")}>
                     <FiSettings
                       style={{ fontSize: "1.2rem", cursor: "pointer" }}
                     />

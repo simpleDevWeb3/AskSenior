@@ -64,6 +64,10 @@ const ProfileContainer = styled.div`
   align-items: center; /* vertical align */
   gap: 0.5rem; /* spacing between avatar and name */
   margin-bottom: 0.5rem;
+
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 export default PostProfile;

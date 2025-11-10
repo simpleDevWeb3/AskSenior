@@ -16,7 +16,6 @@ function CommunitiesPage() {
 export default CommunitiesPage;
 
 const PageContainer = styled.div`
-
   max-width: 80%;
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(18rem)" : "15rem"};
@@ -24,7 +23,15 @@ const PageContainer = styled.div`
 
   @media (max-width: 1000px) {
     transform: none;
-    padding-top: 2rem;
+
+    max-width: 100%;
+  }
+
+  @media (max-width: 800px) {
+    padding-top: 3rem;
+  }
+
+  @media (max-width: 1200px) {
     max-width: 100%;
   }
 `;

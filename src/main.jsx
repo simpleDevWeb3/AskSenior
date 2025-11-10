@@ -18,6 +18,7 @@ import CommunitiesPage from "./pages/CommunitiesPage.jsx";
 import { AuthProvider } from "./features/Auth/AuthContext.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import { DarkThemeProvider } from "./context/DarkThemeContext.jsx";
+import SettingPage from "./pages/SettingPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,11 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <ProfilePage />,
+      },
+
+      {
+        path: "settings",
+        element: <SettingPage />,
       },
     ],
   },

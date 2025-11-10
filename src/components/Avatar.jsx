@@ -4,7 +4,7 @@ import styled from "styled-components";
 const AvatarBorder = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+
   overflow: hidden;
 `;
 

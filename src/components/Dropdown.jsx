@@ -41,9 +41,11 @@ Dropdown.List = function DropdownList({ children, position }) {
   return <ListContainer position={position}>{children}</ListContainer>;
 };
 
-Dropdown.Item = function DropdownItem({ children, onClick }) {
+Dropdown.Item = function DropdownItem({ children, onClick, onClose = true }) {
+  const { close } = useContext(DropdownContext);
   function handleClick() {
-    if (onClick) onClick();
+    if (onClose) close();
+    onClick?.();
   }
 
   return <ListItem onClick={handleClick}>{children}</ListItem>;
@@ -96,7 +98,6 @@ const ListContainer = styled.ul`
   @media (max-width: 368px) {
     width: 100%;
   }
-
 `;
 
 const ListItem = styled.li`
