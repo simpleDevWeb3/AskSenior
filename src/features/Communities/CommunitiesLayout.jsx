@@ -108,7 +108,7 @@ const Group = styled.div`
 `;
 const CommunityItem = styled.li`
   display: flex;
-
+  
   flex-direction: column;
   background: var(--background-color);
   box-shadow: 4px 4px 0px var(--tertiary-color);

@@ -2,16 +2,15 @@ import styled from "styled-components";
 import useSidebar from "../hook/useSidebar";
 import { useScrollRestore } from "../hook/useScrollRestore";
 import Avatar from "../components/Avatar";
-import Filter from "../components/Filter";
-import PostList from "../features/Post/PostList";
-import forumData from "../data/post";
+import Tabs from "../components/Tabs";
+import { Outlet } from "react-router-dom";
 
 function ProfilePage() {
   const { isSidebarOpen } = useSidebar();
   useScrollRestore();
-  const FilterOptions = [
-    { key: "POST", label: "Post" },
-    { key: "COMMENTS", label: "Comments" },
+  const links = [
+    { key: "POST", label: "Post", index: true },
+    { key: "COMMENTED", label: "Commented" },
     { key: "SAVED", label: "Saved" },
     { key: "HISTORY", label: "History" },
     { key: "UPVOTED", label: "Upvoted" },
@@ -19,7 +18,6 @@ function ProfilePage() {
     { key: "DRAFT", label: "Draft" },
   ];
 
-  const { posts } = forumData;
   return (
     <PageContainer isSidebarOpen={isSidebarOpen}>
       <ProfileHeader>
@@ -35,21 +33,18 @@ function ProfilePage() {
         </InfoContainer>
       </ProfileHeader>
       <OperationContainer>
-        <Filter
-          filterField={"type"}
-          options={FilterOptions}
-          startingOption={"POST"}
-        />
+        <Tabs links={links} basePath={"/profile"} />
       </OperationContainer>
       <br />
-      <PostList postData={posts} />
+      <Content>
+        <Outlet />
+      </Content>
     </PageContainer>
   );
 }
 
 export default ProfilePage;
 const PageContainer = styled.div`
-  height: 100%;
   max-width: 900px;
   transform: ${(props) =>
     props.isSidebarOpen ? "translateX(18rem)" : "translateX(15rem)"};
@@ -67,7 +62,7 @@ const PageContainer = styled.div`
     color: var(--text-color);
   }
 `;
-
+const Content = styled.div``;
 const ProfileHeader = styled.div`
   display: flex;
   align-items: end;

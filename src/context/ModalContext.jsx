@@ -3,18 +3,23 @@ import { createContext, useContext, useState } from "react";
 const ModalContext = createContext();
 
 function ModalProvider({ children }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(null);
 
-  function openModal() {
-    setIsModalOpen(true);
+  function openModal(id) {
+    setIsModalOpen(id);
   }
 
   function closeModal() {
-    setIsModalOpen(false);
+    setIsModalOpen(null);
   }
 
-  function toggleModal() {
-    setIsModalOpen((open) => !open);
+  function toggleModal(id) {
+    console.log(id);
+    if (isModalOpen === id) {
+      closeModal();
+    } else {
+      openModal(id);
+    }
   }
 
   return (

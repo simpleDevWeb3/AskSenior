@@ -4,9 +4,9 @@ import { CgClose } from "react-icons/cg";
 import { HiOutlineXCircle } from "react-icons/hi2";
 import ButtonIcon from "./ButtonIcon";
 
-function Modal({ children }) {
+function Modal({ children, id }) {
   const { isModalOpen, closeModal } = useModal();
-  if (!isModalOpen) return null;
+  if (isModalOpen !== id) return null;
 
   return (
     <>
@@ -36,7 +36,7 @@ const OverlayDiv = styled.div`
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 900;
+  z-index: 1000;
   width: 100%;
   height: 100%;
 `;

@@ -19,6 +19,16 @@ import { AuthProvider } from "./features/Auth/AuthContext.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import { DarkThemeProvider } from "./context/DarkThemeContext.jsx";
 import SettingPage from "./pages/SettingPage.jsx";
+import PostsTab from "./features/Profile/PostsTab.jsx";
+import SavedPosts from "./features/Profile/SavedPosts.jsx";
+import Upvoted from "./features/Profile/Upvoted.jsx";
+import Draft from "./features/Profile/Draft.jsx";
+import Downvoted from "./features/Profile/DownVoted.jsx";
+import History from "./features/Profile/History.jsx";
+import CommentedTab from "./features/Profile/CommentedTab.jsx";
+import ProfileSetting from "./features/Settings/ProfileSetting.jsx";
+import AccountSetting from "./features/Settings/AccountSetting.jsx";
+import PrivacySetting from "./features/Settings/PrivacySetting.jsx";
 
 const router = createBrowserRouter([
   {
@@ -60,11 +70,27 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <ProfilePage />,
+        children: [
+          { index: true, element: <PostsTab /> },
+          { path: "POST", element: <PostsTab /> },
+          { path: "SAVED", element: <SavedPosts /> },
+          { path: "COMMENTED", element: <CommentedTab /> },
+          { path: "UPVOTED", element: <Upvoted /> },
+          { path: "DOWNVOTED", element: <Downvoted /> },
+          { path: "HISTORY", element: <History /> },
+          { path: "DRAFT", element: <Draft /> },
+        ],
       },
 
       {
         path: "settings",
         element: <SettingPage />,
+        children: [
+          { index: true, element: <AccountSetting /> },
+          { path: "ACCOUNT", element: <AccountSetting /> },
+          { path: "PROFILE", element: <ProfileSetting /> },
+          { path: "PRIVACY", element: <PrivacySetting /> },
+        ],
       },
     ],
   },

@@ -18,6 +18,10 @@ const StyledApp = styled.div`
   height: 100%;
   background-color: var(--background-color);
   transition: background-color 0.15s ease-in;
+
+  & * {
+    color: var(--text-color);
+  }
 `;
 
 const Layout = styled.div`
@@ -69,8 +73,12 @@ function App() {
 
         <OverlayDiv $isOpen={isSidebarOpen} />
 
-        <Modal>
+        <Modal id={"Login"}>
           <LoginForm />
+        </Modal>
+
+        <Modal id={"Create Community"}>
+          <h1>Create</h1>
         </Modal>
 
         <Menus>

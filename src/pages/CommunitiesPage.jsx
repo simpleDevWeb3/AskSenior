@@ -23,8 +23,10 @@ const PageContainer = styled.div`
 
   @media (max-width: 1000px) {
     transform: none;
-
     max-width: 100%;
+  }
+  @media (min-width: 600px) {
+    height: 100vh;
   }
 
   @media (max-width: 800px) {

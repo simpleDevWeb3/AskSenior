@@ -79,7 +79,6 @@ export const forumData = {
   ],
 
   posts: [
-    // existing posts ...
     {
       id: "p301",
       title: "Best espresso machines under $500?",
@@ -160,8 +159,6 @@ export const forumData = {
         { userId: "u104", type: "up" },
       ],
     },
-
-    // 🆕 New posts
     {
       id: "p308",
       title: "Latte art challenge this weekend!",
@@ -409,7 +406,6 @@ export const forumData = {
       votes: [],
     },
 
-    // 🆕 Comments for Books & Brews (p306)
     {
       id: "cm418",
       postId: "p306",
@@ -429,9 +425,9 @@ export const forumData = {
       votes: [],
     },
 
-    // 🆕 Comments for Off Topic (p307)
+    // Fixed duplicate Off Topic comments
     {
-      id: "cm420",
+      id: "cm434",
       postId: "p307",
       authorId: "u101",
       content: "I’ve been watching restoration videos non-stop lately 😂",
@@ -440,7 +436,7 @@ export const forumData = {
       votes: [{ userId: "u104", type: "up" }],
     },
     {
-      id: "cm421",
+      id: "cm435",
       postId: "p307",
       authorId: "u104",
       content: "Cleaning keyboards is my current obsession. So satisfying!",
@@ -449,43 +445,15 @@ export const forumData = {
       votes: [],
     },
     {
-      id: "cm422",
+      id: "cm436",
       postId: "p307",
       authorId: "u105",
       content: "Same! There’s something magical about before-and-after shots.",
       createdAt: "2025-10-21T15:00:00Z",
-      parentId: "cm420",
-      votes: [],
-    },
-    {
-      id: "cm420",
-      postId: "p307",
-      authorId: "u101",
-      content: "I’ve been watching restoration videos non-stop lately 😂",
-      createdAt: "2025-10-21T14:30:00Z",
-      parentId: null,
-      votes: [{ userId: "u104", type: "up" }],
-    },
-    {
-      id: "cm421",
-      postId: "p307",
-      authorId: "u104",
-      content: "Cleaning keyboards is my current obsession. So satisfying!",
-      createdAt: "2025-10-21T14:45:00Z",
-      parentId: null,
-      votes: [],
-    },
-    {
-      id: "cm422",
-      postId: "p307",
-      authorId: "u105",
-      content: "Same! There’s something magical about before-and-after shots.",
-      createdAt: "2025-10-21T15:00:00Z",
-      parentId: "cm420",
+      parentId: "cm434",
       votes: [],
     },
 
-    // 🆕 New comments
     {
       id: "cm423",
       postId: "p308",
@@ -527,7 +495,7 @@ export const forumData = {
       postId: "p311",
       authorId: "u104",
       content: "I’ll share mine soon — cable management is a nightmare 😂",
-      createdAt: "2025-10-26T15:10:00Z",
+      createdAt: "2025-10-26T15: 10:00Z",
       parentId: null,
       votes: [],
     },

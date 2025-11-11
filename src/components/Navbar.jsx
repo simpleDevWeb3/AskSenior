@@ -165,7 +165,7 @@ function Navbar() {
       {!mobileSearch && (
         <Grouped>
           {!isAuth ? (
-            <ButtonIcon action={() => toggleModal()}>
+            <ButtonIcon action={() => toggleModal("Login")}>
               <IconText>Log In</IconText>
             </ButtonIcon>
           ) : (
