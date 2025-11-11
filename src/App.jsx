@@ -9,6 +9,8 @@ import Menus from "./components/Menus";
 import { SidebarProvider } from "./context/SidebarContext";
 import Modal from "./components/Modal";
 import LoginForm from "./features/Auth/LoginForm";
+import CommunityForm from "./features/Community/CommunityForm";
+import { Selector } from "./components/Selector";
 
 //import { Menus } from "./components/Menus";
 
@@ -76,10 +78,11 @@ function App() {
         <Modal id={"Login"}>
           <LoginForm />
         </Modal>
-
-        <Modal id={"Create Community"}>
-          <h1>Create</h1>
-        </Modal>
+        <Selector>
+          <Modal id={"Create Community"}>
+            <CommunityForm />
+          </Modal>
+        </Selector>
 
         <Menus>
           <Content>

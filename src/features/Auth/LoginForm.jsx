@@ -90,6 +90,10 @@ const FormContainer = styled.form`
   gap: 1.2rem;
   background-color: inherit;
   color: var(--text-color);
+  width: 500px;
+  @media (max-width: 800px) {
+    width: inherit;
+  }
 `;
 
 const Title = styled.h2`

@@ -5,14 +5,15 @@ import { HiOutlineXCircle } from "react-icons/hi2";
 import ButtonIcon from "./ButtonIcon";
 
 function Modal({ children, id }) {
-  const { isModalOpen, closeModal } = useModal();
-  if (isModalOpen !== id) return null;
+  const { isModalOpen, closeModal } = useModal(null);
 
   return (
     <>
-      <OverlayDiv onClick={closeModal} />
+      {isModalOpen === id && <OverlayDiv onClick={closeModal} />}
 
-      <ModalContainer>
+      <ModalContainer
+        style={{ display: isModalOpen === id ? "block" : "none" }}
+      >
         <CloseButtonWrapper>
           <ButtonIcon
             variant="text"
@@ -57,8 +58,13 @@ const ModalContainer = styled.div`
   border-radius: 8px;
   padding: 2rem;
   z-index: 1000;
-  width: 90%;
-  max-width: 500px;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+  }
+
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
 `;
 

@@ -140,10 +140,20 @@ const StyledButton = styled.button`
       color: var(--primary-color);
     `}
 
-  /* Optional icon hover effect */
   &:hover svg {
     color: ${({ $hoverIcon }) =>
       $hoverIcon ? "var(--secondary-color)" : "inherit"};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: var(--hover-color);
+  }
+
+  &:disabled:hover {
+    background-color: var(--hover-color);
   }
 
   span {
@@ -152,6 +162,7 @@ const StyledButton = styled.button`
 `;
 
 function ButtonIcon({
+  disabled,
   icon,
   children,
   action,
@@ -165,6 +176,7 @@ function ButtonIcon({
 }) {
   return (
     <StyledButton
+      disabled={disabled}
       onClick={action}
       $size={size}
       $variant={variant}

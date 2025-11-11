@@ -14,9 +14,10 @@ export function usePostNavigation() {
     navigate(`/comment/${postId}`);
   };
 
-  const handleClickProfile = (e, communityId) => {
+  const handleClickProfile = (e, communityId, userId) => {
     if (e.target.closest("button, a, [data-ignorepostclick]")) return;
-    navigate(`/community/${communityId}`);
+    if (communityId) navigate(`/community/${communityId}`);
+    else if (userId) navigate(`/profile`);
     console.log(`/community/${communityId}`);
   };
 

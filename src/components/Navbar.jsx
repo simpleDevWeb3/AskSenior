@@ -18,6 +18,9 @@ import { BiMoon, BiSearch, BiSolidDoorOpen } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
 import { useDarkTheme } from "../context/DarkThemeContext";
 import { useState, useEffect } from "react";
+import { GrDashboard } from "react-icons/gr";
+import { BsDash } from "react-icons/bs";
+import { MdDashboard } from "react-icons/md";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -116,6 +119,7 @@ function Navbar() {
   const [mobileSearch, setMobileSearch] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 800);
 
+
   useEffect(() => {
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 800);
@@ -127,6 +131,7 @@ function Navbar() {
 
   return (
     <StyledNavbar>
+      
       {!mobileSearch ? (
         <Grouped>
           <Hamburger />
@@ -224,6 +229,13 @@ function Navbar() {
                       style={{ fontSize: "1.4rem", cursor: "pointer" }}
                     />
                     Log out
+                  </Dropdown.Item>
+
+                  <Dropdown.Item>
+                    <MdDashboard
+                      style={{ fontSize: "1.4rem", cursor: "pointer" }}
+                    />
+                    Dashboard
                   </Dropdown.Item>
                 </Dropdown.List>
               </Dropdown>
