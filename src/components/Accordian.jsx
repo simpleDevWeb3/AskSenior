@@ -42,7 +42,8 @@ const Section = styled.section`
   padding: 1rem 0.2rem;
 `;
 const BreakLine = styled.hr`
-  border-bottom: 2px var(--tertiary-color);
+  border-bottom: 4px var(--hover-color);
+  opacity: 0.2;
 `;
 const StyledHeader = styled.div`
   display: flex;

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import ButtonIcon from "./ButtonIcon";
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi2";
 import styled, { css } from "styled-components";
@@ -7,22 +7,42 @@ import { VscNoNewline } from "react-icons/vsc";
 /* eslint-disable react-refresh/only-export-components */
 const CarouselContext = createContext();
 
-function Carousel({ children, total, hideWhenCurrentSlide = false }) {
+function Carousel({
+  children,
+  total,
+  hideWhenCurrentSlide = false,
+  canMoveNext,
+  onSlideChange,
+}) {
   const [index, setIndex] = useState(0);
 
-  const next = () => setIndex((i) => Math.min(i + 1, total - 1));
+  const next = () => {
+    if (canMoveNext && !canMoveNext(index)) return; // block if validation fails
+    setIndex((i) => Math.min(i + 1, total - 1));
+  };
   const prev = () => setIndex((i) => Math.max(i - 1, 0));
   const restoreSlide = () => setIndex(0);
 
+  useEffect(() => {
+    if (onSlideChange) onSlideChange(index);
+  }, [index, onSlideChange]);
+
   return (
     <CarouselContext.Provider
-      value={{ next, prev, index, total, hideWhenCurrentSlide, restoreSlide }}
+      value={{
+        next,
+        prev,
+        index,
+        total,
+        hideWhenCurrentSlide,
+        restoreSlide,
+        canMoveNext,
+      }}
     >
       <Container>{children}</Container>
     </CarouselContext.Provider>
   );
 }
-
 function useCarousel() {
   const ctx = useContext(CarouselContext);
   if (ctx === undefined)
@@ -35,7 +55,12 @@ function Track({ children }) {
   return <Section $index={index}>{children}</Section>;
 }
 
-function NextBtn({ positionX = "right", positionY = "center", disabled }) {
+function NextBtn({
+  positionX = "right",
+  positionY = "center",
+  disabled,
+  icon,
+}) {
   const { next, index, total, hideWhenCurrentSlide } = useCarousel();
   if (hideWhenCurrentSlide && index + 1 === total) return;
   return (
@@ -47,12 +72,13 @@ function NextBtn({ positionX = "right", positionY = "center", disabled }) {
         size="rounded"
         icon={
           <HiArrowRight
-            style={
-              disabled ? { opacity: 0.2, pointerEvents: VscNoNewline } : {}
-            }
+            style={{
+              opacity: disabled ? 0.3 : 1,
+              pointerEvents: disabled ? "none" : "auto",
+            }}
           />
         }
-      ></ButtonIcon>
+      />
     </BtnContainer>
   );
 }
@@ -136,6 +162,13 @@ const BtnContainer = styled.div`
 const CardContainer = styled.div`
   min-width: 100%;
   flex-shrink: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  @media (max-width: 800px) {
+    width: 80%;
+
+    min-width: none;
+  }
 `;
 
 const TrackerContainer = styled.div`
