@@ -4,12 +4,31 @@ import {
   HiOutlineUserGroup,
   HiPlus,
 } from "react-icons/hi";
+
+import { HiOutlineChartBar, HiOutlineClipboardList } from "react-icons/hi";
+
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import useSidebar from "../hook/useSidebar";
 import { useEffect } from "react";
 import Accordian from "./Accordian";
 import { useModal } from "../context/ModalContext";
+import { BiPieChart } from "react-icons/bi";
+import { TbReportAnalytics } from "react-icons/tb";
+import { SiDatabricks } from "react-icons/si";
+import {
+  HiOutlineArrowDownLeft,
+  HiOutlineArrowLeft,
+  HiOutlineUser,
+  HiOutlineUsers,
+} from "react-icons/hi2";
+import { useDashboard } from "../hook/useDashboard";
+import Logo from "./Logo";
+import { IoExitOutline } from "react-icons/io5";
+import { MdExitToApp, MdGroups } from "react-icons/md";
+import Hamburger from "./Hamburger";
+import { CgCommunity } from "react-icons/cg";
+import { RiCommunityFill, RiUserCommunityLine } from "react-icons/ri";
 
 const StyledSidebar = styled.aside`
   overflow-y: scroll;
@@ -20,7 +39,7 @@ const StyledSidebar = styled.aside`
   padding: 1rem;
   gap: 0.2rem;
   border-right: 1px solid var(--tertiary-color);
-  top: 3.5rem;
+  top: ${({ $isDashboard }) => ($isDashboard ? "0" : " 3.5rem")};
   bottom: 0;
   z-index: 99;
   width: 100%;
@@ -85,17 +104,10 @@ const StyledNavAction = styled.div`
   }
 `;
 
-const SectionTitle = styled.div`
-  padding-left: 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-
-  text-transform: uppercase;
-`;
-
 function Sidebar() {
   const { openModal } = useModal();
+  const { isDashboardRoute } = useDashboard();
+
   const {
     isSidebarOpen,
     closeSidebar,
@@ -113,6 +125,7 @@ function Sidebar() {
     { id: 3, name: "Gaming Hub" },
   ];
 
+  // RESIZE HANDLING
   useEffect(() => {
     function handleResize() {
       if (isManualOpen) return;
@@ -124,11 +137,12 @@ function Sidebar() {
         } else {
           openSidebar();
         }
-      } else if (window.innerWidth > 1300) {
+      } else {
         setIsManualOpenResize(false);
         openSidebar();
       }
     }
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -141,6 +155,7 @@ function Sidebar() {
     setIsManualOpenResize,
   ]);
 
+  // Auto-close sidebar on mobile
   function handleNavigate() {
     if (isManualOpenResize !== true) return;
     closeSidebar();
@@ -148,72 +163,109 @@ function Sidebar() {
   }
 
   return (
-    <StyledSidebar isSidebarOpen={isSidebarOpen}>
-      <StyledNavLink onClick={handleNavigate} to="/">
-        <HiOutlineHome />
-        <span>Home</span>
-      </StyledNavLink>
-
-      <StyledNavLink onClick={handleNavigate} to="/popular">
-        <HiOutlineFire />
-        <span>Popular</span>
-      </StyledNavLink>
-
-      <StyledNavLink onClick={handleNavigate} to="/communities">
-        <HiOutlineUserGroup />
-        <span>Communities</span>
-      </StyledNavLink>
-
-      <StyledNavAction onClick={() => openModal("Create Community")}>
-        <HiPlus />
-        <span>Start Community</span>
-      </StyledNavAction>
-      <br />
-      <br />
-
-      <Accordian title={"Manage"}>
-        {userCommunities.map((c) => (
-          <StyledNavLink
-            key={c.id}
-            onClick={handleNavigate}
-            to={`/manage/${c.name.toLowerCase().replace(/\s+/g, "-")}`}
+    <StyledSidebar
+      $isDashboard={isDashboardRoute}
+      isSidebarOpen={isSidebarOpen}
+    >
+      {isDashboardRoute ? (
+        <>
+          <div
+            style={{
+              display: "flex",
+            
+              marginTop: "2rem",
+            }}
           >
-            <HiOutlineUserGroup />
-            <span>{c.name}</span>
-          </StyledNavLink>
-        ))}
-      </Accordian>
-
-      <Accordian title={"Joined"}>
-        {userCommunities.map((c) => (
-          <StyledNavLink
-            key={c.id}
-            onClick={handleNavigate}
-            to={`/manage/${c.name.toLowerCase().replace(/\s+/g, "-")}`}
+            <Hamburger />
+            <Logo />
+          </div>
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.8rem",
+            }}
           >
-            <HiOutlineUserGroup />
-            <span>{c.name}</span>
+            <StyledNavLink onClick={handleNavigate} to="/dashboard/overview">
+              <SiDatabricks />
+              <span>Overview</span>
+            </StyledNavLink>
+            <StyledNavLink onClick={handleNavigate} to="/dashboard/groups">
+              <RiUserCommunityLine />
+              <span>Groups</span>
+            </StyledNavLink>
+            <StyledNavLink onClick={handleNavigate} to="/dashboard/posts">
+              <HiOutlineClipboardList />
+              <span>Posts</span>
+            </StyledNavLink>{" "}
+            <StyledNavLink onClick={handleNavigate} to="/dashboard/users">
+              <HiOutlineUsers />
+              <span>Users</span>
+            </StyledNavLink>
+          </div>
+        </>
+      ) : (
+        <>
+          {" "}
+          <StyledNavLink onClick={handleNavigate} to="/">
+            <HiOutlineHome />
+            <span>Home</span>
           </StyledNavLink>
-        ))}
-      </Accordian>
-
-      <Accordian title={"Followed"}>
-        {userCommunities.map((c) => (
-          <StyledNavLink
-            key={c.id}
-            onClick={handleNavigate}
-            to={`/manage/${c.name.toLowerCase().replace(/\s+/g, "-")}`}
-          >
-            <HiOutlineUserGroup />
-            <span>{c.name}</span>
+          <StyledNavLink onClick={handleNavigate} to="/popular">
+            <HiOutlineFire />
+            <span>Popular</span>
           </StyledNavLink>
-        ))}
-      </Accordian>
+          <StyledNavLink onClick={handleNavigate} to="/communities">
+            <HiOutlineUserGroup />
+            <span>Communities</span>
+          </StyledNavLink>
+          <StyledNavAction onClick={() => openModal("Create Community")}>
+            <HiPlus />
+            <span>Start Community</span>
+          </StyledNavAction>
+          <br />
+          <br />
+          <Accordian title={"Manage"}>
+            {userCommunities.map((c) => (
+              <StyledNavLink
+                key={c.id}
+                onClick={handleNavigate}
+                to={`/manage/${c.name.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <HiOutlineUserGroup />
+                <span>{c.name}</span>
+              </StyledNavLink>
+            ))}
+          </Accordian>
+          <Accordian title={"Joined"}>
+            {userCommunities.map((c) => (
+              <StyledNavLink
+                key={c.id}
+                onClick={handleNavigate}
+                to={`/manage/${c.name.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <HiOutlineUserGroup />
+                <span>{c.name}</span>
+              </StyledNavLink>
+            ))}
+          </Accordian>
+          <Accordian title={"Followed"}>
+            {userCommunities.map((c) => (
+              <StyledNavLink
+                key={c.id}
+                onClick={handleNavigate}
+                to={`/manage/${c.name.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <HiOutlineUserGroup />
+                <span>{c.name}</span>
+              </StyledNavLink>
+            ))}
+          </Accordian>
+        </>
+      )}
     </StyledSidebar>
   );
 }
 
-const Section = styled.section`
-  padding: 1rem 0.2rem;
-`;
 export default Sidebar;

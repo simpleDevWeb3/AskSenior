@@ -29,6 +29,11 @@ import CommentedTab from "./features/Profile/CommentedTab.jsx";
 import ProfileSetting from "./features/Settings/ProfileSetting.jsx";
 import AccountSetting from "./features/Settings/AccountSetting.jsx";
 import PrivacySetting from "./features/Settings/PrivacySetting.jsx";
+import Dashboardpage from "./pages/Dashboardpage.jsx";
+import Overview from "./features/Dashboard/Overview.jsx";
+import ManageGroup from "./features/Dashboard/ManageGroup.jsx";
+import ManageUser from "./features/Dashboard/ManageUser.jsx";
+import ManagePost from "./features/Dashboard/ManagePost.jsx";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +95,17 @@ const router = createBrowserRouter([
           { path: "ACCOUNT", element: <AccountSetting /> },
           { path: "PROFILE", element: <ProfileSetting /> },
           { path: "PRIVACY", element: <PrivacySetting /> },
+        ],
+      },
+      {
+        path: "dashboard",
+        element: <Dashboardpage />,
+        children: [
+          { index: true, element: <Overview /> },
+          { path: "overview", element: <Overview /> },
+          { path: "groups", element: <ManageGroup /> },
+          { path: "users", element: <ManageUser /> },
+          { path: "posts", element: <ManagePost /> },
         ],
       },
     ],

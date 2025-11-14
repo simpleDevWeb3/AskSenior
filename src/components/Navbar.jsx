@@ -14,13 +14,23 @@ import Hamburger from "./Hamburger";
 import { useModal } from "../context/ModalContext";
 import { useAuth } from "../features/Auth/AuthContext";
 import { Dropdown } from "./Dropdown";
-import { BiMoon, BiSearch, BiSolidDoorOpen } from "react-icons/bi";
+import {
+  BiMoon,
+  BiSearch,
+  BiSolidDoorOpen,
+  BiSun,
+  BiUser,
+  BiUserCircle,
+} from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
 import { useDarkTheme } from "../context/DarkThemeContext";
 import { useState, useEffect } from "react";
 import { GrDashboard } from "react-icons/gr";
 import { BsDash } from "react-icons/bs";
 import { MdDashboard } from "react-icons/md";
+import useSidebar from "../hook/useSidebar";
+import { useDashboard } from "../hook/useDashboard";
+import { IoExitOutline } from "react-icons/io5";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -111,6 +121,7 @@ const Circle = styled.div`
 `;
 
 function Navbar() {
+  const { isDashboardRoute } = useDashboard();
   const navigate = useNavigate();
   const { toggleModal } = useModal();
   const { isAuth, logOut } = useAuth();
@@ -118,7 +129,6 @@ function Navbar() {
 
   const [mobileSearch, setMobileSearch] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 800);
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -128,10 +138,37 @@ function Navbar() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  if (isDashboardRoute)
+    return (
+      <StyledNavbar style={{}}>
+        <Grouped>
+          <Hamburger />
+        </Grouped>
+        <Grouped>
+          <ButtonIcon
+            size="rounded"
+            variant="text"
+            action={toggleMode}
+            icon={isDarkMode ? <BiSun /> : <BiMoon />}
+          />
+           <ButtonIcon
+            variant="text"
+            size="rounded"
+            action={() => navigate("/")}
+            icon={<BiUser />}
+          />
+           <ButtonIcon
+            variant="text"
+            size="rounded"
+            action={() => navigate("/")}
+            icon={<IoExitOutline />}
+          />
+        </Grouped>
+     
+      </StyledNavbar>
+    );
   return (
     <StyledNavbar>
-      
       {!mobileSearch ? (
         <Grouped>
           <Hamburger />
@@ -231,7 +268,7 @@ function Navbar() {
                     Log out
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate("/dashboard")}>
                     <MdDashboard
                       style={{ fontSize: "1.4rem", cursor: "pointer" }}
                     />

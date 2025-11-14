@@ -40,6 +40,7 @@ const OverlayDiv = styled.div`
   z-index: 1000;
   width: 100%;
   height: 100%;
+  backdrop-filter: blur(10px);
 `;
 
 const Right = styled.div`
