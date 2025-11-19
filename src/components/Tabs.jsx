@@ -6,7 +6,7 @@ function Tabs({ links, basePath }) {
   const navigate = useNavigate();
   const indexLink = links.find((link) => link.index) || links;
 
-  // Get the last part of the path after basePath
+  // 1.Get the last part of the path after basePath
   const pathAfterBase =
     location.pathname === basePath
       ? "" // no tab in URL
@@ -14,6 +14,8 @@ function Tabs({ links, basePath }) {
 
   const activeValue = pathAfterBase || indexLink.key;
   console.log(activeValue);
+
+  //1.append params 
 
   return (
     <TabContainer>

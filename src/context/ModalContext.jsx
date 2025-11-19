@@ -1,30 +1,38 @@
 import { createContext, useContext, useState } from "react";
-/* eslint-disable react-refresh/only-export-components */
+
 const ModalContext = createContext();
 
 function ModalProvider({ children }) {
-  const [isModalOpen, setIsModalOpen] = useState(null);
+  const [modal, setModal] = useState({
+    id: null, // modal name ("Edit Post")
+    data: null, // payload (post object)
+  });
 
-  function openModal(id) {
-    setIsModalOpen(id);
+  function openModal(id, data = null) {
+    setModal({ id, data });
   }
 
   function closeModal() {
-    setIsModalOpen(null);
+    setModal({ id: null, data: null });
   }
 
-  function toggleModal(id) {
-    console.log(id);
-    if (isModalOpen === id) {
+  function toggleModal(id, data = null) {
+    if (modal.id === id) {
       closeModal();
     } else {
-      openModal(id);
+      openModal(id, data);
     }
   }
 
   return (
     <ModalContext.Provider
-      value={{ isModalOpen, openModal, closeModal, toggleModal }}
+      value={{
+        isModalOpen: modal.id,
+        modalData: modal.data,
+        openModal,
+        closeModal,
+        toggleModal,
+      }}
     >
       {children}
     </ModalContext.Provider>
@@ -33,11 +41,8 @@ function ModalProvider({ children }) {
 
 function useModal() {
   const ctx = useContext(ModalContext);
-
-  if (ctx === undefined)
-    throw new Error("useModal is call outside ModalProvider!");
-
+  if (!ctx) throw new Error("useModal must be used inside ModalProvider");
   return ctx;
 }
 
-export { useModal, ModalProvider };
+export { ModalProvider, useModal };

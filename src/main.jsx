@@ -109,6 +109,10 @@ const router = createBrowserRouter([
           { path: "posts", element: <ManagePost /> },
         ],
       },
+      {
+        path: "search",
+        element: <SearchPage />,
+      },
     ],
   },
 ]);

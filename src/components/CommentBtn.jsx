@@ -5,15 +5,22 @@ import {
   HiOutlineChatBubbleLeft,
   HiOutlineChatBubbleOvalLeft,
 } from "react-icons/hi2";
+import { usePost } from "../features/Post/PostContext";
 
 const IComment = styled(HiOutlineChatBubbleOvalLeft)``;
 const CountComment = styled.span``;
 
-function CommentBtn({ variant, commentCount, onComment }) {
+function CommentBtn({ onComment }) {
+  const { postData, variant, onClickComment } = usePost();
+  const { postComments } = postData;
+  const commentCount = postComments?.length;
   return (
     <ButtonIcon
       data-allowpostclick
-      action={onComment}
+      action={() => {
+        onClickComment();
+        onComment?.();
+      }}
       variant={
         variant === "comment" || variant === "userCommented" ? "text" : ""
       }

@@ -8,6 +8,7 @@ import {
   BiSolidUpvote,
   BiUpvote,
 } from "react-icons/bi";
+import { usePost } from "../features/Post/PostContext";
 
 const CountVote = styled.span`
   color: var(--primary-color);
@@ -19,9 +20,12 @@ const VoteWrapper = styled.div`
   align-items: ${({ $center }) => ($center ? "center" : "stretch")};
   ${({ $variant }) => variantSize[$variant] || ""}
   text-align: center;
+  gap: 0.5rem;
 `;
 
-function VoteBtn({ variant, votes, userVote = null, onVote }) {
+function VoteBtn({ userVote = null, onVote }) {
+  const { postData, variant } = usePost();
+  const { votes } = postData;
   const { numUpvote, numDownvote } = votes.reduce(
     (acc, curr) => {
       if (curr.type === "up") acc.numUpvote += 1;

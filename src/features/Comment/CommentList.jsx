@@ -104,6 +104,8 @@ const CommentWrapper = styled.div`
   cursor: pointer;
   gap: 0.5rem;
   margin-left: ${(props) => (props.commentLvl > 0 ? "1.5" : "0")}rem;
+
+  width: 100%;
 `;
 
 export default CommentList;

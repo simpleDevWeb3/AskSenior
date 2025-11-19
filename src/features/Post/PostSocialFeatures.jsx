@@ -8,16 +8,14 @@ import { usePostHandler } from "./usePostHandler";
 
 function PostSocialFeatures() {
   const { postData, variant, onClickComment } = usePost();
-  const { id, votes, postComments } = postData;
+  const { id} = postData;
   const { handleVote, handleShare } = usePostHandler();
 
-  const commentNum = postComments?.length;
+
   return (
     <SocialFeatures $variant={variant}>
-      <VoteBtn variant={variant} votes={votes} onVote={() => handleVote(id)} />
+      <VoteBtn  onVote={() => handleVote(id)} />
       <CommentBtn
-        variant={variant}
-        commentCount={commentNum}
         onComment={() => {
           onClickComment();
         }}

@@ -9,7 +9,7 @@ import {
 } from "react-icons/hi";
 import ButtonIcon from "./ButtonIcon";
 import Search from "./Search";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Hamburger from "./Hamburger";
 import { useModal } from "../context/ModalContext";
 import { useAuth } from "../features/Auth/AuthContext";
@@ -127,9 +127,14 @@ function Navbar() {
   const { toggleModal } = useModal();
   const { isAuth, logOut } = useAuth();
   const { isDarkMode, toggleMode } = useDarkTheme();
-
+  const [searchParams,setSearchParams] = useSearchParams();
   const [mobileSearch, setMobileSearch] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 800);
+
+  function handleSearch(query) {
+    setSearchParams({ q: query });
+    navigate(`/search?q=${query}`);
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -186,7 +191,7 @@ function Navbar() {
       <SearchContainer>
         {isDesktop ? (
           <Dropdown position="center">
-            <Search />
+            <Search onSearch={handleSearch} />
           </Dropdown>
         ) : !mobileSearch ? (
           <BiSearch
@@ -199,7 +204,7 @@ function Navbar() {
           />
         ) : (
           <Dropdown position="center">
-            <Search />
+            <Search onSearch={handleSearch} />
           </Dropdown>
         )}
       </SearchContainer>

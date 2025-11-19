@@ -8,7 +8,7 @@ import PostSocialFeatures from "./PostSocialFeatures";
 //css
 import { variantSize } from "../../styles/VariantSize";
 import styled from "styled-components";
-import PostContext from "./PostContext";
+import PostContext, { usePost } from "./PostContext";
 import { usePostNavigation } from "./usePostNavigation";
 import Avatar from "../../components/Avatar";
 import TextFields from "../../components/TextFields";
@@ -18,9 +18,14 @@ import {
   HiMiniCircleStack,
   HiMiniInformationCircle,
   HiMiniQuestionMarkCircle,
+  HiPencil,
 } from "react-icons/hi2";
 import { VscTriangleLeft } from "react-icons/vsc";
 import { GoTriangleLeft } from "react-icons/go";
+import VoteBtn from "../../components/VoteBtn";
+import CommentBtn from "../../components/CommentBtn";
+import ButtonIcon from "../../components/ButtonIcon";
+import { useModal } from "../../context/ModalContext";
 
 function PostCard({
   postData,
@@ -58,6 +63,7 @@ function PostCard({
             <PostSocialFeatures />
           </PostBody>
         )}
+        {variant === "user_post" && <User_Post data={postData} />}
       </StyledPost>
     </PostContext.Provider>
   );
@@ -120,6 +126,31 @@ function UserCommented() {
     </>
   );
 }
+
+function User_Post({ data }) {
+  const { openModal } = useModal();
+  
+  return (
+    <PostBody>
+      <PostHeader>
+        <PostProfile />
+        <ButtonIcon size="rounded" action={() => openModal("Edit Post", data)}>
+          <HiPencil />
+        </ButtonIcon>
+      </PostHeader>
+      <PostContent />
+      <StyledAction>
+        <VoteBtn />
+        <CommentBtn />
+      </StyledAction>
+    </PostBody>
+  );
+}
+const StyledAction = styled.div`
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+`;
 const UserName = styled.div`
   color: var(--primary-color);
   font-weight: 700;

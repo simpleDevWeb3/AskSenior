@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-function Filter({ filterField, options, startingOption }) {
+function Filter({ filterField, options, startingOption, variant }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const type = searchParams.get("type") || startingOption;
   function handleClick(val, e) {
@@ -13,10 +13,15 @@ function Filter({ filterField, options, startingOption }) {
     <StyledFilter>
       {options.map((option) => (
         <Option>
-          <FilterButton onClick={(e) => handleClick(option.key, e)}>
+          <FilterButton
+            $variant={variant}
+            $type={type}
+            $key={option.key}
+            onClick={(e) => handleClick(option.key, e)}
+          >
             {option.label}
           </FilterButton>
-          {type === option.key && <Underline />}
+          {type === option.key && !variant && <Underline />}
         </Option>
       ))}
     </StyledFilter>
@@ -57,8 +62,26 @@ const Option = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
+const ButtonStyle = {
+  tabs: css`
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    background-color: var(--hover-color);
+  `,
+};
+
 const FilterButton = styled.button`
   border: none;
   background-color: inherit;
   color: var(--text-color);
+
+  ${({ $variant, $type, $key }) =>
+    $variant && $type === $key && ButtonStyle[$variant]}
+
+  padding:  ${({ $variant }) => $variant && "0.5rem 1rem"};
+  &:hover {
+    background-color: ${({ $variant }) => $variant && "var(--hover-color)"};
+    border-radius: 25px;
+    transition: background-color 0.2s;
+  }
 `;

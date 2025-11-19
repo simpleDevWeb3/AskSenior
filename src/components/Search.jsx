@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { HiOutlineSearch } from "react-icons/hi";
 import { Dropdown, useDropdown } from "./Dropdown";
+import { useState } from "react";
 
-
-const StyledSearchBar = styled.div`
+const StyledSearchBar = styled.form`
   background-color: var(--tertiary-color);
   border-radius: 25px;
   border: 1px solid #ccc;
@@ -49,31 +49,50 @@ const Layout = styled.div`
   gap: 0.5rem;
 `;
 
-function Search() {
-  const { open } = useDropdown();
+function Search({ onSearch, onInput }) {
+  const [query, setQuery] = useState("");
+  const { close } = useDropdown();
+  
+  function handleSearch(e) {
+    e.preventDefault();
+    if (!query.trim()) return;
+    onSearch?.(query);
+    close();
+  }
 
+  function handleInput(e) {
+    const { value } = e.target;
+
+    setQuery(value);
+    onInput?.();
+  }
   return (
-    <StyledSearchBar>
+    <StyledSearchBar onSubmit={(e) => handleSearch(e)}>
       <Dropdown.Trigger>
         <Layout>
           <SearchIcon />
           <StyledInput
             type="text"
             placeholder="search post"
-            onChange={() => {
-              open();
-            }}
+            onChange={(e) => handleInput(e)}
+            value={query}
           />
         </Layout>
       </Dropdown.Trigger>
 
-      {/* Dropdown suggestion list */}
-      <Dropdown.List>
-        <Dropdown.Item>Latte Recipes</Dropdown.Item>
-        <Dropdown.Item>Coffee Beans</Dropdown.Item>
-        <Dropdown.Item>Nearby Cafes</Dropdown.Item>
-        <Dropdown.Item>Equipment Reviews</Dropdown.Item>
-      </Dropdown.List>
+      {
+        /* Dropdown suggestion list */
+        query && (
+          <Dropdown.List>
+            <Dropdown.Item onClick={() => onSearch?.(query)}>
+              {query}
+            </Dropdown.Item>
+            <Dropdown.Item>{query}</Dropdown.Item>
+            <Dropdown.Item>{query}</Dropdown.Item>
+            <Dropdown.Item>{query}</Dropdown.Item>
+          </Dropdown.List>
+        )
+      }
     </StyledSearchBar>
   );
 }

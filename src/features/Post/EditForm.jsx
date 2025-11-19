@@ -1,18 +1,17 @@
-
 import styled from "styled-components";
 import Search from "../../components/Search";
 import { Dropdown } from "../../components/Dropdown";
-
 import { HiArrowDown } from "react-icons/hi2";
 import { HiChevronDown } from "react-icons/hi";
 import Filter from "../../components/Filter";
-
 import { BsTrashFill, BsUpload } from "react-icons/bs";
 import { FaTrash } from "react-icons/fa";
 import ButtonIcon from "../../components/ButtonIcon";
 import { usePostForm } from "./usePostForm";
+import { useModal } from "../../context/ModalContext";
 
-function PostForm({ onSubmit }) {
+function EditForm({ onSubmit }) {
+  const { modalData } = useModal();
   const {
     type,
     formData,
@@ -32,13 +31,12 @@ function PostForm({ onSubmit }) {
     handleMouseLeave,
     handleCancelImage,
     handleSubmit,
-  } = usePostForm(onSubmit);
+  } = usePostForm(onSubmit, modalData);
 
-  
   return (
     <Layout>
       <FormContainer onSubmit={handleSubmit}>
-        <Title>Create a Post</Title>
+        <Title>Edit Post</Title>
 
         {error && <ErrorMsg>{error}</ErrorMsg>}
         <FormGroup>
@@ -134,7 +132,7 @@ function PostForm({ onSubmit }) {
   );
 }
 
-export default PostForm;
+export default EditForm;
 
 /* ---------- Styled Components ---------- */
 const ActionContainer = styled.div`
@@ -195,8 +193,11 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  width: 60%;
+
+  width: 30rem;
+  min-width: 20rem;
   max-width: 50rem;
+
   color: var(--text-color);
 
   @media (max-width: 1000px) {

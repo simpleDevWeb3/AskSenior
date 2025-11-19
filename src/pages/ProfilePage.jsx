@@ -47,9 +47,9 @@ export default ProfilePage;
 const PageContainer = styled.div`
   max-width: 900px;
   transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(18rem)" : "translateX(15rem)"};
+    props.isSidebarOpen ? "translateX(5rem)" : "translateX(0rem)"};
   transition: transform 0.3s ease-in-out;
-
+  margin: auto;
   @media (max-width: 800px) {
     padding-top: 4rem;
   }
@@ -93,7 +93,7 @@ const AvatarContainer = styled.div`
   height: 6rem;
   overflow: hidden;
   border-radius: 50%;
-  margin-left: 1rem;
+
 `;
 const HeroEl = styled.div`
   width: 100%;
@@ -102,5 +102,5 @@ const HeroEl = styled.div`
   position: relative;
 `;
 const OperationContainer = styled.div`
-  margin-left: 1rem;
+
 `;

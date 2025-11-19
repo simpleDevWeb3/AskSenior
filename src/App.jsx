@@ -12,6 +12,7 @@ import LoginForm from "./features/Auth/LoginForm";
 import CommunityForm from "./features/Community/CommunityForm";
 import { Selector } from "./components/Selector";
 import AuthForm from "./features/Auth/AuthForm";
+import EditForm from "./features/Post/EditForm";
 
 //import { Menus } from "./components/Menus";
 
@@ -75,17 +76,19 @@ function App() {
         <Sidebar />
 
         <OverlayDiv $isOpen={isSidebarOpen} />
-     
-          <Modal id={"Login"}>
-            <AuthForm />
-          </Modal>
-      
+
+        <Modal id={"Login"}>
+          <AuthForm />
+        </Modal>
+
         <Selector>
           <Modal id={"Create Community"}>
             <CommunityForm />
           </Modal>
         </Selector>
-
+        <Modal id={"Edit Post"}>
+          <EditForm />
+        </Modal>
         <Menus>
           <Content>
             <Outlet />
