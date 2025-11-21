@@ -129,19 +129,19 @@ function UserCommented() {
 
 function User_Post({ data }) {
   const { openModal } = useModal();
-  
+
   return (
     <PostBody>
       <PostHeader>
         <PostProfile />
-        <ButtonIcon size="rounded" action={() => openModal("Edit Post", data)}>
-          <HiPencil />
-        </ButtonIcon>
       </PostHeader>
       <PostContent />
       <StyledAction>
         <VoteBtn />
         <CommentBtn />
+        <ButtonIcon size="rounded" action={() => openModal("Edit Post", data)}>
+          <HiPencil />
+        </ButtonIcon>
       </StyledAction>
     </PostBody>
   );

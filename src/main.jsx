@@ -35,7 +35,17 @@ import Overview from "./features/Dashboard/Overview.jsx";
 import ManageUser from "./features/Dashboard/ManageUser.jsx";
 import ManagePost from "./features/Dashboard/ManagePost.jsx";
 import ManageCommutiy from "./features/Dashboard/ManageCommunity.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      //staleTime: 60 * 1000,
+      staleTime: 0,
+    },
+  },
+});
+window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 const router = createBrowserRouter([
   {
     path: "/",
@@ -119,14 +129,16 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <DarkThemeProvider>
-        <ModalProvider>
-          <SidebarProvider>
-            <RouterProvider router={router} />
-          </SidebarProvider>
-        </ModalProvider>
-      </DarkThemeProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <DarkThemeProvider>
+          <ModalProvider>
+            <SidebarProvider>
+              <RouterProvider router={router} />
+            </SidebarProvider>
+          </ModalProvider>
+        </DarkThemeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
