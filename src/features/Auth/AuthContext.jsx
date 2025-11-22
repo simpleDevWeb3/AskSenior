@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect } from "react";
 import { useUser } from "./useUser";
 import { useNavigate } from "react-router-dom";

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export function useLogout() {
   const queryClient = useQueryClient();
 
-  const { mutate: logout, isPending: isLoading } = useMutation({
+  const { mutate: logout, isPending: isLoadingLogout } = useMutation({
     mutationFn: () => logoutApi(),
     onSuccess: () => {
       // Remove cache and localStorage
@@ -20,5 +20,5 @@ export function useLogout() {
     },
   });
 
-  return { logout, isLoading };
+  return { logout, isLoadingLogout };
 }

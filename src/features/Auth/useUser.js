@@ -5,13 +5,13 @@ export function useUser() {
   const { isLoading, data, isFetching } = useQuery({
     queryKey: ["user"],
     queryFn: getCurrentUserApi,
- 
+
     initialData: () => {
       const storedUser = localStorage.getItem("userProfile");
       return storedUser ? JSON.parse(storedUser) : undefined;
     },
-    // Optional: refetch on window focus
-    refetchOnWindowFocus: true,
+
+    refetchOnWindowFocus: false,
   });
 
   const isAuthenticated = !!data;

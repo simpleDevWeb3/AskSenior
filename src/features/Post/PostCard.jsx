@@ -26,6 +26,8 @@ import VoteBtn from "../../components/VoteBtn";
 import CommentBtn from "../../components/CommentBtn";
 import ButtonIcon from "../../components/ButtonIcon";
 import { useModal } from "../../context/ModalContext";
+import { useAuth } from "../Auth/AuthContext";
+import { useUser } from "../Auth/useUser";
 
 function PostCard({
   postData,
@@ -70,6 +72,8 @@ function PostCard({
 }
 function CommentPost({ children, postData }) {
   const { isShowTextField } = useFieldText();
+  const { isAuthenticated } = useAuth();
+
   console.log("post id: ", postData.id);
   return (
     <>
@@ -84,13 +88,14 @@ function CommentPost({ children, postData }) {
         <PostContent />
         <PostSocialFeatures />
 
-        {isShowTextField === postData.id && <TextFields />}
+        {isAuthenticated && isShowTextField === postData.id && <TextFields />}
       </PostBody>
     </>
   );
 }
 
 function UserCommented() {
+  const { user } = useUser();
   return (
     <>
       <AvatarContainer>
@@ -117,7 +122,7 @@ function UserCommented() {
           </div>
         </PostHeader>
         <p style={{ fontSize: "0.8rem" }}>
-          <b> SuperSimple </b>replied to <b> u/Elex</b>
+          <b> {user.name} </b>replied to <b> u/Elex</b>
         </p>
         <br />
         <PostContent />

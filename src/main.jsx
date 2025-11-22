@@ -37,7 +37,7 @@ import ManagePost from "./features/Dashboard/ManagePost.jsx";
 import ManageCommutiy from "./features/Dashboard/ManageCommunity.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+import ProtectedRoute from "./components/ProtectedRoute"; 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -47,12 +47,22 @@ const queryClient = new QueryClient({
   },
 });
 window.__TANSTACK_QUERY_CLIENT__ = queryClient;
-import ProtectedRoute from "./components/ProtectedRoute"; // adjust path
+
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <AuthProvider>
+        <DarkThemeProvider>
+          <ModalProvider>
+            <SidebarProvider>
+              <App />
+            </SidebarProvider>
+          </ModalProvider>
+        </DarkThemeProvider>
+      </AuthProvider>
+    ),
     children: [
       { index: true, element: <HomePage /> },
       { path: "community/:communityId", element: <CommunityPage /> },
@@ -133,14 +143,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-
-      <DarkThemeProvider>
-        <ModalProvider>
-          <SidebarProvider>
-            <RouterProvider router={router} />
-          </SidebarProvider>
-        </ModalProvider>
-      </DarkThemeProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>
 );

@@ -4,9 +4,11 @@ import { useScrollRestore } from "../hook/useScrollRestore";
 import Avatar from "../components/Avatar";
 import Tabs from "../components/Tabs";
 import { Outlet } from "react-router-dom";
+import { useUser } from "../features/Auth/useUser";
 
 function ProfilePage() {
   const { isSidebarOpen } = useSidebar();
+  const { user } = useUser();
   useScrollRestore();
   const links = [
     { key: "POST", label: "Post", index: true },
@@ -27,8 +29,8 @@ function ProfilePage() {
 
         <InfoContainer>
           <div>
-            <UsernameBig>User 101</UsernameBig>
-            <UsernameSmall>@User 101</UsernameSmall>
+            <UsernameBig>{user.name}</UsernameBig>
+            <UsernameSmall>@{user.name}</UsernameSmall>
           </div>
         </InfoContainer>
       </ProfileHeader>
@@ -93,7 +95,6 @@ const AvatarContainer = styled.div`
   height: 6rem;
   overflow: hidden;
   border-radius: 50%;
-
 `;
 const HeroEl = styled.div`
   width: 100%;
@@ -101,6 +102,4 @@ const HeroEl = styled.div`
   background-color: purple;
   position: relative;
 `;
-const OperationContainer = styled.div`
-
-`;
+const OperationContainer = styled.div``;

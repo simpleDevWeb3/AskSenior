@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export function useLogin() {
   const queryClient = useQueryClient();
 
-  const { mutate: login, isPending: isLoading } = useMutation({
+  const { mutate: login, isPending: isLoadingLogin } = useMutation({
     mutationFn: ({ email, password }) => loginApi({ email, password }),
     onSuccess: (data) => {
       if (!data?.profile || !data?.accessToken) return;
@@ -28,5 +28,5 @@ export function useLogin() {
     },
   });
 
-  return { login, isLoading };
+  return { login, isLoadingLogin };
 }

@@ -51,7 +51,7 @@ function CommentPost() {
         onClickComment={() => toggleTextField(post.id)}
       ></PostCard>
 
-      {isShowTextField === post.id ? (
+      {isAuthenticated && isShowTextField === post.id ? (
         <TextFields />
       ) : (
         <ShareYourThougt

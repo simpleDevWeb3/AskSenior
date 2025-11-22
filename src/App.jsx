@@ -15,19 +15,28 @@ import AuthForm from "./features/Auth/AuthForm";
 import EditForm from "./features/Post/EditForm";
 import { AuthProvider } from "./features/Auth/AuthContext";
 import { Toaster } from "react-hot-toast";
+import Loading from "./components/Loading";
+import { useUser } from "./features/Auth/useUser";
+import { useLogin } from "./features/Auth/useLogin";
+import { useLogout } from "./features/Auth/useLogout";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 //import { Menus } from "./components/Menus";
 
 const StyledApp = styled.div`
   display: grid;
-  grid-template-rows: auto 1fr; /* Header 20%, rest 80% */
+  grid-template-rows: auto 1fr;
   height: 100%;
-  background-color: var(--background-color);
+  background-color: var(--background-color, #141414);
   transition: background-color 0.15s ease-in;
 
   & * {
     color: var(--text-color);
   }
+`;
+const MainWrapper = styled.div`
+  min-height: 100vh;
+  background-color: var(--background-color, #141414);
 `;
 
 const Layout = styled.div`
@@ -61,7 +70,7 @@ const Content = styled.main`
 
   height: 100%;
   width: 100%;
-
+  background-color: var(--background-color, #121212);
   @media (max-width: 800px) {
     padding: 0rem;
   }
@@ -70,8 +79,12 @@ const Content = styled.main`
 function App() {
   const { isSidebarOpen } = useSidebar();
 
+  const globalIsMutating = useIsMutating();
+  const globalIsFetching = useIsFetching();
+  const isLoading = globalIsMutating > 0 || globalIsFetching > 0;
   return (
-    <AuthProvider>
+    <>
+      {isLoading && <Loading />}
       <StyledApp>
         <Navbar />
 
@@ -94,7 +107,9 @@ function App() {
           </Modal>
           <Menus>
             <Content>
-              <Outlet />
+              <MainWrapper>
+                <Outlet />
+              </MainWrapper>
             </Content>
           </Menus>
         </Layout>
@@ -118,10 +133,11 @@ function App() {
             backgroundColor: "var(--background-color)",
             color: "var(--text-color)",
             boxShadow: "1px 5px 5px var(--hover-color)",
+            border: "1px solid var(--hover-color)",
           },
         }}
       />
-    </AuthProvider>
+    </>
   );
 }
 
