@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { loginApi } from "../../services/AuthApi";
 import toast from "react-hot-toast";
 
-export function useLogin() {
+export function useLogin(handleSuccess) {
   const queryClient = useQueryClient();
 
   const { mutate: login, isPending: isLoadingLogin } = useMutation({
@@ -22,9 +22,12 @@ export function useLogin() {
       });
 
       toast.success("Login Succesfully");
+      handleSuccess?.();
     },
     onError: (err) => {
       console.log("Login error: ", err);
+      toast.error(err);
+      throw err;
     },
   });
 

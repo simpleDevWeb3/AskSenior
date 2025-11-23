@@ -18,18 +18,14 @@ const Overlay = styled.div`
 `;
 
 const Spinner = styled.div`
-  width: 70px;
-  height: 70px;
+  width: 20px;
+  height: 20px;
   border: 6px solid rgba(255, 255, 255, 0.2);
   border-top-color: white;
   border-radius: 50%;
   animation: ${spin} 0.9s linear infinite;
 `;
 
-export default function Loading() {
-  return (
-    <Overlay>
-      <Spinner />
-    </Overlay>
-  );
+export default function SpinnerMini() {
+  return <Spinner />;
 }

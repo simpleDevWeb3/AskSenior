@@ -5,15 +5,17 @@ import RegisterProfile from "./RegisterProfile";
 import RegisterStyling from "./RegisterStyling";
 import RegisterUser from "./RegisterUser";
 import { useModal } from "../../context/ModalContext";
-import { useAuth } from "./AuthContext";
 import { Selector } from "../../components/Selector";
 import { HiOutlineArrowLeft, HiOutlineBarsArrowUp } from "react-icons/hi2";
 import ButtonIcon from "../../components/ButtonIcon";
+import { useRegister } from "./useRegister";
+import { validImgFile } from "../../helpers/formHelper";
+import SpinnerMini from "../../components/SpinnerMini";
 
 function RegisterForm({ toLogin }) {
   const navigate = useNavigate();
   const { closeModal } = useModal();
-  const { logIn } = useAuth();
+  const { register, isLoadingRegister } = useRegister(closeModal);
 
   const steps = [
     {
@@ -48,23 +50,27 @@ function RegisterForm({ toLogin }) {
       component: ({ formData, handleChange }) => (
         <RegisterStyling formData={formData} onChange={handleChange} />
       ),
-      validate: () => true,
+      validate: (formData) => {
+        const { icon, banner } = formData;
+
+        return validImgFile(icon) && validImgFile(banner);
+      },
     },
   ];
 
   return (
     <>
       <ButtonIcon action={toLogin} icon={<HiOutlineArrowLeft />}>
-        Login
+        {isLoadingRegister ? <SpinnerMini /> : "Login"}
       </ButtonIcon>
 
       <Selector limit={0}>
         <MultiStepForm
           steps={steps}
-          onSuccess={() => {
-            navigate("/profile");
-            closeModal();
-            logIn();
+          onSuccess={(formData) => {
+            register(formData);
+
+            navigate("/");
           }}
         />
       </Selector>

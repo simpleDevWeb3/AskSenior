@@ -15,11 +15,8 @@ import AuthForm from "./features/Auth/AuthForm";
 import EditForm from "./features/Post/EditForm";
 import { AuthProvider } from "./features/Auth/AuthContext";
 import { Toaster } from "react-hot-toast";
-import Loading from "./components/Loading";
-import { useUser } from "./features/Auth/useUser";
-import { useLogin } from "./features/Auth/useLogin";
 import { useLogout } from "./features/Auth/useLogout";
-import { useIsFetching, useIsMutating } from "@tanstack/react-query";
+import Spinner from "./components/Spinner";
 
 //import { Menus } from "./components/Menus";
 
@@ -79,12 +76,8 @@ const Content = styled.main`
 function App() {
   const { isSidebarOpen } = useSidebar();
 
-  const globalIsMutating = useIsMutating();
-  const globalIsFetching = useIsFetching();
-  const isLoading = globalIsMutating > 0 || globalIsFetching > 0;
   return (
     <>
-      {isLoading && <Loading />}
       <StyledApp>
         <Navbar />
 

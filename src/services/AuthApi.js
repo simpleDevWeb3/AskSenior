@@ -8,24 +8,40 @@ async function loginApi(formData) {
     );
     console.log(data);
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 
 async function registerApi(formData) {
+  const fd = new FormData();
+  fd.append("Email", formData.Email); 
+  fd.append("Password", formData.Password);
+  fd.append("name", formData.username);
+  fd.append("bio", formData.userDescription);
+
+  // Files
+  fd.append("AvatarFile", formData.icon); // File object
+  fd.append("BannerFile", formData.banner); // File object
+
+  // Preferences (array)
+  formData.preference.forEach((p) => fd.append("preference", p));
+
   try {
-    return await PostReq("https://localhost:7071/api/Auth/signup", formData);
-  } catch (error) {
-    console.log(error);
+    return await PostReq("https://localhost:7071/api/Auth/signup", fd);
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 
 async function logoutApi(formData) {
   try {
     return await PostReq("https://localhost:7071/api/Auth/logout", formData);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 }
 
@@ -49,7 +65,7 @@ async function getCurrentUserApi() {
     return data.profile || null;
   } catch (err) {
     console.log("getCurrentUserApi error:", err);
-    return null;
+    throw err;
   }
 }
 

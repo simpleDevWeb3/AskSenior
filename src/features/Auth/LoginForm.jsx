@@ -7,19 +7,21 @@ import ButtonIcon from "../../components/ButtonIcon";
 import Input from "../../components/Input";
 import { useLogin } from "./useLogin";
 
+import SpinnerMini from "../../components/SpinnerMini";
+
 function LoginForm({ onLogin, onClick }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const { logIn } = useAuth();
-  const { login, isLoading } = useLogin();
+
   const { closeModal } = useModal();
+  const { login, isLoadingLogin } = useLogin(closeModal);
   function handleChange(e, field) {
     const { value } = e.target;
 
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
@@ -28,12 +30,14 @@ function LoginForm({ onLogin, onClick }) {
     }
 
     setError("");
-    if (onLogin) {
-      onLogin(formData);
-    }
-    login(formData);
 
-    closeModal();
+    try {
+      const userData = await login(formData); // wait for login
+      // optionally update parent component
+      onLogin?.(userData);
+    } catch (err) {
+      setError(err?.message || "Login failed");
+    }
   }
 
   return (
@@ -46,7 +50,10 @@ function LoginForm({ onLogin, onClick }) {
 
       <Input handleInput={(e) => handleChange(e, "password")}>Password</Input>
 
-      <ButtonIcon>Login</ButtonIcon>
+      <ButtonIcon disabled={isLoadingLogin}>
+        {" "}
+        {isLoadingLogin ? <SpinnerMini /> : "log in"}
+      </ButtonIcon>
 
       <SignupPrompt>
         Don’t have an account?{" "}

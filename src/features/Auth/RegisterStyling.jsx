@@ -4,28 +4,11 @@ import Avatar from "../../components/Avatar";
 import { PiPictureInPicture } from "react-icons/pi";
 import { FcPicture } from "react-icons/fc";
 import { AiFillPicture } from "react-icons/ai";
+import { handleFileImgUpload } from "../../helpers/formHelper";
 
 function RegisterStyling({ formData, onChange }) {
   const [bannerImage, setBannerImage] = useState(null);
   const [iconImage, setIconImage] = useState("/avatar.jpg");
-
-  function handleBannerUpload(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setBannerImage(imageUrl);
-      onChange("banner", imageUrl);
-    }
-  }
-
-  function handleIconUpload(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setIconImage(imageUrl);
-      onChange("icon", imageUrl);
-    }
-  }
 
   return (
     <Wrapper>
@@ -46,7 +29,9 @@ function RegisterStyling({ formData, onChange }) {
               type="file"
               accept="image/*"
               id="bannerUpload"
-              onChange={handleBannerUpload}
+              onChange={(e) =>
+                handleFileImgUpload(e, setBannerImage, onChange, "banner")
+              }
             />
             <UploadLabel htmlFor="bannerUpload">
               {" "}
@@ -62,7 +47,9 @@ function RegisterStyling({ formData, onChange }) {
               type="file"
               accept="image/*"
               id="iconUpload"
-              onChange={handleIconUpload}
+              onChange={(e) =>
+                handleFileImgUpload(e, setIconImage, onChange, "icon")
+              }
             />
             <UploadLabel htmlFor="iconUpload">
               Add

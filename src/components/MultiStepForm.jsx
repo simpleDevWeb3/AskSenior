@@ -2,17 +2,18 @@ import styled from "styled-components";
 import Carousel from "./Carousel";
 import { useState } from "react";
 import ButtonIcon from "./ButtonIcon";
+import { updateFormData } from "../helpers/formHelper";
+
 //Steps => component data => key, component, validate
 //initialData => data initailly passed inside
 function MultiStepForm({ steps = [], initialData = {}, onSuccess, onError }) {
   const [formData, setFormData] = useState(initialData);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+
   // Update form data
   const handleChange = (field, value) => {
-    //Field is equivilent of the data field
-    //value is data passed from the object
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => updateFormData(prev, field, value));
   };
 
   const totalSteps = steps.length;
@@ -28,7 +29,7 @@ function MultiStepForm({ steps = [], initialData = {}, onSuccess, onError }) {
   const handleSubmit = () => {
     console.log("Final form data:", formData);
     // Add API call or other logic here
-    onSuccess?.();
+    onSuccess?.(formData);
     setFormData({});
     setCurrentSlide(0);
     onError?.();

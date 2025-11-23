@@ -24,7 +24,7 @@ function ProfilePage() {
     <PageContainer isSidebarOpen={isSidebarOpen}>
       <ProfileHeader>
         <AvatarContainer>
-          <Avatar src="/avatar.jpg" />
+          <Avatar src={user.avatar_url} />
         </AvatarContainer>
 
         <InfoContainer>

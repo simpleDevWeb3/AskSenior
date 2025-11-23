@@ -32,6 +32,9 @@ import useSidebar from "../hook/useSidebar";
 import { useDashboard } from "../hook/useDashboard";
 import { IoExitOutline } from "react-icons/io5";
 import { useLogout } from "../features/Auth/useLogout";
+import Avatar from "./Avatar";
+import { useUser } from "../features/Auth/useUser";
+import UserAvatar from "./UserAvatar";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -77,9 +80,10 @@ const Grouped = styled.div`
   justify-content: center;
 `;
 
-const User = styled(HiOutlineUserCircle)`
-  color: var(--primary-color);
-  font-size: 1.7rem;
+const AvatarWrapper = styled.div`
+  width: 1.7rem;
+  border-radius: 50%;
+  overflow: hidden;
 `;
 
 const SearchContainer = styled.div`
@@ -132,7 +136,9 @@ function Navbar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileSearch, setMobileSearch] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 800);
+
   console.log("isAuth: ", isAuthenticated);
+
   function handleSearch(query) {
     setSearchParams({ q: query });
     navigate(`/search?q=${query}`);
@@ -241,15 +247,29 @@ function Navbar() {
                     size="rounded"
                     shape="circle"
                     variant="text"
-                    icon={<User />}
+                    icon={
+                      <AvatarWrapper>
+                        <UserAvatar />
+                      </AvatarWrapper>
+                    }
                   />
                 </Dropdown.Trigger>
                 <Dropdown.List position="right">
                   <Dropdown.Item onClick={() => navigate("/profile")}>
-                    <HiOutlineUser
-                      style={{ fontSize: "1.2rem", cursor: "pointer" }}
-                    />
-                    view profile
+                    <AvatarWrapper style={{ width: "2.5rem" }}>
+                      <UserAvatar />
+                    </AvatarWrapper>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "start",
+                        alignItems: "start",
+                      }}
+                    >
+                      <p>view profile</p>
+                      <p>{user?.name}</p>
+                    </div>
                   </Dropdown.Item>
 
                   <Dropdown.Item onClose={false}>
