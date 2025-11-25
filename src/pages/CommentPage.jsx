@@ -11,11 +11,11 @@ import { useScrollRestore } from "../hook/useScrollRestore";
 
 function CommentPage() {
   const navigate = useNavigate();
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
   useScrollRestore();
   return (
     <FieldTextProvider>
-      <StyledContainer isSidebarOpen={isSidebarOpen}>
+      <StyledContainer $isSidebarOpen={$isSidebarOpen}>
         <NavigateBack>
           <ButtonIcon
             action={() => navigate(-1)}
@@ -46,8 +46,8 @@ const StyledContainer = styled.div`
   width: 80%;
   justify-content: center;
   padding: 2rem 1rem;
-  transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(17rem)" : "translateX(5rem)"};
+  transform: ${({ $isSidebarOpen }) =>
+    $isSidebarOpen ? "translateX(17rem)" : "translateX(5rem)"};
   transition: all 0.4s ease;
   box-sizing: border-box;
   align-items: flex-start;

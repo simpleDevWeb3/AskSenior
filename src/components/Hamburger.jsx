@@ -4,12 +4,12 @@ import ButtonIcon from "./ButtonIcon";
 
 import useSidebar from "../hook/useSidebar";
 
-const StyledHamburger= styled(HiOutlineMenu)`
+const StyledHamburger = styled(HiOutlineMenu)`
   font-size: 1.9rem;
 `;
 function Hamburger() {
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
-  console.log(isSidebarOpen, " ,Menu");
+  const { $isSidebarOpen, toggleSidebar } = useSidebar();
+  console.log($isSidebarOpen, " ,Menu");
   return (
     <ButtonIcon
       size="rounded"

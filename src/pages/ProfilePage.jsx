@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 import { useUser } from "../features/Auth/useUser";
 
 function ProfilePage() {
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
   const { user } = useUser();
 
   const encodedBannerUrl = user.banner_url ? encodeURI(user.banner_url) : null;
@@ -23,7 +23,7 @@ function ProfilePage() {
   ];
 
   return (
-    <PageContainer isSidebarOpen={isSidebarOpen}>
+    <PageContainer $isSidebarOpen={$isSidebarOpen}>
       <ProfileHeader>
         <Banner $image={encodedBannerUrl}>
           <AvatarContainer>
@@ -54,8 +54,8 @@ function ProfilePage() {
 export default ProfilePage;
 const PageContainer = styled.div`
   max-width: 900px;
-  transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(5rem)" : "translateX(0rem)"};
+  transform: ${({ $isSidebarOpen }) =>
+    $isSidebarOpen ? "translateX(5rem)" : "translateX(0rem)"};
   transition: transform 0.3s ease-in-out;
   margin: auto;
   @media (max-width: 800px) {

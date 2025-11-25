@@ -4,10 +4,10 @@ import useSidebar from "../hook/useSidebar";
 import { useScrollRestore } from "../hook/useScrollRestore";
 
 function CommunitiesPage() {
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
   useScrollRestore();
   return (
-    <PageContainer isSidebarOpen={isSidebarOpen}>
+    <PageContainer $isSidebarOpen={$isSidebarOpen}>
       <CommunitiesLayout />
     </PageContainer>
   );
@@ -17,8 +17,8 @@ export default CommunitiesPage;
 
 const PageContainer = styled.div`
   max-width: 80%;
-  transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(18rem)" : "15rem"};
+  transform: ${({ $isSidebarOpen }) =>
+    $isSidebarOpen ? "translateX(18rem)" : "15rem"};
   transition: transform 0.3s ease-in-out;
 
   @media (max-width: 1000px) {

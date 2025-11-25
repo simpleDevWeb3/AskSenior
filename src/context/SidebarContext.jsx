@@ -5,7 +5,7 @@ const SidebarContext = createContext();
 
 // Provider
 function SidebarProvider({ children }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [$isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isManualOpen, setIsManualOpen] = useState(false);
   const [isManualOpenResize, setIsManualOpenResize] = useState(false);
 
@@ -29,7 +29,7 @@ function SidebarProvider({ children }) {
   return (
     <SidebarContext.Provider
       value={{
-        isSidebarOpen,
+        $isSidebarOpen,
         openSidebar,
         closeSidebar,
         toggleSidebar,

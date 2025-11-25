@@ -12,9 +12,18 @@ export async function PostReq(apiUrl, data) {
 
     return res.data;
   } catch (err) {
-    console.error(err);
-    const backendMsg = err.response?.data?.msg;
-    throw backendMsg || err.message || "Unknown error";
+   
+    const errorData = err.response?.data;
+
+    
+    const backendMsg =
+      errorData?.error ||
+      errorData?.msg ||
+      errorData?.message ||
+      err.message ||
+      "Unknown error";
+
+    throw backendMsg;
   }
 }
 

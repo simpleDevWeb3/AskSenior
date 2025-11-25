@@ -4,10 +4,11 @@ import Avatar from "../../components/Avatar";
 import { PiPictureInPicture } from "react-icons/pi";
 import { FcPicture } from "react-icons/fc";
 import { AiFillPicture } from "react-icons/ai";
-import { handleFileImgUpload } from "../../helpers/formHelper";
+import { handleFileImgUpload, validImgFile } from "../../helpers/formHelper";
 import Error from "../../components/Error";
+import { GiIvoryTusks } from "react-icons/gi";
 
-function RegisterStyling({ formData, onChange }) {
+function RegisterStyling({ onChange, formData }) {
   const [error, setError] = useState({});
   const [bannerImage, setBannerImage] = useState(null);
   const [iconImage, setIconImage] = useState("/avatar.jpg");
@@ -31,9 +32,20 @@ function RegisterStyling({ formData, onChange }) {
               type="file"
               accept="image/*"
               id="bannerUpload"
-              onChange={(e) =>
-                handleFileImgUpload(e, setBannerImage, onChange, "banner")
-              }
+              onChange={(e) => {
+                handleFileImgUpload(e, setBannerImage, onChange, "banner");
+                const currentFile = e.target.files[0];
+                const isValidBanner = validImgFile(currentFile);
+
+                console.log(isValidBanner.error);
+                console.log(isValidBanner.isValid);
+                setError((prev) => ({
+                  ...prev,
+                  isValidBanner: !isValidBanner.isValid
+                    ? isValidBanner.error
+                    : "",
+                }));
+              }}
             />
             <UploadLabel htmlFor="bannerUpload">
               {" "}
@@ -41,7 +53,7 @@ function RegisterStyling({ formData, onChange }) {
               <AiFillPicture />
             </UploadLabel>
           </OptionGroup>
-
+          {error.isValidBanner && <Error msg={error.isValidBanner} />}
           {/* Icon Upload */}
           <OptionGroup>
             <label style={{ flex: 1 }}>Profile Icon</label>
@@ -58,7 +70,6 @@ function RegisterStyling({ formData, onChange }) {
               <AiFillPicture />
             </UploadLabel>
           </OptionGroup>
-          <Error msg={"Only allow *png"} />
         </LeftPanel>
 
         {/* RIGHT PANEL */}

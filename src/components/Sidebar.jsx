@@ -40,8 +40,8 @@ const StyledSidebar = styled.aside`
   z-index: 99;
   width: 100%;
   max-width: 17rem;
-  transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(0rem)" : "translateX(-20rem)"};
+  transform: ${({ $isSidebarOpen }) =>
+    $isSidebarOpen ? "translateX(0rem)" : "translateX(-20rem)"};
   transition: transform 0.4s ease, background-color 0.15s ease;
 
   @media (max-width: 1300px) {
@@ -105,7 +105,7 @@ function Sidebar() {
   const { isDashboardRoute } = useDashboard();
   const { isAuthenticated } = useAuth();
   const {
-    isSidebarOpen,
+    $isSidebarOpen,
     closeSidebar,
     openSidebar,
     setIsManualOpen,
@@ -161,7 +161,7 @@ function Sidebar() {
   return (
     <StyledSidebar
       $isDashboard={isDashboardRoute}
-      isSidebarOpen={isSidebarOpen}
+      $isSidebarOpen={$isSidebarOpen}
     >
       {isDashboardRoute ? (
         <>

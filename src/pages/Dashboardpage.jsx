@@ -4,10 +4,10 @@ import useSidebar from "../hook/useSidebar";
 import { useScrollRestore } from "../hook/useScrollRestore";
 
 function Dashboardpage() {
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
   useScrollRestore();
   return (
-    <PageContainer $isSidebarOpen={isSidebarOpen}>
+    <PageContainer $isSidebarOpen={$isSidebarOpen}>
       <Outlet />
     </PageContainer>
   );
@@ -15,7 +15,6 @@ function Dashboardpage() {
 
 export default Dashboardpage;
 const PageContainer = styled.div`
-
   transform: ${({ $isSidebarOpen }) =>
     $isSidebarOpen ? "translateX(17rem)" : "translateX(0rem)"};
   transition: transform 0.4s ease;

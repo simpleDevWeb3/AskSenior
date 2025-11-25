@@ -74,7 +74,7 @@ const Content = styled.main`
 `;
 
 function App() {
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
 
   return (
     <>
@@ -84,7 +84,7 @@ function App() {
         <Layout>
           <Sidebar />
 
-          <OverlayDiv $isOpen={isSidebarOpen} />
+          <OverlayDiv $isOpen={$isSidebarOpen} />
 
           <Modal id={"Login"}>
             <AuthForm />

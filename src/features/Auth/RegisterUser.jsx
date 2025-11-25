@@ -4,22 +4,23 @@ import { useState } from "react";
 import Error from "../../components/Error";
 import { isDup, isValidFormat } from "../../helpers/formHelper";
 
-function RegisterUser({ onChange, formData }) {
+function RegisterUser({ onChange }) {
   const [errors, setErrors] = useState({});
 
-  function handleEmailInput(email) {
+  function handleEmailInput(mail) {
+    const email = mail.trim();
     const formatValid = isValidFormat(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, email);
     const dupValid = isDup("Admin@gmail.com", email);
 
     // Update parent form data
     onChange("Email", email);
     onChange("EmailFormatValid", formatValid);
-    onChange("EmailDuplicateValid", dupValid);
+    onChange("EmailIsDuplicate", dupValid);
 
     // Update child UI errors
     setErrors((prev) => ({
       ...prev,
-      email: formData.Email === "" ? "Required" : "",
+
       format: !formatValid
         ? "Please enter a valid email address (e.g., name@example.com)."
         : "",
@@ -40,7 +41,6 @@ function RegisterUser({ onChange, formData }) {
       isValidFormPassword: !isValidFormPassword
         ? "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)."
         : "",
-      password: password === "" ? "Required" : "",
     }));
   }
 
@@ -56,7 +56,7 @@ function RegisterUser({ onChange, formData }) {
           <Input handleInput={(e) => handleEmailInput(e.target.value)}>
             Email
           </Input>
-          {errors.email && <Error msg={errors.email} />}
+
           {errors.format && <Error msg={errors.format} />}
           {errors.duplicate && <Error msg={errors.duplicate} />}
         </Row>
@@ -68,7 +68,6 @@ function RegisterUser({ onChange, formData }) {
           {errors.isValidFormPassword && (
             <Error msg={errors.isValidFormPassword} />
           )}
-          {errors.password && <Error msg={errors.password} />}
         </Row>
       </div>
     </FormBody>

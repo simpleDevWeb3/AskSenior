@@ -4,7 +4,7 @@ import Tabs from "../components/Tabs";
 import { Outlet } from "react-router-dom";
 
 function SettingPage() {
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
   const tabs = [
     {
       key: "ACCOUNT",
@@ -21,7 +21,7 @@ function SettingPage() {
     },
   ];
   return (
-    <StyledPage isSidebarOpen={isSidebarOpen}>
+    <StyledPage $isSidebarOpen={$isSidebarOpen}>
       <h1>Settings</h1>
       <br />
       <Tabs basePath={"/Settings"} links={tabs} />
@@ -37,8 +37,8 @@ const StyledPage = styled.div`
     color: var(--text-color);
   }
 
-  transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(17rem)" : "translate(10rem)"};
+  transform: ${({ $isSidebarOpen }) =>
+    $isSidebarOpen ? "translateX(17rem)" : "translate(10rem)"};
   transition: transform 0.2s ease;
   @media (max-width: 800px) {
     transform: none;

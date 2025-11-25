@@ -13,7 +13,7 @@ const scrollPositions = {};
 
 function HomePosts() {
   const { handleClickPost, handleClickProfile } = usePostNavigation();
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
   const location = useLocation();
   const navType = useNavigationType();
   const containerRef = useRef(null);
@@ -47,7 +47,7 @@ function HomePosts() {
   return (
     <StyledContainer
       ref={containerRef}
-      $isSidebarOpen={isSidebarOpen}
+      $isSidebarOpen={$isSidebarOpen}
       navType={navType}
     >
       <PostWrapper>
@@ -71,8 +71,8 @@ const StyledContainer = styled.div`
   overflow-y: visible;
 
   @media (min-width: 1000px) {
-    transform: ${(props) =>
-      props.$isSidebarOpen ? "translateX(13rem)" : "translateX(5rem)"};
+    transform: ${({ $isSidebarOpen }) =>
+      $isSidebarOpen ? "translateX(13rem)" : "translateX(5rem)"};
     transition: ${(props) =>
       props.navType === "POP" ? "none" : "all 0.3s ease"};
   }

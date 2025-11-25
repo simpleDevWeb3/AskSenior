@@ -35,19 +35,27 @@ function validImgFile(
   allowedTypes = ALLOWED_IMAGE_TYPES,
   maxSize = MAX_IMAGE_SIZE
 ) {
-  if (!fileImg || !(fileImg instanceof File)) return false;
+  // FIX: Return an object with an error message, not just boolean 'false'
+  if (!fileImg || !(fileImg instanceof File)) {
+    return { isValid: false, error: "Invalid file or no file selected." };
+  }
 
   const { size, type } = fileImg;
 
   const isAllowImgType = (type) => allowedTypes.includes(type);
-
   const isSizeExceed = (size) => size > maxSize;
 
-  if (!isAllowImgType(type) || isSizeExceed(size)) return false;
+  if (!isAllowImgType(type))
+    return { isValid: false, error: `Only ${allowedTypes} format allowed.` };
 
-  return true;
+  if (isSizeExceed(size))
+    return {
+      isValid: false,
+      error: `Image size exceeded ${maxSize / 1000000}MB`,
+    };
+
+  return { isValid: true, error: "" };
 }
-
 /**
  * Handle file upload for form fields and generate a preview URL.
  *

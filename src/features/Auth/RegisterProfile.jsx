@@ -4,7 +4,7 @@ import { useState } from "react";
 import Error from "../../components/Error";
 import { isDup, isValidFormat } from "../../helpers/formHelper";
 
-function RegisterProfile({ name = "", description = "", onChange, formData }) {
+function RegisterProfile({ name = "", description = "", onChange }) {
   const [error, setError] = useState({});
 
   function handleUsername(username) {
@@ -15,24 +15,19 @@ function RegisterProfile({ name = "", description = "", onChange, formData }) {
     const usernameDup = isDup("tako", username);
     onChange?.("username", username);
     onChange?.("usernameDup", usernameDup);
-    onChange?.("usernameValidForm",usernameValidForm);
+    onChange?.("usernameValidForm", usernameValidForm);
     setError((prev) => ({
       ...prev,
       usernameValidForm: !usernameValidForm
         ? "Username must start with a letter, be between 3 and 16 characters long, and contain only letters, numbers, or underscores."
         : "",
-      username: username === "" ? "Required" : "",
+
       usernameDup: usernameDup ? "username has been taken" : "",
     }));
   }
 
   function handleDescription(description) {
     onChange?.("userDescription", description);
-
-    setError((prev) => ({
-      ...prev,
-      description: description === "" ? "Required" : "",
-    }));
   }
   return (
     <>
@@ -45,7 +40,6 @@ function RegisterProfile({ name = "", description = "", onChange, formData }) {
             Username
           </Input>
 
-          {error.username && <Error msg={error.username} />}
           {error.usernameDup && <Error msg={error.usernameDup} />}
 
           {error.usernameValidForm && <Error msg={error.usernameValidForm} />}
@@ -53,8 +47,6 @@ function RegisterProfile({ name = "", description = "", onChange, formData }) {
           <Input handleInput={(e) => handleDescription(e.target.value)}>
             Description
           </Input>
-
-          {error.description && <Error msg={error.description} />}
         </div>
 
         <ProfileCard>

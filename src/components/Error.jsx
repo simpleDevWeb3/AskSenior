@@ -1,4 +1,3 @@
-
 import styled from "styled-components";
 
 function Error({ msg, icon }) {
@@ -11,12 +10,12 @@ function Error({ msg, icon }) {
 }
 
 const StyledError = styled.p`
-  color: #ffffff;
+  color: #ffffff !important;
   text-align: center;
   display: flex;
   gap: 0.3rem;
   align-items: center;
-  background-color: #9f3333;
+  background-color: #f76c6c;
   border-radius: 8px;
   margin-top: 1rem;
   padding: 0.5rem;

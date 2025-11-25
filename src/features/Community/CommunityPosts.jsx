@@ -9,7 +9,7 @@ import useSidebar from "../../hook/useSidebar";
 function CommunityPosts() {
   const { communityId } = useParams();
   const { posts, comments, communities } = forumData;
-  const { isSidebarOpen } = useSidebar();
+  const { $isSidebarOpen } = useSidebar();
 
   // filter posts from this community
   const communityPosts = posts
@@ -24,7 +24,7 @@ function CommunityPosts() {
   return (
     <>
       {/* Sliding Main Content */}
-      <PageContainer isSidebarOpen={isSidebarOpen}>
+      <PageContainer $isSidebarOpen={$isSidebarOpen}>
         {/* Banner Section */}
         <BannerWrapper>
           <CommunityProfileCard communityData={community} />
@@ -57,10 +57,10 @@ const PageContainer = styled.div`
   min-height: 100vh;
 
   /* SLIDE ANIMATION */
-  transform: ${(props) =>
-    props.isSidebarOpen ? "translateX(17rem)" : "translateX(10rem)"};
+  transform: ${({ $isSidebarOpen }) =>
+    $isSidebarOpen ? "translateX(17rem)" : "translateX(10rem)"};
   transition: transform 0.3s ease;
-
+  
   @media (max-width: 800px) {
     transform: translateX(0rem);
     width: 100%;
@@ -107,7 +107,6 @@ const MainSection = styled.div`
   max-width: 60rem;
   display: flex;
   flex-direction: column;
-
 `;
 
 const Sidebar = styled.div`

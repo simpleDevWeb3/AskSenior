@@ -35,14 +35,15 @@ function LoginForm({ onLogin, onClick }) {
     try {
       const userData = await login(formData); // wait for login
       // optionally update parent component
+      console.log(userData);
       onLogin?.(userData);
     } catch (err) {
-      setError(err?.message || "Login failed");
+      setError(err?.message || "Invalid Login Credential");
     }
   }
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <FormContainer onSubmit={async (e) => handleSubmit(e)}>
       <Title>Login</Title>
 
       {error && <Error msg={error} />}

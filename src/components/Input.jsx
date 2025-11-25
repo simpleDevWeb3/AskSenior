@@ -1,19 +1,24 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-function Input({ children, handleInput,initialValue = "" }) {
+function Input({ children, handleInput, initialValue = "", required = true }) {
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState(initialValue);
-
+  const [error, setError] = useState("");
   return (
     <InputContainer $isFocus={isFocus}>
+      {error && <RequireMsg> {error}</RequireMsg>}
       <StyledInput
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(e) => {
-          setValue(e.target.value);
+          const input = e.target.value;
+          setValue(input);
           handleInput(e);
+          if (required) {
+            input === "" ? setError("* Required!") : setError("");
+          }
         }}
       />
       <InputLabel $isFocus={isFocus} $isValue={value}>
@@ -24,7 +29,12 @@ function Input({ children, handleInput,initialValue = "" }) {
 }
 
 export default Input;
-
+const RequireMsg = styled.span`
+  color: red !important;
+  position: absolute;
+  top: auto;
+  right: 10px;
+`;
 const InputContainer = styled.div`
   position: relative; /* needed for absolute label */
   border: 1px solid

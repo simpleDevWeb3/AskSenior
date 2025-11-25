@@ -63,7 +63,7 @@ function RegisterForm({ toLogin }) {
       validate: (formData) => {
         const { icon, banner } = formData;
 
-        return validImgFile(icon) && validImgFile(banner);
+        return validImgFile(icon).isValid && validImgFile(banner).isValid;
       },
     },
   ];
