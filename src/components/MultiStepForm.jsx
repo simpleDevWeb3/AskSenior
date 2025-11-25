@@ -3,14 +3,14 @@ import Carousel from "./Carousel";
 import { useState } from "react";
 import ButtonIcon from "./ButtonIcon";
 import { updateFormData } from "../helpers/formHelper";
+import { useDisableTab } from "../hook/useDisableTab";
 
 //Steps => component data => key, component, validate
 //initialData => data initailly passed inside
 function MultiStepForm({ steps = [], initialData = {}, onSuccess, onError }) {
   const [formData, setFormData] = useState(initialData);
   const [currentSlide, setCurrentSlide] = useState(0);
-
-
+  useDisableTab(true);
   // Update form data
   const handleChange = (field, value) => {
     setFormData((prev) => updateFormData(prev, field, value));

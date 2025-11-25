@@ -23,7 +23,7 @@ function RegisterUser({ onChange, formData }) {
       format: !formatValid
         ? "Please enter a valid email address (e.g., name@example.com)."
         : "",
-      duplicate: dupValid ? "Email has been taken!" : "",
+      duplicate: dupValid ? "Email has been registered!" : "",
     }));
   }
 

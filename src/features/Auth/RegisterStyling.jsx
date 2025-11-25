@@ -5,8 +5,10 @@ import { PiPictureInPicture } from "react-icons/pi";
 import { FcPicture } from "react-icons/fc";
 import { AiFillPicture } from "react-icons/ai";
 import { handleFileImgUpload } from "../../helpers/formHelper";
+import Error from "../../components/Error";
 
 function RegisterStyling({ formData, onChange }) {
+  const [error, setError] = useState({});
   const [bannerImage, setBannerImage] = useState(null);
   const [iconImage, setIconImage] = useState("/avatar.jpg");
 
@@ -56,6 +58,7 @@ function RegisterStyling({ formData, onChange }) {
               <AiFillPicture />
             </UploadLabel>
           </OptionGroup>
+          <Error msg={"Only allow *png"} />
         </LeftPanel>
 
         {/* RIGHT PANEL */}
