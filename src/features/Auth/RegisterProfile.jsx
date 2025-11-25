@@ -1,29 +1,60 @@
 import styled from "styled-components";
 import Input from "../../components/Input";
+import { useState } from "react";
+import Error from "../../components/Error";
+import { isDup, isValidFormat } from "../../helpers/formHelper";
 
-function RegisterProfile({ name = "", description = "", onChange }) {
+function RegisterProfile({ name = "", description = "", onChange, formData }) {
+  const [error, setError] = useState({});
+
+  function handleUsername(username) {
+    const usernameValidForm = isValidFormat(
+      /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/,
+      username
+    );
+    const usernameDup = isDup("tako", username);
+    onChange?.("username", username);
+    onChange?.("usernameDup", usernameDup);
+    onChange?.("usernameValidForm",usernameValidForm);
+    setError((prev) => ({
+      ...prev,
+      usernameValidForm: !usernameValidForm
+        ? "Username must start with a letter, be between 3 and 16 characters long, and contain only letters, numbers, or underscores."
+        : "",
+      username: username === "" ? "Required" : "",
+      usernameDup: usernameDup ? "username has been taken" : "",
+    }));
+  }
+
+  function handleDescription(description) {
+    onChange?.("userDescription", description);
+
+    setError((prev) => ({
+      ...prev,
+      description: description === "" ? "Required" : "",
+    }));
+  }
   return (
     <>
       <h2>Tell us about your self</h2>
-      <p>
-        A name & description help other student remember you
-      </p>
+      <p>A name & description help other student remember you</p>
       <br />
       <StyledContainer>
         <div style={{ width: "30rem" }}>
-          <Input
-            handleInput={(e) => onChange?.("username", e.target.value)}
-          >
-           Username
+          <Input handleInput={(e) => handleUsername(e.target.value)}>
+            Username
           </Input>
+
+          {error.username && <Error msg={error.username} />}
+          {error.usernameDup && <Error msg={error.usernameDup} />}
+
+          {error.usernameValidForm && <Error msg={error.usernameValidForm} />}
           <br />
-          <Input
-            handleInput={(e) =>
-              onChange?.("userDescription", e.target.value)
-            }
-          >
+          <Input handleInput={(e) => handleDescription(e.target.value)}>
             Description
           </Input>
+
+          {error.description && <Error msg={error.description} />}
         </div>
 
         <ProfileCard>

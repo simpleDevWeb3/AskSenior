@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-function Input({ children, handleInput }) {
+function Input({ children, handleInput,initialValue = "" }) {
   const [isFocus, setIsFocus] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue);
 
   return (
     <InputContainer $isFocus={isFocus}>

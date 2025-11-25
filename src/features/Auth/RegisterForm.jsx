@@ -32,7 +32,12 @@ function RegisterForm({ toLogin }) {
       component: ({ formData, handleChange }) => (
         <RegisterUser formData={formData} onChange={handleChange} />
       ),
-      validate: (formData) => formData.Email && formData.Password,
+      validate: (formData) =>
+        formData.Email &&
+        formData.Password &&
+        !formData.EmailIsDuplicate &&
+        formData.EmailFormatValid &&
+        formData.isValidFormPass,
     },
     {
       key: "profile",
@@ -40,10 +45,15 @@ function RegisterForm({ toLogin }) {
         <RegisterProfile
           name={formData.username}
           description={formData.userDescription}
+          formData={formData}
           onChange={handleChange}
         />
       ),
-      validate: (formData) => formData.username || formData.userDescription,
+      validate: (formData) =>
+        formData.username &&
+        formData.userDescription &&
+        !formData.usernameDup &&
+        formData.usernameValidForm,
     },
     {
       key: "styling",

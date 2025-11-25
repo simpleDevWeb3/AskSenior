@@ -28,7 +28,7 @@ import History from "./features/Profile/History.jsx";
 import CommentedTab from "./features/Profile/CommentedTab.jsx";
 import ProfileSetting from "./features/Settings/ProfileSetting.jsx";
 import AccountSetting from "./features/Settings/AccountSetting.jsx";
-import PrivacySetting from "./features/Settings/PrivacySetting.jsx";
+
 import Dashboardpage from "./pages/Dashboardpage.jsx";
 import Overview from "./features/Dashboard/Overview.jsx";
 
@@ -37,7 +37,8 @@ import ManagePost from "./features/Dashboard/ManagePost.jsx";
 import ManageCommutiy from "./features/Dashboard/ManageCommunity.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import ProtectedRoute from "./components/ProtectedRoute"; 
+import ProtectedRoute from "./components/ProtectedRoute";
+import StyleSetting from "./features/Settings/StyleSetting.jsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -47,7 +48,6 @@ const queryClient = new QueryClient({
   },
 });
 window.__TANSTACK_QUERY_CLIENT__ = queryClient;
-
 
 const router = createBrowserRouter([
   {
@@ -117,7 +117,7 @@ const router = createBrowserRouter([
           { index: true, element: <AccountSetting /> },
           { path: "ACCOUNT", element: <AccountSetting /> },
           { path: "PROFILE", element: <ProfileSetting /> },
-          { path: "PRIVACY", element: <PrivacySetting /> },
+          { path: "STYLE", element: <StyleSetting /> },
         ],
       },
       {

@@ -9,6 +9,8 @@ import { useUser } from "../features/Auth/useUser";
 function ProfilePage() {
   const { isSidebarOpen } = useSidebar();
   const { user } = useUser();
+
+  const encodedBannerUrl = user.banner_url ? encodeURI(user.banner_url) : null;
   useScrollRestore();
   const links = [
     { key: "POST", label: "Post", index: true },
@@ -23,16 +25,20 @@ function ProfilePage() {
   return (
     <PageContainer isSidebarOpen={isSidebarOpen}>
       <ProfileHeader>
-        <AvatarContainer>
-          <Avatar src={user.avatar_url} />
-        </AvatarContainer>
-
-        <InfoContainer>
-          <div>
-            <UsernameBig>{user.name}</UsernameBig>
-            <UsernameSmall>@{user.name}</UsernameSmall>
-          </div>
-        </InfoContainer>
+        <Banner $image={encodedBannerUrl}>
+          <AvatarContainer>
+            <Avatar src={user.avatar_url} />
+          </AvatarContainer>
+        </Banner>
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <ReservedEl />
+          <InfoContainer>
+            <div>
+              <UsernameBig>{user.name}</UsernameBig>
+              <UsernameSmall>@{user.name}</UsernameSmall>
+            </div>
+          </InfoContainer>
+        </div>
       </ProfileHeader>
       <OperationContainer>
         <Tabs links={links} basePath={"/profile"} />
@@ -67,9 +73,9 @@ const PageContainer = styled.div`
 const Content = styled.div``;
 const ProfileHeader = styled.div`
   display: flex;
-  align-items: end;
-  gap: 1rem;
 
+  gap: 0.5rem;
+  flex-direction: column;
   margin-bottom: 1rem;
 `;
 const InfoContainer = styled.div`
@@ -77,7 +83,7 @@ const InfoContainer = styled.div`
   gap: 1rem;
 `;
 const ReservedEl = styled.div`
-  width: 6rem;
+  width: 8rem;
 `;
 
 const UsernameBig = styled.p`
@@ -95,11 +101,17 @@ const AvatarContainer = styled.div`
   height: 6rem;
   overflow: hidden;
   border-radius: 50%;
+  position: absolute;
+  left: 2rem;
+  top: 6rem;
 `;
-const HeroEl = styled.div`
+const Banner = styled.div`
   width: 100%;
-  height: 4rem;
-  background-color: purple;
+  height: 8rem;
+  background-image: ${(props) =>
+    props.$image ? `url(${props.$image})` : "none"};
+  background-size: cover;
   position: relative;
+  border-radius: 8px;
 `;
 const OperationContainer = styled.div``;

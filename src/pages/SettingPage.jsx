@@ -16,8 +16,8 @@ function SettingPage() {
       label: "Profile",
     },
     {
-      key: "PRIVACY",
-      label: "Privacy",
+      key: "STYLE",
+      label: "Style",
     },
   ];
   return (
@@ -32,7 +32,7 @@ function SettingPage() {
 
 const StyledPage = styled.div`
   height: 100vh;
-
+  padding-left: 4rem;
   & * {
     color: var(--text-color);
   }

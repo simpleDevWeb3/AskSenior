@@ -82,6 +82,7 @@ const Grouped = styled.div`
 
 const AvatarWrapper = styled.div`
   width: 1.7rem;
+  height: 1.7rem;
   border-radius: 50%;
   overflow: hidden;
 `;
@@ -256,7 +257,9 @@ function Navbar() {
                 </Dropdown.Trigger>
                 <Dropdown.List position="right">
                   <Dropdown.Item onClick={() => navigate("/profile")}>
-                    <AvatarWrapper style={{ width: "2.5rem" }}>
+                    <AvatarWrapper
+                      style={{ width: "2.5rem", height: "2.5rem" }}
+                    >
                       <UserAvatar />
                     </AvatarWrapper>
                     <div

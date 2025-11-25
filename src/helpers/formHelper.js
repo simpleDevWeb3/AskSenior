@@ -64,10 +64,32 @@ function handleFileImgUpload(event, setPreview, onChange, fieldName) {
 
   setPreview?.(previewUrl); // update preview state
 
-  //convert file 
+  //convert file
   onChange(fieldName, file); // update form data
 }
 
-
-
-export { validImgFile, updateFormData, handleFileImgUpload };
+/**
+ *
+ * @param {string} duplicate  - data that duplicate with input
+ * @param {string} target  - user input
+ * @returns  duplicate === target;
+ */
+function isDup(duplicate, target) {
+  return duplicate === target;
+}
+/**
+ *
+ * @param {regex} regex
+ * @param {string} target
+ * @returns true  or false;
+ */
+function isValidFormat(regex, target) {
+  return regex.test(target);
+}
+export {
+  validImgFile,
+  updateFormData,
+  handleFileImgUpload,
+  isDup,
+  isValidFormat,
+};

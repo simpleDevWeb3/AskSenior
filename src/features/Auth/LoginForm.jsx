@@ -8,6 +8,7 @@ import Input from "../../components/Input";
 import { useLogin } from "./useLogin";
 
 import SpinnerMini from "../../components/SpinnerMini";
+import Error from "../../components/Error";
 
 function LoginForm({ onLogin, onClick }) {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -44,7 +45,7 @@ function LoginForm({ onLogin, onClick }) {
     <FormContainer onSubmit={handleSubmit}>
       <Title>Login</Title>
 
-      {error && <ErrorMsg>{error}</ErrorMsg>}
+      {error && <Error msg={error} />}
 
       <Input handleInput={(e) => handleChange(e, "email")}>Email</Input>
 
