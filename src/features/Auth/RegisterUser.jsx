@@ -16,7 +16,7 @@ function RegisterUser({ onChange }) {
   // This runs whenever the API comes back with a new answer (true/false)
   useEffect(() => {
     // Tell Parent Component if it's duplicate
-    onChange("EmailIsDuplicate", !!isDupEmail);
+    onChange("EmailIsDuplicate", isDupEmail?.isDuplicate);
     console.log("isDupMail: ", isDupEmail);
     console.log(
       "isDupemaile: ",

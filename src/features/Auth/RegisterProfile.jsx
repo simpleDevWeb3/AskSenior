@@ -1,28 +1,44 @@
 import styled from "styled-components";
 import Input from "../../components/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Error from "../../components/Error";
-import { isDup, isValidFormat } from "../../helpers/formHelper";
+import {  isValidFormat } from "../../helpers/formHelper";
+import { useIsDupUsername } from "./useIsDupUsername";
 
 function RegisterProfile({ name = "", description = "", onChange }) {
   const [error, setError] = useState({});
+  const [usernameToValidate, setUsernameToValidate] = useState("");
+  const { isDupUsername, isLoading } = useIsDupUsername(usernameToValidate);
+
+  //validate from api so useEffect
+  useEffect(() => {
+    onChange?.("usernameDup", isDupUsername?.isDuplicate);
+
+    setError((prev) => ({
+      ...prev,
+      usernameDup: isDupUsername?.isDuplicate ? "username has been taken" : "",
+    }));
+  }, [isDupUsername, onChange]);
 
   function handleUsername(username) {
     const usernameValidForm = isValidFormat(
       /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/,
       username
     );
-    const usernameDup = isDup("tako", username);
+
+    if (usernameValidForm) setUsernameToValidate(username);
+    else {
+      setUsernameToValidate("");
+    }
+
     onChange?.("username", username);
-    onChange?.("usernameDup", usernameDup);
     onChange?.("usernameValidForm", usernameValidForm);
+
     setError((prev) => ({
       ...prev,
       usernameValidForm: !usernameValidForm
         ? "Username must start with a letter, be between 3 and 16 characters long, and contain only letters, numbers, or underscores."
         : "",
-
-      usernameDup: usernameDup ? "username has been taken" : "",
     }));
   }
 
@@ -39,7 +55,11 @@ function RegisterProfile({ name = "", description = "", onChange }) {
           <Input handleInput={(e) => handleUsername(e.target.value)}>
             Username
           </Input>
-
+          {isLoading && (
+            <span style={{ fontSize: "0.8rem", color: "gray" }}>
+              Checking availability...
+            </span>
+          )}
           {error.usernameDup && <Error msg={error.usernameDup} />}
 
           {error.usernameValidForm && <Error msg={error.usernameValidForm} />}
