@@ -3,7 +3,9 @@ import { GetReq, PostReq } from "../helpers/apiHelper";
 async function getAllPostApi(user_id) {
   console.log(user_id ? user_id : null);
   return await GetReq(
-    `https://localhost:7071/api/Post?user_id=${user_id ? user_id : null}`
+    `https://localhost:7071/api/Post/getPost?user_id=${
+      user_id ? user_id : null
+    }`
   );
 }
 async function createPostApi(postData) {

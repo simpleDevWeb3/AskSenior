@@ -90,13 +90,12 @@ function App() {
             <AuthForm />
           </Modal>
 
-        
-
           <Selector>
             <Modal id={"Create Community"}>
               <CommunityForm />
             </Modal>
           </Selector>
+         
           <Modal id={"Edit Post"}>
             <EditForm />
           </Modal>

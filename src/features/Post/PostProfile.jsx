@@ -14,9 +14,9 @@ function PostProfile() {
           handleClickProfile(e, postData.communityId, postData.authorId)
         }
       >
-        <Avatar src="/avatar.jpg" />
+        <Avatar src={postData.avatar_url} />
       </AvatarContainer>
-      <UserName $size={avatarSize}>@c/MalaysiaKini</UserName>
+      <UserName $size={avatarSize}>u/{postData.user_name}</UserName>
     </ProfileContainer>
   );
 }

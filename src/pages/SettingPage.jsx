@@ -2,6 +2,9 @@ import styled from "styled-components";
 import useSidebar from "../hook/useSidebar";
 import Tabs from "../components/Tabs";
 import { Outlet } from "react-router-dom";
+import Modal from "../components/Modal";
+import EditAccount from "../features/Auth/EditAccount";
+import EditProfile from "../features/Auth/EditProfile";
 
 function SettingPage() {
   const { $isSidebarOpen } = useSidebar();
@@ -15,16 +18,20 @@ function SettingPage() {
       key: "PROFILE",
       label: "Profile",
     },
-    {
-      key: "STYLE",
-      label: "Style",
-    },
   ];
   return (
     <StyledPage $isSidebarOpen={$isSidebarOpen}>
       <h1>Settings</h1>
       <br />
       <Tabs basePath={"/Settings"} links={tabs} />
+      
+      <Modal id={"Setting_Account"}>
+        <EditAccount />
+      </Modal>
+
+      <Modal id={"Setting_Profile"}>
+        <EditProfile />
+      </Modal>
       <Outlet />
     </StyledPage>
   );

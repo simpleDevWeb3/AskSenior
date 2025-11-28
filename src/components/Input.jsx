@@ -1,16 +1,28 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-function Input({ children, handleInput, initialValue = "", required = true }) {
+function Input({
+  type,
+  children,
+  handleInput,
+  initialValue = "",
+  required = true,
+  viewOnly = false,
+  icon=""
+}) {
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState("");
   return (
     <InputContainer $isFocus={isFocus}>
+      {icon}
       {error && <RequireMsg> {error}</RequireMsg>}
       <StyledInput
+        $viewOnly={viewOnly}
+        readOnly={viewOnly}
+        type={type}
         value={value}
-        onFocus={() => setIsFocus(true)}
+        onFocus={() => !viewOnly && setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(e) => {
           const input = e.target.value;
@@ -37,6 +49,7 @@ const RequireMsg = styled.span`
 `;
 const InputContainer = styled.div`
   position: relative; /* needed for absolute label */
+
   border: 1px solid
     ${({ $isFocus }) =>
       $isFocus ? "rgba(16, 110, 211, 0.867)" : "var(--hover-color)"};
@@ -65,6 +78,8 @@ const StyledInput = styled.input`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: ${({ $viewOnly }) => ($viewOnly ? "default" : "text")};
+  caret-color: ${({ readOnly }) => (readOnly ? "transparent" : "auto")};
 `;
 
 const InputLabel = styled.label`

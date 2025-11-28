@@ -38,7 +38,7 @@ import ManageCommutiy from "./features/Dashboard/ManageCommunity.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ProtectedRoute from "./components/ProtectedRoute";
-import StyleSetting from "./features/Settings/StyleSetting.jsx";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -117,7 +117,6 @@ const router = createBrowserRouter([
           { index: true, element: <AccountSetting /> },
           { path: "ACCOUNT", element: <AccountSetting /> },
           { path: "PROFILE", element: <ProfileSetting /> },
-          { path: "STYLE", element: <StyleSetting /> },
         ],
       },
       {

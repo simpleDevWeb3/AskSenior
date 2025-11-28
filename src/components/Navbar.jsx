@@ -33,6 +33,7 @@ import { IoExitOutline } from "react-icons/io5";
 import { useLogout } from "../features/Auth/useLogout";
 import Avatar from "./Avatar";
 import UserAvatar from "./UserAvatar";
+import { useUser } from "../features/Auth/useUser";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -130,7 +131,7 @@ function Navbar() {
   const { logout } = useLogout();
   const navigate = useNavigate();
   const { toggleModal } = useModal();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useUser();
   const { isDarkMode, toggleMode } = useDarkTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileSearch, setMobileSearch] = useState(false);

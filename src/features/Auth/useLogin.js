@@ -14,12 +14,10 @@ export function useLogin(handleSuccess) {
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("userProfile", JSON.stringify(data.profile));
 
+      queryClient.removeQueries();
+
       // Update React Query cache
-      queryClient.setQueryData(["user"], {
-        profile: data.profile,
-        accessToken: data.accessToken,
-        isAuthenticated: true,
-      });
+      queryClient.setQueryData(["user"], data.profile);
 
       toast.success("Login Succesfully");
       handleSuccess?.();

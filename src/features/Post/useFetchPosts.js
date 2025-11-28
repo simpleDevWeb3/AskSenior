@@ -9,6 +9,17 @@ export function useFetchPosts() {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: () => getAllPostApi(null),
+
+    refetchOnWindowFocus: false,
+
+
+    staleTime: 1000 * 60 * 5,
+
+ 
+    gcTime: 1000 * 60 * 30,
+
+
+    retry: 1,
   });
 
   return { posts, isLoadPost, errorPost };

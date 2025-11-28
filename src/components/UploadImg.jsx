@@ -4,8 +4,16 @@ import styled from "styled-components";
 import { useState } from "react";
 import { MdCancel } from "react-icons/md";
 
-function UploadImg({ id, setPreview, onChange, fieldName, onError, label }) {
-  const [imgUrl, setImgUrl] = useState("");
+function UploadImg({
+  id,
+  setPreview,
+  onChange,
+  fieldName,
+  onError,
+  label,
+  initialUrl = "",
+}) {
+  const [imgUrl, setImgUrl] = useState(initialUrl);
   function handleUpload(e) {
     {
       console.log("starting..");

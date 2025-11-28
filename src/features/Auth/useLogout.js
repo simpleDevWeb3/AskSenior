@@ -9,7 +9,7 @@ export function useLogout() {
 
   const { mutate: logout, isPending: isLoadingLogout } = useMutation({
     mutationFn: logoutApi,
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.removeQueries();
 
       localStorage.clear();
