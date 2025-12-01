@@ -28,6 +28,9 @@ import ButtonIcon from "../../components/ButtonIcon";
 import { useModal } from "../../context/ModalContext";
 import { useAuth } from "../Auth/AuthContext";
 import { useUser } from "../Auth/useUser";
+import { useCreateComment } from "../Comment/useCreateComment";
+import { useFetchPostComment } from "./useFetchPostComment";
+import { useParams } from "react-router-dom";
 
 function PostCard({
   postData,
@@ -81,7 +84,10 @@ function PostCard({
 function CommentPost({ children, postData }) {
   const { isShowTextField } = useFieldText();
   const { isAuthenticated } = useAuth();
-  console.log(postData);
+  const { user } = useUser();
+  const { createComment } = useCreateComment();
+  const { postId } = useParams();
+  const id = postId;
 
   return (
     <>
@@ -97,7 +103,16 @@ function CommentPost({ children, postData }) {
         <PostSocialFeatures />
 
         {isAuthenticated && isShowTextField === postData.comment_id && (
-          <TextFields />
+          <TextFields
+            onSubmit={(content) =>
+              createComment({
+                postId: id,
+                userId: user.id,
+                parentId: postData.comment_id,
+                content,
+              })
+            }
+          />
         )}
       </PostBody>
     </>

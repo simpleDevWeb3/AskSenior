@@ -5,21 +5,23 @@ import styled from "styled-components";
 import CommunityProfileCard from "../../components/CommunityProfileCard";
 import CommunityInfo from "../../components/CommunityInfo";
 import useSidebar from "../../hook/useSidebar";
+import { useFetchCommunity } from "./useFetchCommunity";
+import Spinner from "../../components/Spinner";
 
 function CommunityPosts() {
   const { communityId } = useParams();
-  const { posts, comments, communities } = forumData;
+
   const { $isSidebarOpen } = useSidebar();
+  const { community, isLoadCommunity, errorCommunity } =
+    useFetchCommunity(communityId);
 
-  // filter posts from this community
-  const communityPosts = posts
-    .filter((post) => post.communityId === communityId)
-    .map((post) => ({
-      ...post,
-      postComments: comments.filter((c) => c.postId === post.id),
-    }));
-
-  const community = communities.find((c) => c.id === communityId);
+  if (isLoadCommunity) return <Spinner />;
+  if (errorCommunity)
+    return (
+      <div>
+        <h1>{errorCommunity}</h1>
+      </div>
+    );
 
   return (
     <>
@@ -34,7 +36,7 @@ function CommunityPosts() {
         <ContentContainer>
           <HorizontalContainer>
             <MainSection>
-              <PostList postData={communityPosts} />
+              {/* <PostList postData={communityPosts} />*/}
             </MainSection>
 
             <Sidebar>
@@ -60,7 +62,7 @@ const PageContainer = styled.div`
   transform: ${({ $isSidebarOpen }) =>
     $isSidebarOpen ? "translateX(17rem)" : "translateX(10rem)"};
   transition: transform 0.3s ease;
-  
+
   @media (max-width: 800px) {
     transform: translateX(0rem);
     width: 100%;

@@ -58,6 +58,7 @@ function PostForm() {
       ...formDataFromHook,
       topic_id: selectedTopic.id,
       user_id: user.id,
+      community_id: null,
     };
     //call api here!
     console.log(finalData);

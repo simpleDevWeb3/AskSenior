@@ -11,7 +11,7 @@ function PostProfile() {
       <AvatarContainer
         $size={avatarSize}
         onClick={(e) =>
-          handleClickProfile(e, postData.communityId, postData.authorId)
+          handleClickProfile(e, postData.community_id, postData.user_id)
         }
       >
         <Avatar src={postData.avatar_url} />

@@ -4,7 +4,10 @@ import { FiUsers } from "react-icons/fi";
 import { HiOutlineArrowTrendingUp } from "react-icons/hi2";
 import ButtonIcon from "../../components/ButtonIcon";
 import Avatar from "../../components/Avatar";
+import { useFetchAllCommunity } from "./useFetchAllCommunity";
+import Spinner from "../../components/Spinner";
 
+/*
 // Sample community data
 const initialCommunities = [
   { id: 1, name: "Kopi Lovers", members: 12500, growth: "up" },
@@ -12,11 +15,13 @@ const initialCommunities = [
   { id: 3, name: "Cafe Creatives", members: 7200, growth: "down" },
   { id: 4, name: "Gaming Mamak", members: 5200, growth: "up" },
   { id: 5, name: "Study Corner", members: 3400, growth: "steady" },
-];
+];*/
 
 function CommunitiesLayout() {
-  const [communities, setCommunities] = useState(initialCommunities);
-
+  const { communities, isLoadCommunities, errorCommunities } =
+    useFetchAllCommunity();
+  if (isLoadCommunities) return <Spinner />;
+  if (errorCommunities) return <div>Error:{errorCommunities}</div>;
   return (
     <Container>
       <Header>
@@ -28,7 +33,11 @@ function CommunitiesLayout() {
           <CommunityItem key={community.id}>
             <Group>
               <AvatarContainer>
-                <Avatar src={"/avatar.jpg"} />
+                <Avatar
+                  src={
+                    community.avatarUrl ? community.avatarUrl : "/avatar.jpg"
+                  }
+                />
               </AvatarContainer>
               <Info>
                 <Name>{community.name}</Name>
@@ -38,7 +47,9 @@ function CommunitiesLayout() {
               <ButtonIcon>Join</ButtonIcon>
             </Group>
             <Description>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde,
+              {community.description
+                ? community.description
+                : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde,"}
             </Description>
           </CommunityItem>
         ))}
@@ -108,7 +119,7 @@ const Group = styled.div`
 `;
 const CommunityItem = styled.li`
   display: flex;
-  
+
   flex-direction: column;
   background: var(--background-color);
   box-shadow: 4px 4px 0px var(--tertiary-color);

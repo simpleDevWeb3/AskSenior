@@ -6,7 +6,6 @@ import PostMenusOther from "./PostMenusOther";
 import { usePost } from "./PostContext";
 import { usePostHandler } from "./usePostHandler";
 
-
 function PostSocialFeatures() {
   const { postData, variant, onClickComment } = usePost();
   const { id } = postData;
@@ -14,7 +13,7 @@ function PostSocialFeatures() {
 
   return (
     <SocialFeatures $variant={variant}>
-      <VoteBtn onVote={() => handleVote(id)} />
+      <VoteBtn onVote={(type) => handleVote(id, type)} />
       <CommentBtn
         onComment={() => {
           onClickComment();

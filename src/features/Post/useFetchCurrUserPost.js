@@ -10,7 +10,7 @@ export function useFetchCurrUserPost(user_id) {
     queryKey: ["posts", user_id],
     queryFn: () => getAllPostApi(user_id),
 
-    efetchOnWindowFocus: false,
+    refetchOnWindowFocus: false,
 
     staleTime: 1000 * 60 * 5,
 

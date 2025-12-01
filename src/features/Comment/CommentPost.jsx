@@ -8,6 +8,8 @@ import { useAuth } from "../Auth/AuthContext";
 import { useModal } from "../../context/ModalContext";
 import { useFetchPostComment } from "../Post/useFetchPostComment";
 import Spinner from "../../components/Spinner";
+import { useCreateComment } from "./useCreateComment";
+import { useUser } from "../Auth/useUser";
 
 const ShareYourThougt = styled.div`
   border: solid 1px var(--tertiary-color);
@@ -26,6 +28,8 @@ const ShareYourThougt = styled.div`
 `;
 
 function CommentPost() {
+  const { user } = useUser();
+  const { createComment } = useCreateComment();
   const { isShowTextField, toggleTextField } = useFieldText();
   const { openModal } = useModal();
   const { postId } = useParams();
@@ -61,7 +65,16 @@ function CommentPost() {
       ></PostCard>
 
       {isAuthenticated && isShowTextField === postData.id ? (
-        <TextFields />
+        <TextFields
+          onSubmit={(content) =>
+            createComment({
+              postId: postData.id,
+              userId: user.id,
+              parentId: null,
+              content,
+            })
+          }
+        />
       ) : (
         <ShareYourThougt
           onClick={() =>

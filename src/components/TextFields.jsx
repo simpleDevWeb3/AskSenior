@@ -4,7 +4,7 @@ import { BsFillSendFill, BsFillTrashFill } from "react-icons/bs";
 import { useRef, useState } from "react";
 import { useFieldText } from "../hook/useFieldText";
 
-function TextFields() {
+function TextFields({ onSubmit }) {
   const [text, setText] = useState("");
   const { toggleTextField } = useFieldText();
 
@@ -16,6 +16,7 @@ function TextFields() {
     console.log(text);
     if (!text) return;
     toggleTextField(null);
+    onSubmit?.(text);
   }
 
   function handleCancel() {
