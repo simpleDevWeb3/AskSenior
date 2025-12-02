@@ -31,6 +31,13 @@ import { useUser } from "../Auth/useUser";
 import { useCreateComment } from "../Comment/useCreateComment";
 import { useFetchPostComment } from "./useFetchPostComment";
 import { useParams } from "react-router-dom";
+import { SlArrowRight } from "react-icons/sl";
+import { MdOutlineArrowRight } from "react-icons/md";
+import { formatDistanceToNow } from "date-fns";
+import { formatTimeAgo } from "../../helpers/dateHelper";
+import { LuDot } from "react-icons/lu";
+import { useCallback } from "react";
+import { truncateText } from "../../helpers/stringHelper";
 
 function PostCard({
   postData,
@@ -66,8 +73,27 @@ function PostCard({
         {variant === "post" && (
           <PostBody>
             <PostHeader>
-              <PostProfile />
-
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: postData.community_id ? "start" : "center",
+                }}
+              >
+                <PostProfile />
+                <span
+                  style={{
+                    fontWeight: "500",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  <LuDot />
+                  <span style={{ fontSize: "0.8rem" }}>
+                    {formatTimeAgo(postData.created_at)}
+                  </span>
+                </span>
+              </div>
               <PostMenusOther />
             </PostHeader>
             <Tag $bgColor={getRandomColor}>{postData.topic_name}</Tag>
@@ -88,6 +114,12 @@ function CommentPost({ children, postData }) {
   const { createComment } = useCreateComment();
   const { postId } = useParams();
   const id = postId;
+  const { postComment, isLoadComment } = useFetchPostComment(postId);
+  const { user_id: op_id } = isLoadComment ? null : postComment[0];
+
+  const isOP = function (user_id) {
+    return op_id === user_id;
+  };
 
   return (
     <>
@@ -97,8 +129,76 @@ function CommentPost({ children, postData }) {
       </AvatarContainer>
       <PostBody>
         <PostHeader>
-          <UserName>{postData.user_name}</UserName>
+          <UserName style={{ gap: "0.5rem" }}>
+            {isOP(postData.user_id) && (
+              <label
+                style={{
+                  background: "var(--hover-color)",
+                  color: "var(--text-color)",
+                  padding: "0.2rem 1rem",
+                  borderRadius: "25px",
+                  marginRight: "0.5rem",
+                }}
+              >
+                OP
+              </label>
+            )}
+            {postData.user_name}
+            <span
+              style={{
+                fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <LuDot /> {formatTimeAgo(postData.created_at)}
+            </span>
+          </UserName>
         </PostHeader>
+        {postData.reply_to && (
+          <p
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "0.8rem",
+              marginBottom: "0.5rem",
+              background: "var(--hover-color)",
+              width: "fit-content",
+              padding: "0.5rem 1rem",
+              borderRadius: "25px",
+            }}
+          >
+            <>
+              <span style={{ fontWeight: "700" }}>
+                replies to{" "}
+                {isOP(postData.user_id) && (
+                  <label
+                    style={{
+                      background: "var(--hover-color)",
+                      color: "var(--text-color)",
+                      padding: "0.2rem 1rem",
+                      borderRadius: "25px",
+                      marginRight: "0.5rem",
+                    }}
+                  >
+                    OP
+                  </label>
+                )}
+                {postData.reply_to}
+              </span>
+              <span
+                style={{
+                  fontWeight: "500",
+                  overflowWrap: "break-word",
+                  wordBreak: "break-word",
+                }}
+              >
+                : {truncateText(postData.reply_to_content)}
+              </span>
+            </>
+          </p>
+        )}
+
         <PostContent />
         <PostSocialFeatures />
 
@@ -167,7 +267,7 @@ function User_Post({ data }) {
       </PostHeader>
       <PostContent />
       <StyledAction>
-        {/* <VoteBtn />*/}
+        <VoteBtn />
         <CommentBtn />
         <ButtonIcon size="rounded" action={() => openModal("Edit Post", data)}>
           <HiPencil />
@@ -186,6 +286,9 @@ const UserName = styled.div`
   font-weight: 700;
   font-size: 0.7rem;
   margin-bottom: 0.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
 `;
 
 const AvatarContainer = styled.div`
@@ -203,7 +306,7 @@ const AvatarContainer = styled.div`
 const StyledPost = styled.div`
   width: 100%;
   height: 100%;
-
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: ${({ $variant }) =>
     $variant === "comment" ? `columns` : " "};

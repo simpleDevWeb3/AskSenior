@@ -44,7 +44,7 @@ function VoteBtn({ userVote = null, onVote }) {
       // undo vote
       newTotal += type === "up" ? -1 : 1;
       setCurrentVote(null);
-      onVote?.(null);
+      onVote?.(type);
     } else if (currentVote === "up" && type === "down") {
       // switch from up → down
       newTotal -= 2;

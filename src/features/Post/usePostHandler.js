@@ -1,5 +1,5 @@
 import { useUser } from "../Auth/useUser";
-import { useVotePost } from "../Vote/useVote";
+import { useVotePost } from "../Vote/useVotePost";
 
 /*
 --data '{
@@ -11,11 +11,11 @@ import { useVotePost } from "../Vote/useVote";
   "created_at": null
    */
 export function usePostHandler() {
-  const { votePost, isLoadVote, errorVote } = useVotePost();
+  const { votePost } = useVotePost();
   const { user } = useUser();
-  const handleVote = (post_id, voteType) => {
+  const handleVote = (post_id = null, comment_id = null, voteType) => {
     console.log("Post", post_id, "voted:", voteType);
-   
+    console.log("Post", comment_id, "voted:", voteType);
     let userVote = null;
     if (voteType === "up") {
       userVote = true;
@@ -25,6 +25,7 @@ export function usePostHandler() {
 
     votePost({
       post_id,
+      comment_id,
       user_id: user.id,
       is_upvote: userVote,
     });

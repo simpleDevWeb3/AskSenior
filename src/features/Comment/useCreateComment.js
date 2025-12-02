@@ -13,7 +13,7 @@ export function useCreateComment() {
 
       onSuccess: (_, variables) => {
         toast.success("Comment created successfully!");
-
+        queryClient.invalidateQueries({ queryKey: ["posts"] });
         queryClient.invalidateQueries({
           queryKey: ["postComment", variables.postId],
         });

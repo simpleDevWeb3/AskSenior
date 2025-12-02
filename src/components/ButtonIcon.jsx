@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 
-// ✅ Responsive size styles
 const sizeStyles = {
   small: css`
     padding: 0.3rem 0.8rem;

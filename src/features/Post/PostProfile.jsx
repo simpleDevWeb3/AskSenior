@@ -5,7 +5,7 @@ import { usePostNavigation } from "./usePostNavigation";
 function PostProfile() {
   const { avatarSize, postData } = usePost();
   const { handleClickProfile } = usePostNavigation();
-
+  const { community_name } = postData;
   return (
     <ProfileContainer>
       <AvatarContainer
@@ -16,7 +16,12 @@ function PostProfile() {
       >
         <Avatar src={postData.avatar_url} />
       </AvatarContainer>
-      <UserName $size={avatarSize}>u/{postData.user_name}</UserName>
+      <UserName $size={avatarSize}>
+        {community_name && <div>c/{community_name}</div>}
+        <p style={community_name && { fontWeight: "500" }}>
+          {postData.user_name}
+        </p>
+      </UserName>{" "}
     </ProfileContainer>
   );
 }

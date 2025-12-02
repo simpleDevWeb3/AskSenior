@@ -82,6 +82,9 @@ const TextWrapper = styled.div`
   align-items: ${({ $center }) => ($center ? "center" : "stretch")};
   gap: 0.5rem;
   ${({ $variant }) => variantSize[$variant] || ""}
+  overflow-wrap: break-word;
+
+  word-break: break-word;
 `;
 
 const ImageContainer = styled.div`

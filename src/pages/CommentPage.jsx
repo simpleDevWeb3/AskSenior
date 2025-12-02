@@ -2,17 +2,27 @@ import styled from "styled-components";
 import CommentPost from "../features/Comment/CommentPost";
 import Comments from "../features/Comment/Comments";
 import { HiArrowLeft } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ButtonIcon from "../components/ButtonIcon";
 import { FieldTextProvider } from "../context/FieldTextContext";
 import CommunityInfo from "../components/CommunityInfo";
 import useSidebar from "../hook/useSidebar";
 import { useScrollRestore } from "../hook/useScrollRestore";
+import { useFetchPostComment } from "../features/Post/useFetchPostComment";
+import Spinner from "../components/Spinner";
 
 function CommentPage() {
   const navigate = useNavigate();
   const { $isSidebarOpen } = useSidebar();
   useScrollRestore();
+  const { postId } = useParams();
+  const id = postId;
+  const { postComment, isLoadComment, errorComment } = useFetchPostComment(id);
+
+  if (isLoadComment) return <Spinner />;
+  if (errorComment) return <div>{errorComment}</div>;
+  if (!postComment) return <div>Post not found</div>;
+
   return (
     <FieldTextProvider>
       <StyledContainer $isSidebarOpen={$isSidebarOpen}>
@@ -30,11 +40,13 @@ function CommentPage() {
 
             <Comments />
           </ContentWrapper>
-          <ContentWrapper>
-            <Sidebar>
-              <CommunityInfo />
-            </Sidebar>
-          </ContentWrapper>
+          {postComment[0].community_id && (
+            <ContentWrapper>
+              <Sidebar>
+                <CommunityInfo />
+              </Sidebar>
+            </ContentWrapper>
+          )}
         </ContentGrid>
       </StyledContainer>
     </FieldTextProvider>
@@ -103,5 +115,6 @@ const Sidebar = styled.div`
   @media (max-width: 1000px) {
     display: none;
   }
+  background-color: var(--hover-color);
 `;
 export default CommentPage;

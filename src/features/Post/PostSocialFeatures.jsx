@@ -9,11 +9,17 @@ import { usePostHandler } from "./usePostHandler";
 function PostSocialFeatures() {
   const { postData, variant, onClickComment } = usePost();
   const { id } = postData;
+  const { comment_id } = postData;
   const { handleVote, handleShare } = usePostHandler();
 
   return (
     <SocialFeatures $variant={variant}>
-      <VoteBtn onVote={(type) => handleVote(id, type)} />
+      <VoteBtn
+        onVote={(type) => {
+          if (variant === "post") handleVote(id, null, type);
+          if (variant === "comment") handleVote(null, comment_id, type);
+        }}
+      />
       <CommentBtn
         onComment={() => {
           onClickComment();
@@ -35,7 +41,7 @@ const SocialFeatures = styled.div`
   gap: 0.5rem;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
-  margin-top: ${({ $variant }) => ($variant === "comment" ? "0.5rem" : "1rem")};
+  margin-top: ${({ $variant }) => ($variant === "comment" ? "0" : "1rem")};
 
   text-align: center;
 `;
