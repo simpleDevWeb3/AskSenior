@@ -5,19 +5,22 @@ import CommentBtn from "../../components/CommentBtn";
 import PostMenusOther from "./PostMenusOther";
 import { usePost } from "./PostContext";
 import { usePostHandler } from "./usePostHandler";
+import { useFetchPostComment } from "./useFetchPostComment";
 
-function PostSocialFeatures() {
+function PostSocialFeatures({ post_id }) {
   const { postData, variant, onClickComment } = usePost();
   const { id } = postData;
+
   const { comment_id } = postData;
   const { handleVote, handleShare } = usePostHandler();
 
   return (
     <SocialFeatures $variant={variant}>
       <VoteBtn
+        userVote={postData.self_vote}
         onVote={(type) => {
           if (variant === "post") handleVote(id, null, type);
-          if (variant === "comment") handleVote(null, comment_id, type);
+          if (variant === "comment") handleVote(post_id, comment_id, type);
         }}
       />
       <CommentBtn

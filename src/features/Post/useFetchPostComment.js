@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPostCommentsApi } from "../../services/PostApi";
 
-export function useFetchPostComment(post_id) {
+export function useFetchPostComment(post_id,currentUserId) {
   const {
     data: postComment,
     isLoading: isLoadComment,
     error: errorComment,
   } = useQuery({
     queryKey: ["postComment", post_id],
-    queryFn: () => getPostCommentsApi(post_id),
+    queryFn: () => getPostCommentsApi(post_id,currentUserId),
 
     refetchOnWindowFocus: false,
 

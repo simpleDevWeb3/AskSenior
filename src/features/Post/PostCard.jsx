@@ -114,7 +114,7 @@ function CommentPost({ children, postData }) {
   const { createComment } = useCreateComment();
   const { postId } = useParams();
   const id = postId;
-  const { postComment, isLoadComment } = useFetchPostComment(postId);
+  const { postComment, isLoadComment } = useFetchPostComment(postId,user.id);
   const { user_id: op_id } = isLoadComment ? null : postComment[0];
 
   const isOP = function (user_id) {
@@ -200,7 +200,7 @@ function CommentPost({ children, postData }) {
         )}
 
         <PostContent />
-        <PostSocialFeatures />
+        <PostSocialFeatures post_id={id} />
 
         {isAuthenticated && isShowTextField === postData.comment_id && (
           <TextFields

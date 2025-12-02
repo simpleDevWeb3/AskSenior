@@ -13,14 +13,17 @@ import { useVotePost } from "../Vote/useVotePost";
 export function usePostHandler() {
   const { votePost } = useVotePost();
   const { user } = useUser();
+
   const handleVote = (post_id = null, comment_id = null, voteType) => {
     console.log("Post", post_id, "voted:", voteType);
-    console.log("Post", comment_id, "voted:", voteType);
+    console.log("Comment", comment_id, "voted:", voteType);
     let userVote = null;
     if (voteType === "up") {
       userVote = true;
     } else if (voteType === "down") {
       userVote = false;
+    } else {
+      userVote = null;
     }
 
     votePost({

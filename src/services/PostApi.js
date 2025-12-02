@@ -1,11 +1,16 @@
 import { GetReq, PostReq } from "../helpers/apiHelper";
 
-async function getAllPostApi(user_id, page = 1, pageSize = 3) {
+async function getAllPostApi(
+  user_id,
+  page = 1,
+  pageSize = 3,
+  currentUserId = null
+) {
   console.log(user_id ? user_id : null);
   return await GetReq(
     `https://localhost:7071/api/Post/getPost?user_id=${
       user_id ? user_id : null
-    }&post_title=null&post_id=null&page=${page}&pageSize=${pageSize}`
+    }&post_title=null&post_id=null&page=${page}&pageSize=${pageSize}&current_user=${currentUserId}`
   );
 }
 async function createPostApi(postData) {
@@ -32,11 +37,11 @@ async function createPostApi(postData) {
   }
 }
 
-async function getPostCommentsApi(post_id) {
+async function getPostCommentsApi(post_id, currentUserId) {
   console.log("post_id url: ", post_id);
   console.log("API Function CALLED with:", post_id);
   return await GetReq(
-    `https://localhost:7071/api/Post/getPost?user_id=null&post_title=null&post_id=${post_id}&page=1&pageSize=10`
+    `https://localhost:7071/api/Post/getPost?user_id=null&post_title=null&post_id=${post_id}&page=1&pageSize=10&current_user=${currentUserId}`
   );
 }
 

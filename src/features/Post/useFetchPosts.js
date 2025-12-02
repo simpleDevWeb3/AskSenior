@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAllPostApi } from "../../services/PostApi";
 
-export function useFetchPosts() {
+export function useFetchPosts(curr_user_id) {
   const {
     data,
     isLoading: isLoadPost,
@@ -11,7 +11,7 @@ export function useFetchPosts() {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ["posts"],
-    queryFn: ({ pageParam }) => getAllPostApi(null, pageParam),
+    queryFn: ({ pageParam }) => getAllPostApi(null, pageParam, 3, curr_user_id),
 
     initialPageParam: 1,
 

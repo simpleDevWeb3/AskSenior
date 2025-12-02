@@ -35,7 +35,10 @@ function CommentPost() {
   const { postId } = useParams();
   const id = postId;
   const { isAuthenticated } = useAuth();
-  const { postComment, isLoadComment, errorComment } = useFetchPostComment(id);
+  const { postComment, isLoadComment, errorComment } = useFetchPostComment(
+    id,
+    user.id
+  );
   /*T
   const post = forumData.posts.find((post) => post.id === id);*/
   if (isLoadComment) return <Spinner />;

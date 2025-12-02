@@ -10,6 +10,7 @@ import useSidebar from "../hook/useSidebar";
 import { useScrollRestore } from "../hook/useScrollRestore";
 import { useFetchPostComment } from "../features/Post/useFetchPostComment";
 import Spinner from "../components/Spinner";
+import { useUser } from "../features/Auth/useUser";
 
 function CommentPage() {
   const navigate = useNavigate();
@@ -17,7 +18,11 @@ function CommentPage() {
   useScrollRestore();
   const { postId } = useParams();
   const id = postId;
-  const { postComment, isLoadComment, errorComment } = useFetchPostComment(id);
+  const { user } = useUser();
+  const { postComment, isLoadComment, errorComment } = useFetchPostComment(
+    id,
+    user.id
+  );
 
   if (isLoadComment) return <Spinner />;
   if (errorComment) return <div>{errorComment}</div>;

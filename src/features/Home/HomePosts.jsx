@@ -12,6 +12,7 @@ import Spinner from "../../components/Spinner";
 import { useInView } from "react-intersection-observer";
 import SpinnerMini from "../../components/SpinnerMini";
 import { Mosaic } from "react-loading-indicators";
+import { useUser } from "../Auth/useUser";
 
 // Store scroll positions by path
 
@@ -28,7 +29,7 @@ function HomePosts() {
     ...post,
     postComments: comments.filter((c) => c.postId === post.id),
   }));*/
-  
+  const { user } = useUser();
   const {
     posts,
     isLoadPost,
@@ -36,7 +37,7 @@ function HomePosts() {
     hasNextPage,
     isFetchingNextPage,
     errorPost,
-  } = useFetchPosts();
+  } = useFetchPosts(user.id);
 
   const { ref, inView } = useInView();
 
