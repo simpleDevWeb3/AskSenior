@@ -6,11 +6,18 @@ import { useFetchPostComment } from "../features/Post/useFetchPostComment";
 import { useParams } from "react-router-dom";
 import ButtonIcon from "./ButtonIcon";
 import Spinner from "./Spinner";
+import { useJoinCommunity } from "../features/Community/useJoinCommunity";
+import { useUser } from "../features/Auth/useUser";
+import SpinnerMini from "./SpinnerMini";
 
 function CommunityInfo() {
   const { postId } = useParams();
   const id = postId;
   const { postComment, isLoadComment, errorComment } = useFetchPostComment(id);
+  const { joinCommunity, isLoadingJoinCommunity } = useJoinCommunity();
+
+  const { user } = useUser();
+
   const moderators = [
     { id: 1, name: "kopifan88" },
     { id: 2, name: "latte_lady" },
@@ -58,8 +65,12 @@ function CommunityInfo() {
           </ModeratorList>
         </ModeratorSection>
 
-        <ButtonIcon style={{ background: "var(--hover-color)" }}>
-          Join
+        <ButtonIcon
+          disabled={isLoadingJoinCommunity}
+          action={() => joinCommunity({ community_id, user_id: user.id })}
+          style={{ background: "var(--hover-color)" }}
+        >
+          {isLoadingJoinCommunity ? <SpinnerMini /> : "Join"}
         </ButtonIcon>
       </Container>
     );

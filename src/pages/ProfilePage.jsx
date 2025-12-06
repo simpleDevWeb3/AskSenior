@@ -15,11 +15,9 @@ function ProfilePage() {
   const links = [
     { key: "POST", label: "Post", index: true },
     { key: "COMMENTED", label: "Commented" },
-    { key: "SAVED", label: "Saved" },
-    { key: "HISTORY", label: "History" },
+
     { key: "UPVOTED", label: "Upvoted" },
     { key: "DOWNVOTED", label: "Downvoted" },
-    { key: "DRAFT", label: "Draft" },
   ];
 
   return (

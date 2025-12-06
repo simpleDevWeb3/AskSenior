@@ -2,24 +2,29 @@ import styled from "styled-components";
 import useSidebar from "../hook/useSidebar";
 import PostList from "../features/Post/PostList";
 import forumData from "../data/post";
-import { useSearchParams } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 import Tabs from "../components/Tabs";
 import Filter from "../components/Filter";
 import { useScrollRestore } from "../hook/useScrollRestore";
-
+import SearchPostResult from "../features/Search/SearchPostResult";
+import SearchCommunityResult from "../features/Search/SearchCommunityResult";
+import SearchAccountResult from "../features/Search/SearchAccountResult";
 function SearchPage() {
   useScrollRestore();
-  const { isSidebarOpen } = useSidebar();
-  const { posts } = forumData;
+  const { $isSidebarOpen } = useSidebar(); // FIX: do not destructure with $
+
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q");
+  const type = searchParams.get("type") || "POST";
+
   const options = [
     { key: "POST", label: "Post" },
     { key: "COMMUNITY", label: "Community" },
     { key: "ACCOUNT", label: "Account" },
   ];
+
   return (
-    <SearchList $isSidebarOpen={isSidebarOpen}>
+    <SearchList $isSidebarOpen={$isSidebarOpen}>
       <OperationRow>
         <Filter
           filterField="type"
@@ -28,9 +33,11 @@ function SearchPage() {
           variant={"tabs"}
         />
       </OperationRow>
-      <br />
+
       <Wrapper>
-        <PostList postData={posts} />
+        {type === "POST" && <SearchPostResult query={query} />}
+        {type === "COMMUNITY" && <SearchCommunityResult query={query} />}
+        {type === "ACCOUNT" && <SearchAccountResult query={query} />}
       </Wrapper>
     </SearchList>
   );
@@ -39,7 +46,7 @@ function SearchPage() {
 export default SearchPage;
 const SearchList = styled.ul`
   transform: ${({ $isSidebarOpen }) =>
-    $isSidebarOpen ? `translateX(17rem)` : `translate(10rem)`};
+    $isSidebarOpen ? `translateX(25rem)` : `translate(10rem)`};
 
   @media (max-width: 1000px) {
     padding-top: 1rem;

@@ -38,6 +38,9 @@ import ManageCommutiy from "./features/Dashboard/ManageCommunity.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SearchPostResult from "./features/Search/SearchPostResult.jsx";
+import SearchCommunityResult from "./features/Search/SearchCommunityResult.jsx";
+import SearchAccountResult from "./features/Search/SearchAccountResult.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +69,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "community/:communityId", element: <CommunityPage /> },
+      { path: "profile/:userId", element: <ProfilePage /> },
       { path: "Communities", element: <CommunitiesPage /> },
       { path: "comment/:postId", element: <CommentPage /> },
       { path: "search", element: <SearchPage /> },
@@ -98,12 +102,10 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <PostsTab /> },
           { path: "POST", element: <PostsTab /> },
-          { path: "SAVED", element: <SavedPosts /> },
+
           { path: "COMMENTED", element: <CommentedTab /> },
           { path: "UPVOTED", element: <Upvoted /> },
           { path: "DOWNVOTED", element: <Downvoted /> },
-          { path: "HISTORY", element: <History /> },
-          { path: "DRAFT", element: <Draft /> },
         ],
       },
       {

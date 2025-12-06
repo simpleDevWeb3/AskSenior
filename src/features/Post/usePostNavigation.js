@@ -17,7 +17,7 @@ export function usePostNavigation() {
   const handleClickProfile = (e, communityId, userId) => {
     if (e.target.closest("button, a, [data-ignorepostclick]")) return;
     if (communityId) navigate(`/community/${communityId}`);
-    else if (userId) navigate(`/profile`);
+    else if (userId) navigate(`/profile/${userId}`);
     console.log(`/community/${communityId}`);
   };
 

@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-import { joinCommunityApi } from "../../services/CommunityApi";
+import { leaveCommunityApi } from "../../services/CommunityApi";
 
-export function useJoinCommunity() {
+export function useLeaveCommunity() {
   const queryClient = useQueryClient();
 
-  const { mutateAsync: joinCommunity, isPending: isLoadingJoinCommunity } =
+  const { mutateAsync: leaveCommunity, isPending: isLoadingleaveCommunity } =
     useMutation({
       mutationFn: ({ community_id, user_id }) =>
-        joinCommunityApi({ community_id, user_id }),
+        leaveCommunityApi({ community_id, user_id }),
 
       onSuccess: (_, variables) => {
-        toast.success("Community joined Successfully!");
+        toast.success("Leave Community Successfully!");
         queryClient.invalidateQueries({ queryKey: ["communities"] });
         queryClient.invalidateQueries({ queryKey: ["joinedCommunity"] });
         queryClient.invalidateQueries({
@@ -27,5 +27,5 @@ export function useJoinCommunity() {
       },
     });
 
-  return { joinCommunity, isLoadingJoinCommunity };
+  return { leaveCommunity, isLoadingleaveCommunity };
 }

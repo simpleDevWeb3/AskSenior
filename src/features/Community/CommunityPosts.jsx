@@ -7,19 +7,54 @@ import CommunityInfo from "../../components/CommunityInfo";
 import useSidebar from "../../hook/useSidebar";
 import { useFetchCommunity } from "./useFetchCommunity";
 import Spinner from "../../components/Spinner";
+import { useFetchComunityPost } from "./useFetchCommunityPost";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { Mosaic } from "react-loading-indicators";
+import { useUser } from "../Auth/useUser";
+import { useLeaveCommunity } from "./useLeaveCommunity";
+import { useJoinCommunity } from "./useJoinCommunity";
+import NoExist from "../../components/NoExist";
 
 function CommunityPosts() {
   const { communityId } = useParams();
 
   const { $isSidebarOpen } = useSidebar();
-  const { community, isLoadCommunity, errorCommunity } =
-    useFetchCommunity(communityId);
+  const { user } = useUser();
+  const { community, isLoadCommunity, errorCommunity } = useFetchCommunity(
+    communityId,
+    user?.id
+  );
+
+  const {
+    posts,
+    isLoadCommunityPost,
+    errorCommunityPost,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFetchComunityPost(communityId);
+  const existPost = posts.length > 0;
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   if (isLoadCommunity) return <Spinner />;
+  if (isLoadCommunityPost) return <Spinner />;
   if (errorCommunity)
     return (
       <div>
         <h1>{errorCommunity}</h1>
+      </div>
+    );
+  if (errorCommunityPost)
+    return (
+      <div>
+        <h1>{errorCommunityPost}</h1>
       </div>
     );
 
@@ -36,7 +71,28 @@ function CommunityPosts() {
         <ContentContainer>
           <HorizontalContainer>
             <MainSection>
-              {/* <PostList postData={communityPosts} />*/}
+              {!existPost && <NoExist name={"post"} />}
+              {posts && <PostList postData={posts} />}
+
+              <div
+                ref={ref}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "10rem",
+                  width: "100%",
+                }}
+              >
+                {isFetchingNextPage && (
+                  <Mosaic
+                    color="rgba(21, 144, 221, 0.889)"
+                    size="large"
+                    text=""
+                    textColor=""
+                  />
+                )}
+              </div>
             </MainSection>
 
             <Sidebar>

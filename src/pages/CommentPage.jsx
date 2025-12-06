@@ -11,6 +11,7 @@ import { useScrollRestore } from "../hook/useScrollRestore";
 import { useFetchPostComment } from "../features/Post/useFetchPostComment";
 import Spinner from "../components/Spinner";
 import { useUser } from "../features/Auth/useUser";
+import { useJoinCommunity } from "../features/Community/useJoinCommunity";
 
 function CommentPage() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function CommentPage() {
     id,
     user?.id
   );
+ 
 
   if (isLoadComment) return <Spinner />;
   if (errorComment) return <div>{errorComment}</div>;

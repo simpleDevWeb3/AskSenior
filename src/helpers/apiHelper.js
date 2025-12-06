@@ -1,5 +1,31 @@
 import axios from "axios";
 
+export async function DeleteReq(apiUrl, data = {}) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.delete(apiUrl, {
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      data: data, 
+    });
+
+    return res.data;
+  } catch (err) {
+    const errorData = err.response?.data;
+
+    const backendMsg =
+      errorData?.error ||
+      errorData?.msg ||
+      errorData?.message ||
+      err.message ||
+      "Unknown error";
+
+    throw backendMsg;
+  }
+}
+
 export async function PostReq(apiUrl, data) {
   try {
     const token = localStorage.getItem("token");

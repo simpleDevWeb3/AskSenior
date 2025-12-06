@@ -1,5 +1,5 @@
 import { GetReq, PostReq } from "../helpers/apiHelper";
-
+/**curl 'https://localhost:7071/api/Post/getPost?current_user=null&user_id=null&post_title=null&post_id=null&community_id=null&page=1&pageSize=10' */
 async function getAllPostApi(
   user_id,
   page = 1,
@@ -45,4 +45,25 @@ async function getPostCommentsApi(post_id, currentUserId) {
   );
 }
 
-export { createPostApi, getAllPostApi, getPostCommentsApi };
+/**
+ * curl 'https://localhost:7071/api/Post/getPost?current_user=null&user_id=null&post_title=null&post_id=null&community_id=null&page=1&pageSize=10'
+ */
+
+async function searchPostApi(current_user, postTitle, page = 1) {
+  return await GetReq(`https://localhost:7071/api/Post/getPost?current_user=${current_user}&user_id=null&post_title=${postTitle}&post_id=null&community_id=null&page=${page}&pageSize=3
+  `);
+}
+//curl 'https://localhost:7071/api/Vote/all_Vote?user_id=&vote_type=true'
+async function getPostByVote(user_id, vote_type) {
+  return await GetReq(
+    `https://localhost:7071/api/Vote/all_Vote?user_id=${user_id}&vote_type=${vote_type}`
+  );
+}
+
+export {
+  createPostApi,
+  getAllPostApi,
+  getPostCommentsApi,
+  searchPostApi,
+  getPostByVote,
+};

@@ -19,7 +19,8 @@ function PostSocialFeatures({ post_id }) {
       <VoteBtn
         userVote={postData.self_vote}
         onVote={(type) => {
-          if (variant === "post") handleVote(id, null, type);
+          if (variant === "post" || variant === "user_post")
+            handleVote(id, null, type);
           if (variant === "comment") handleVote(post_id, comment_id, type);
         }}
       />

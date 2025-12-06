@@ -4,9 +4,13 @@ import ButtonIcon from "./ButtonIcon";
 import { BiBell } from "react-icons/bi";
 import { HiPlus } from "react-icons/hi2";
 import { useState, useEffect } from "react";
+import SpinnerMini from "./SpinnerMini";
+import JoinBtn from "./JoinBtn";
+import { useUser } from "../features/Auth/useUser";
 
 function CommunityProfileCard({ communityData }) {
-  const { name } = communityData;
+  const { name, bannerUrl, avatarUrl, isJoined, id } = communityData;
+  const { user } = useUser();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -19,12 +23,12 @@ function CommunityProfileCard({ communityData }) {
     <StyledContainer>
       <BannerContainer>
         <Banner>
-          <img src="/avatar.jpg" />
+          <img src={bannerUrl} />
         </Banner>
 
         {windowWidth > 800 && (
           <AvatarContainer>
-            <Avatar src={"/avatar.jpg"} />
+            <Avatar src={avatarUrl} />
           </AvatarContainer>
         )}
       </BannerContainer>
@@ -34,7 +38,7 @@ function CommunityProfileCard({ communityData }) {
         <HorizontalContainer2>
           {windowWidth <= 800 && (
             <AvatarContainerMobile>
-              <Avatar src={"/avatar.jpg"} />
+              <Avatar src={avatarUrl} />
             </AvatarContainerMobile>
           )}
 
@@ -44,9 +48,11 @@ function CommunityProfileCard({ communityData }) {
               <ButtonIcon icon={<AddIcon />} variant="outline">
                 <span>Create Post</span>
               </ButtonIcon>
-              <ButtonIcon variant="outline">
-                <span>Join</span>
-              </ButtonIcon>
+              <JoinBtn
+                community_id={id}
+                user_id={user?.id}
+                isJoined={isJoined}
+              />
               <ButtonIcon
                 size="rounded"
                 variant="outline"
@@ -62,9 +68,7 @@ function CommunityProfileCard({ communityData }) {
           <ButtonIcon icon={<AddIcon />} variant="outline">
             <span>Create Post</span>
           </ButtonIcon>
-          <ButtonIcon variant="outline">
-            <span>Join</span>
-          </ButtonIcon>
+          <JoinBtn community_id={id} user_id={user?.id} isJoined={isJoined} />
           <ButtonIcon
             size="rounded"
             variant="outline"

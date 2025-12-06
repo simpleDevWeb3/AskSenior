@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { HiOutlineSearch } from "react-icons/hi";
 import { Dropdown, useDropdown } from "./Dropdown";
 import { useState } from "react";
+import Avatar from "./Avatar";
 
 const StyledSearchBar = styled.form`
   background-color: var(--tertiary-color);
@@ -49,10 +50,10 @@ const Layout = styled.div`
   gap: 0.5rem;
 `;
 
-function Search({ onSearch, onInput }) {
+function Search({ onSearch, onInput, useSearch, placeholder, initialData }) {
   const [query, setQuery] = useState("");
   const { close } = useDropdown();
-  
+  useSearch?.();
   function handleSearch(e) {
     e.preventDefault();
     if (!query.trim()) return;
@@ -73,7 +74,7 @@ function Search({ onSearch, onInput }) {
           <SearchIcon />
           <StyledInput
             type="text"
-            placeholder="search post"
+            placeholder={placeholder}
             onChange={(e) => handleInput(e)}
             value={query}
           />
@@ -82,14 +83,23 @@ function Search({ onSearch, onInput }) {
 
       {
         /* Dropdown suggestion list */
-        query && (
+        initialData && (
           <Dropdown.List>
-            <Dropdown.Item onClick={() => onSearch?.(query)}>
-              {query}
-            </Dropdown.Item>
-            <Dropdown.Item>{query}</Dropdown.Item>
-            <Dropdown.Item>{query}</Dropdown.Item>
-            <Dropdown.Item>{query}</Dropdown.Item>
+            {initialData.map((data) => (
+              <Dropdown.Item>
+                <div
+                  style={{
+                    width: "35px",
+                    height: "35px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Avatar src={data.avatar_url} />
+                </div>
+                {data.name}
+              </Dropdown.Item>
+            ))}
           </Dropdown.List>
         )
       }

@@ -5,13 +5,17 @@ import { useFetchAllCommunity } from "./useFetchAllCommunity";
 import Spinner from "../../components/Spinner";
 import { useUser } from "../Auth/useUser";
 import { useJoinCommunity } from "../Community/useJoinCommunity";
+import { useNavigate } from "react-router-dom";
+import JoinBtn from "../../components/JoinBtn";
 
 function CommunitiesLayout() {
-  const { communities, isLoadCommunities, errorCommunities } =
-    useFetchAllCommunity();
   const { user } = useUser();
-  const { joinCommunity, isLoadingJoinCommunity } = useJoinCommunity();
+  const { communities, isLoadCommunities, errorCommunities } =
+    useFetchAllCommunity(user?.id);
+  const navigate = useNavigate();
 
+  const notOwnedCommunities =
+    communities?.filter((community) => community.adminId !== user?.id) || [];
   if (isLoadCommunities)
     return (
       <FullPageLoader>
@@ -19,7 +23,8 @@ function CommunitiesLayout() {
       </FullPageLoader>
     );
 
-  if (errorCommunities) return <div>Error: {errorCommunities}</div>;
+  if (errorCommunities || !Array.isArray(communities))
+    return <div>Error: {errorCommunities}</div>;
 
   return (
     <Container>
@@ -28,8 +33,15 @@ function CommunitiesLayout() {
       </Header>
 
       <List>
-        {communities.map((community) => (
-          <CommunityItem key={community.id}>
+        {notOwnedCommunities.map((community) => (
+          <CommunityItem
+            onClick={(e) => {
+              e.stopPropagation();
+              if (e.target.closest("button")) return;
+              navigate(`/community/${community.id}`);
+            }}
+            key={community.id}
+          >
             {/* 1. Banner Image */}
             <CardBanner $src={community.bannerUrl || "/default-banner.jpg"} />
 
@@ -53,18 +65,11 @@ function CommunitiesLayout() {
                   </Info>
                 </div>
 
-                <ButtonIcon
-                  disabled={isLoadingJoinCommunity}
-                  style={{ padding: "0.5rem 1.2rem", borderRadius: "25px" }}
-                  action={() => {
-                    joinCommunity({
-                      community_id: community.id,
-                      user_id: user.id,
-                    });
-                  }}
-                >
-                  Join
-                </ButtonIcon>
+                <JoinBtn
+                  community_id={community.id}
+                  user_id={user?.id}
+                  isJoined={community.isJoined}
+                />
               </Group>
 
               <Description>
@@ -72,6 +77,15 @@ function CommunitiesLayout() {
                   ? community.description
                   : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde,"}
               </Description>
+
+              {/* --- NEW: Tags Section --- */}
+              {community.topics && community.topics.length > 0 && (
+                <TagsContainer>
+                  {community.topics.map((topic) => (
+                    <Tag key={topic.id}>{topic.name}</Tag>
+                  ))}
+                </TagsContainer>
+              )}
             </CardContent>
           </CommunityItem>
         ))}
@@ -100,15 +114,16 @@ const Header = styled.div`
   color: var(--primary-color);
   margin-bottom: 1rem;
 `;
+
 const FullPageLoader = styled.div`
-  height: 100vh; /* Occupy full viewport height */
+  height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Optional: Background color to match your theme if needed */
   background-color: var(--background-color);
 `;
+
 const Title = styled.h3`
   font-weight: 600;
 `;
@@ -117,7 +132,7 @@ const List = styled.ul`
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 1.5rem; /* Increased gap slightly for larger cards */
+  gap: 1.5rem;
 
   @media (max-width: 1000px) {
     grid-template-columns: 1fr 1fr;
@@ -135,10 +150,8 @@ const CommunityItem = styled.li`
   box-shadow: 4px 4px 0px var(--tertiary-color);
   border-radius: 10px;
   border: 1px solid var(--hover-color);
-  overflow: hidden; /* Ensures banner stays within rounded corners */
+  overflow: hidden;
   transition: transform 0.2s ease, background 0.2s ease;
-
-  /* Removed padding here, moved to CardContent */
   padding: 0;
 
   &:hover {
@@ -167,7 +180,7 @@ const CardContent = styled.div`
 
 const Group = styled.div`
   display: flex;
-  align-items: flex-start; /* Align to top to handle the avatar pull-up */
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 0.5rem;
 `;
@@ -178,16 +191,12 @@ const AvatarContainer = styled.div`
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-
-  /* The Magic: Pull it up over the banner */
   margin-top: -25px;
-
-  /* Create a border matching the card bg to make it "pop" */
   border: 4px solid var(--background-color);
   background-color: var(--background-color);
 
   ${CommunityItem}:hover & {
-    border-color: var(--hover-color); /* Match border color on card hover */
+    border-color: var(--hover-color);
   }
 `;
 
@@ -195,7 +204,7 @@ const Info = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 0.8rem;
-  padding-top: 0.2rem; /* Push text down slightly to align with bottom of avatar */
+  padding-top: 0.2rem;
 `;
 
 const Name = styled.h3`
@@ -216,4 +225,31 @@ const Description = styled.p`
   opacity: 0.7;
   font-size: 0.95rem;
   line-height: 1.4;
+`;
+
+// --- New Tag Styles ---
+
+const TagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap; /* Allows tags to go to next line if there are many */
+  gap: 0.5rem;
+  margin-top: auto; /* Pushes tags to the bottom if the card height stretches */
+  padding-top: 1rem;
+`;
+
+const Tag = styled.span`
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-color);
+  background-color: var(--tertiary-color); /* Matches the shadow/accent */
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px; /* Pill shape */
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+
+  /* Optional: Make it stand out slightly more on hover */
+  &:hover {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
 `;

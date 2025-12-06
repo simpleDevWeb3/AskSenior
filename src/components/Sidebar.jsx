@@ -26,6 +26,11 @@ import { CgCommunity } from "react-icons/cg";
 import { RiCommunityFill, RiUserCommunityLine } from "react-icons/ri";
 import { useAuth } from "../features/Auth/AuthContext";
 import { useUser } from "../features/Auth/useUser";
+import { useFetchJoinedCommunity } from "../features/Communities/useFetchJoinedCommunity";
+import Spinner from "./Spinner";
+import ListJoinedCommunity from "./ListJoinedCommunity";
+import ListCreatedCommunity from "./ListCreatedCommunity";
+import { useFetchCreatedCommunity } from "../features/Communities/useFetchCreatedCommunity";
 
 const StyledSidebar = styled.aside`
   overflow-y: scroll;
@@ -104,7 +109,7 @@ const StyledNavAction = styled.div`
 function Sidebar() {
   const { openModal } = useModal();
   const { isDashboardRoute } = useDashboard();
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, user } = useUser();
   const {
     $isSidebarOpen,
     closeSidebar,
@@ -114,14 +119,17 @@ function Sidebar() {
     isManualOpenResize,
     setIsManualOpenResize,
   } = useSidebar();
-
+  const { communities, isLoadCommunities, errorCommunities } =useFetchJoinedCommunity(user?.id);
   // Example communities list
-  const userCommunities = [
-    { id: 1, name: "Kopi Lovers" },
-    { id: 2, name: "Web Dev" },
-    { id: 3, name: "Gaming Hub" },
-  ];
-
+  const {
+    createdCommunities,
+    isLoadCreatedCommunities,
+    errorCreatedCommunities,
+  } = useFetchCreatedCommunity(user?.id);
+  const joinedCommunities =
+    communities?.communities?.filter(
+      (community) => community.adminId !== user?.id
+    ) || [];
   // RESIZE HANDLING
   useEffect(() => {
     function handleResize() {
@@ -229,44 +237,10 @@ function Sidebar() {
           </StyledNavAction>
           <br />
           <br />
-          {isAuthenticated && (
+          {isAuthenticated && communities && createdCommunities && (
             <>
-              <Accordian title={"Manage"}>
-                {userCommunities.map((c) => (
-                  <StyledNavLink
-                    key={c.id}
-                    onClick={handleNavigate}
-                    to={`/dashboard`}
-                  >
-                    <HiOutlineUserGroup />
-                    <span>{c.name}</span>
-                  </StyledNavLink>
-                ))}
-              </Accordian>
-              <Accordian title={"Joined"}>
-                {userCommunities.map((c) => (
-                  <StyledNavLink
-                    key={c.id}
-                    onClick={handleNavigate}
-                    to={`/dashboard`}
-                  >
-                    <HiOutlineUserGroup />
-                    <span>{c.name}</span>
-                  </StyledNavLink>
-                ))}
-              </Accordian>
-              <Accordian title={"Followed"}>
-                {userCommunities.map((c) => (
-                  <StyledNavLink
-                    key={c.id}
-                    onClick={handleNavigate}
-                    to={`/dashboard`}
-                  >
-                    <HiOutlineUserGroup />
-                    <span>{c.name}</span>
-                  </StyledNavLink>
-                ))}
-              </Accordian>
+              <ListCreatedCommunity communities={createdCommunities} />
+              <ListJoinedCommunity communities={joinedCommunities} />
             </>
           )}
         </>

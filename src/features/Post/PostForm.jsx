@@ -19,12 +19,17 @@ import { useUser } from "../Auth/useUser";
 import { useCreatePost } from "./useCreatePost";
 import Spinner from "../../components/Spinner";
 import Carousel from "../../components/Carousel";
+import { useFetchJoinedCommunity } from "../Communities/useFetchJoinedCommunity";
 
 function PostForm() {
   const { openModal, closeModal } = useModal();
   const [selectedTopic, setSelectedTopic] = useState(null);
   const { user } = useUser();
   const { createPost, isLoadCreatePost, errorCreatePost } = useCreatePost();
+
+  const { communities, isLoadCommunities, errorCommunities } =
+    useFetchJoinedCommunity(user?.id);
+
   const fileInputRef = useRef(null);
   const {
     type,
@@ -98,7 +103,10 @@ function PostForm() {
           {displaySearch ? (
             <Dropdown position="left">
               <SearchBarContainer ref={ref}>
-                <Search />
+                <Search
+                  placeholder={"Search Community"}
+                  initialData={communities.communities}
+                />
               </SearchBarContainer>
             </Dropdown>
           ) : (

@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCommunityApi } from "../../services/CommunityApi";
+import { searchCommunityApi } from "../../services/CommunityApi";
 
-export function useFetchCommunity(community_id, user_id) {
+export function useSearchCommunity(query) {
   const {
     data: community,
     isLoading: isLoadCommunity,
     error: errorCommunity,
   } = useQuery({
-    queryKey: ["community", community_id],
-    queryFn: () => getCommunityApi(community_id, user_id),
+    queryKey: ["searchCommunityResult", query],
+    queryFn: () => searchCommunityApi(query),
 
     refetchOnWindowFocus: false,
 

@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getAllPostApi } from "../../services/PostApi";
+import { searchPostApi } from "../../services/PostApi";
 
-export function useFetchCurrUserPost(user_id) {
+export function useSearchPosts(curr_user_id, postTitle) {
   const {
     data,
     isLoading: isLoadPost,
@@ -10,8 +10,9 @@ export function useFetchCurrUserPost(user_id) {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["posts", user_id],
-    queryFn: ({ pageParam }) => getAllPostApi(user_id, pageParam, 3, user_id),
+    queryKey: ["searchPostResult", postTitle],
+    queryFn: ({ pageParam }) =>
+      searchPostApi(curr_user_id, postTitle, pageParam),
 
     initialPageParam: 1,
 
@@ -33,6 +34,7 @@ export function useFetchCurrUserPost(user_id) {
   });
 
   const posts = data?.pages.flat() || [];
+
   return {
     posts,
     isLoadPost,

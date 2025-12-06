@@ -200,7 +200,10 @@ function Navbar() {
       <SearchContainer>
         {isDesktop ? (
           <Dropdown position="center">
-            <Search onSearch={handleSearch} />
+            <Search
+              onSearch={handleSearch}
+              placeholder={"Search Post,Community,Account"}
+            />
           </Dropdown>
         ) : !mobileSearch ? (
           <BiSearch
@@ -213,7 +216,10 @@ function Navbar() {
           />
         ) : (
           <Dropdown position="center">
-            <Search onSearch={handleSearch} />
+            <Search
+              onSearch={handleSearch}
+              placeholder={"Search Post,Community,Account"}
+            />
           </Dropdown>
         )}
       </SearchContainer>

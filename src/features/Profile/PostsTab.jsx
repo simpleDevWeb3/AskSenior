@@ -8,6 +8,7 @@ import { useFetchCurrUserPost } from "../Post/useFetchCurrUserPost";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { Mosaic } from "react-loading-indicators";
+import NoExist from "../../components/NoExist";
 
 function PostsTab() {
   const { user } = useUser();
@@ -21,7 +22,7 @@ function PostsTab() {
   } = useFetchCurrUserPost(user.id);
 
   const { ref, inView } = useInView();
-
+  const existPost = posts.length > 0;
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -32,7 +33,7 @@ function PostsTab() {
     <Container style={{ position: "relative" }}>
       {isLoadPost && <Spinner />}
       {errorPost && <div>{errorPost}</div>}
-
+      {!existPost && <NoExist name={"post "} />}
       {posts &&
         posts.map((post) => (
           <PostWrapper>

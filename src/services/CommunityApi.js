@@ -1,13 +1,26 @@
-import { GetReq, PostReq } from "../helpers/apiHelper";
-//curl https://localhost:7071/api/Community/getall
+import { DeleteReq, GetReq, PostReq } from "../helpers/apiHelper";
 
-async function getAllCommunityApi() {
-  return await GetReq(`https://localhost:7071/api/Community/getall`);
+//curl 'https://localhost:7071/api/Community/adminCommunities/{adminId}'
+
+async function getCreatedCommunityApi(user_id) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/adminCommunities/${user_id}`
+  );
 }
 
-//curl 'https://localhost:7071/api/Community/getbyid?id='
-async function getCommunityApi(id) {
-  return await GetReq(`https://localhost:7071/api/Community/getbyid?id=${id}`);
+//curl 'https://localhost:7071/api/Community/getAll?userId=''
+
+async function getAllCommunityApi(user_id) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/getAll?userId=${user_id}`
+  );
+}
+
+//curl 'https://localhost:7071/api/Community/getById?id=&userId='
+async function getCommunityApi(community_id, user_id) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/getById?id=${community_id}&userId=${user_id}`
+  );
 }
 
 /**
@@ -47,10 +60,52 @@ async function joinCommunityApi(formData) {
     `https://localhost:7071/api/Community/join?userId=${user_id}&communityId=${community_id}`
   );
 }
+/**
+ * curl 'https://localhost:7071/api/Community/leave?userId=&communityId=' \
+  --request DELETE
+ */
+async function leaveCommunityApi(formData) {
+  const { user_id, community_id } = formData;
+  return await DeleteReq(
+    `https://localhost:7071/api/Community/leave?userId=${user_id}&communityId=${community_id}`
+  );
+}
+/**
+ * curl 'https://localhost:7071/api/Post/getPost?current_user=null&user_id=null&post_title=null&post_id=null&community_id=null&page=1&pageSize=10'
+ */
+async function getAllCommunityPostApi(community_id, page = 1, pageSize = 3) {
+  return await GetReq(
+    `https://localhost:7071/api/Post/getPost?current_user=null&user_id=null&post_title=null&post_id=null&community_id=${community_id}&page=${page}&pageSize=${pageSize}`
+  );
+}
+
+/**
+ * curl 'https://localhost:7071/api/Community/search?keyword='
+ */
+
+async function searchCommunityApi(query) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/search?keyword=${query}`
+  );
+}
+/**
+ *curl 'https://localhost:7071/api/Community/userCommunities?userId='
+ */
+
+async function getUserJoinedCommunityApi(user_id) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/userCommunities?userId=${user_id}`
+  );
+}
 
 export {
   getAllCommunityApi,
   getCommunityApi,
   createCommunityApi,
   joinCommunityApi,
+  getAllCommunityPostApi,
+  searchCommunityApi,
+  getUserJoinedCommunityApi,
+  getCreatedCommunityApi,
+  leaveCommunityApi,
 };

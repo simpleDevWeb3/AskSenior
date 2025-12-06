@@ -11,7 +11,7 @@ export function useCreateCommunity(onHandleSuccess) {
       mutationFn: (formData) => createCommunityApi(formData),
       onSuccess: () => {
         toast.success("Community created successfully!");
-        queryClient.invalidateQueries({ queryKey: ["communities"] });
+        queryClient.invalidateQueries({ queryKey: ["createdCommunities"] });
         onHandleSuccess?.();
       },
       onError: (err) => {

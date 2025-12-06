@@ -98,6 +98,10 @@ function PostCard({
           </PostBody>
         )}
         {variant === "user_post" && <User_Post data={postData} />}
+        {variant === "post_vote_user" && <PostByUserVote />}
+        {variant === "comment_vote_user" && (
+          <CommentPostByVote postData={postData} />
+        )}
       </StyledPost>
     </PostContext.Provider>
   );
@@ -262,19 +266,143 @@ function User_Post({ data }) {
       </PostHeader>
       <PostContent />
       <StyledAction>
-        <VoteBtn />
-        <CommentBtn />
-        <ButtonIcon size="rounded" action={() => openModal("Edit Post", data)}>
-          <HiPencil />
-        </ButtonIcon>
+        <PostSocialFeatures />
+        <div style={{}}>
+          <ButtonIcon
+            style={{ marginTop: "0.5rem" }}
+            size="rounded"
+            icon={<HiPencil />}
+            action={() => openModal("Edit Post", data)}
+          ></ButtonIcon>
+        </div>
       </StyledAction>
     </PostBody>
   );
 }
+
+function PostByUserVote() {
+  return (
+    <PostBody>
+      <PostHeader>
+        <PostProfile />
+      </PostHeader>
+      <PostContent />
+      <StyledAction></StyledAction>
+    </PostBody>
+  );
+}
+
+function CommentPostByVote({ children, postData }) {
+  const { user, isAuthenticated } = useUser();
+  //const { createComment } = useCreateComment();
+  const { postId } = useParams();
+  //const id = postId;
+
+  const { user_id: op_id } = postData;
+
+  const isOP = function (user_id) {
+    return op_id === user_id;
+  };
+
+  return (
+    <>
+      <AvatarContainer>
+        <Avatar src={postData.avatar_url} />
+        {children}
+      </AvatarContainer>
+      <PostBody>
+        <PostHeader>
+          <UserName style={{ gap: "0.5rem" }}>
+            {isOP(postData.user_id) && (
+              <label
+                style={{
+                  background: "var(--hover-color)",
+                  color: "var(--text-color)",
+                  padding: "0.2rem 1rem",
+                  borderRadius: "25px",
+                  marginRight: "0.5rem",
+                }}
+              >
+                OP
+              </label>
+            )}
+            {postData.user_name}
+            <span
+              style={{
+                fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {/*  <LuDot /> {formatTimeAgo(postData.created_at)} */}
+            </span>
+          </UserName>
+        </PostHeader>
+        {postData?.reply_to_username && (
+          <p
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "0.8rem",
+              marginBottom: "0.5rem",
+              background: "var(--hover-color)",
+              width: "fit-content",
+              padding: "0.5rem 1rem",
+              borderRadius: "25px",
+            }}
+          >
+            <>
+              <span style={{ fontWeight: "700" }}>
+                replies to{" "}
+                {isOP(postData.reply_to_id) && (
+                  <label
+                    style={{
+                      background: "var(--hover-color)",
+                      color: "var(--text-color)",
+                      padding: "0.2rem 1rem",
+                      borderRadius: "25px",
+                      marginRight: "0.5rem",
+                    }}
+                  >
+                    OP
+                  </label>
+                )}
+                {postData.reply_to_username}
+              </span>
+              <span
+                style={{
+                  fontWeight: "500",
+                  overflowWrap: "break-word",
+                  wordBreak: "break-word",
+                }}
+              >
+                : {truncateText(postData.reply_to_content)}
+              </span>
+            </>
+          </p>
+        )}
+
+        <div>
+          <p
+            style={{
+              fontWeight: "500",
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
+            }}
+          >
+            {postData.comment_content}
+          </p>
+        </div>
+      </PostBody>
+    </>
+  );
+}
+
 const StyledAction = styled.div`
   margin-top: 0.5rem;
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 `;
 const UserName = styled.div`
   color: var(--primary-color);
