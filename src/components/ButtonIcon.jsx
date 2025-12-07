@@ -96,10 +96,9 @@ const variantStyles = {
     background: none;
     color: var(--text-color);
     border: 1px solid var(--hover-color);
-    box-shadow: 0px 3px 0px var(--tertiary-color);
 
     &:hover {
-      box-shadow: 0px 3px 3px var(--hover-color);
+      background-color: var(--hover-color);
     }
   `,
   text: css`

@@ -7,9 +7,9 @@ export function useFetchJoinedCommunity(user_id) {
     isLoading: isLoadCommunities,
     error: errorCommunities,
   } = useQuery({
-    queryKey: ["joinedCommunity"],
+    queryKey: ["joinedCommunity", user_id],
     queryFn: () => getUserJoinedCommunityApi(user_id),
-
+    enabled: !!user_id,
     refetchOnWindowFocus: false,
 
     staleTime: 1000 * 60 * 5,

@@ -33,7 +33,9 @@ export function useVotePost() {
         queryClient.invalidateQueries({
           queryKey: ["postByVote", true],
         }),
-
+        queryClient.invalidateQueries({
+          queryKey: ["userCommented"],
+        }),
         queryClient.invalidateQueries({
           queryKey: ["postByVote", false],
         }),

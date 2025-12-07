@@ -2,11 +2,10 @@ import styled from "styled-components";
 import Search from "../../components/Search";
 import { Dropdown } from "../../components/Dropdown";
 
-import { HiArrowDown } from "react-icons/hi2";
 import { HiChevronDown, HiPencil } from "react-icons/hi";
 import Filter from "../../components/Filter";
 
-import { BsTrashFill, BsUpload } from "react-icons/bs";
+import { BsUpload } from "react-icons/bs";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import ButtonIcon from "../../components/ButtonIcon";
 import { usePostForm } from "./usePostForm";
@@ -20,17 +19,23 @@ import { useCreatePost } from "./useCreatePost";
 import Spinner from "../../components/Spinner";
 import Carousel from "../../components/Carousel";
 import { useFetchJoinedCommunity } from "../Communities/useFetchJoinedCommunity";
+import Avatar from "../../components/Avatar";
 
 function PostForm() {
   const { openModal, closeModal } = useModal();
-  const [selectedTopic, setSelectedTopic] = useState(null);
   const { user } = useUser();
   const { createPost, isLoadCreatePost, errorCreatePost } = useCreatePost();
+  const { communities } = useFetchJoinedCommunity(user?.id);
 
-  const { communities, isLoadCommunities, errorCommunities } =
-    useFetchJoinedCommunity(user?.id);
+  // 1. Local State (UI Only)
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedCommunity, setSelectedCommunity] = useState(null);
+  const [filterQuery, setFilterQuery] = useState("");
 
   const fileInputRef = useRef(null);
+
+  // 2. Initialize Hook
+  // The callback here ONLY runs if the hook's validation passes
   const {
     type,
     formData,
@@ -42,7 +47,7 @@ function PostForm() {
     ref,
     postOptions,
     handleChange,
-    handleImageChange,
+    handleImageChange, // Hook now handles validation internally
     handleDrop,
     handleDragOver,
     handleDragLeave,
@@ -50,28 +55,30 @@ function PostForm() {
     handleMouseLeave,
     handleCancelImage,
     handleSubmit,
-  } = usePostForm(handleFinalSubmit);
+  } = usePostForm(onFormSuccess);
 
-  // 1. Create a wrapper function to merge data
-  function handleFinalSubmit(formDataFromHook) {
-    if (!selectedTopic) {
-      alert("Please select a topic!");
-      return;
-    }
-
+  // 3. Success Callback (Executed by the hook after validation)
+  function onFormSuccess(validatedFormData) {
     const finalData = {
-      ...formDataFromHook,
+      ...validatedFormData,
       topic_id: selectedTopic.id,
       user_id: user.id,
-      community_id: null,
+      community_id: selectedCommunity?.id,
     };
-    //call api here!
-    console.log(finalData);
 
-    setSelectedTopic(null);
-
+    console.log("Submitting:", finalData);
     createPost(finalData);
+
+    // Reset UI selection state
+    setSelectedTopic(null);
+    setSelectedCommunity(null);
   }
+
+  // 4. Component Handlers
+  const joinedList = communities?.communities || [];
+  const filteredCommunities = joinedList.filter((c) =>
+    c.name.toLowerCase().includes(filterQuery.toLowerCase())
+  );
 
   function onAdd(topic) {
     setSelectedTopic(topic);
@@ -82,45 +89,86 @@ function PostForm() {
     closeModal();
   }
 
+  function handleSelectCommunity(community) {
+    setSelectedCommunity(community);
+    setSelectedTopic(null); // Reset topic when community changes
+    setDisplaySearch(false);
+    setFilterQuery("");
+  }
+
   return (
     <Layout>
       {isLoadCreatePost && <Spinner />}
       {errorCreatePost && <div>{errorCreatePost}</div>}
+
       <Selector>
         <Modal id={"Select Topic"}>
           <SelectTopic
             selectedTopic={selectedTopic}
             onAdd={onAdd}
             onCancel={onCancel}
+            availableTopics={selectedCommunity?.topics || []}
           />
         </Modal>
       </Selector>
-      <FormContainer onSubmit={handleSubmit}>
+
+      {/* 5. Pass external context (Community/Topic) to handleSubmit */}
+      <FormContainer
+        onSubmit={(e) => handleSubmit(e, { selectedCommunity, selectedTopic })}
+      >
         <Title>Create a Post</Title>
 
+        {/* Display Error from Hook */}
         {error && <ErrorMsg>{error}</ErrorMsg>}
+
         <FormGroup>
           {displaySearch ? (
             <Dropdown position="left">
               <SearchBarContainer ref={ref}>
                 <Search
                   placeholder={"Search Community"}
-                  initialData={communities.communities}
+                  initialData={filteredCommunities}
+                  onInput={(val) => setFilterQuery(val)}
+                  onSelect={handleSelectCommunity}
                 />
               </SearchBarContainer>
             </Dropdown>
           ) : (
             <SelectCommunity onClick={() => setDisplaySearch((show) => !show)}>
-              Select Community
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                {selectedCommunity ? (
+                  <>
+                    <div
+                      style={{
+                        width: "25px",
+                        height: "25px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Avatar src={selectedCommunity.avatarUrl} />
+                    </div>
+                    <span style={{ fontWeight: "bold" }}>
+                      {selectedCommunity.name}
+                    </span>
+                  </>
+                ) : (
+                  "Select Community"
+                )}
+              </div>
               <HiChevronDown />
             </SelectCommunity>
           )}
         </FormGroup>
+
         <Filter
           filterField="type"
           options={postOptions}
           startingOption="TEXT"
         />
+
         <FormGroup>
           <Input
             id="title"
@@ -131,6 +179,7 @@ function PostForm() {
             onChange={handleChange}
           />
         </FormGroup>
+
         <ActionContainer
           style={{ justifyContent: "start", alignItems: "center" }}
         >
@@ -155,65 +204,59 @@ function PostForm() {
                 multiple
                 id="image"
                 accept="image/*"
+                // 6. Direct Hook Handler (Validation is inside hook now)
                 onChange={handleImageChange}
               />
-              {!formData.image && (
-                <>
-                  <FileLabel
-                    onDragOver={(e) => handleDragOver(e)}
-                    onDragLeave={(e) => handleDragLeave(e)}
-                    onDrop={(e) => handleDrop(e)}
-                    htmlFor="image"
-                  >
-                    {isDragging ? "Drop Image Here" : "Drag and Drop Image"}
-                    <BsUpload />
-                  </FileLabel>
-                </>
-              )}
-
-              {formData.image && (
+              {!formData.image || formData.image.length === 0 ? (
+                <FileLabel
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  htmlFor="image"
+                >
+                  {isDragging ? "Drop Image Here" : "Drag and Drop Image"}
+                  <BsUpload />
+                </FileLabel>
+              ) : (
                 <ImageContainer
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  {formData.image.length > 0 && (
-                    <Carousel
-                      scrollLastAuto={true}
-                      total={formData.image.length}
-                      hideWhenCurrentSlide={true}
-                    >
-                      <Carousel.Count />
-                      <Carousel.Track>
-                        {formData.image.map((img) => (
-                          <Carousel.Card>
-                            <ImagePreview
-                              src={URL?.createObjectURL(img)}
-                              alt="Preview"
-                            />
-                          </Carousel.Card>
-                        ))}
-                      </Carousel.Track>
-                      <Carousel.PrevBtn
-                        style={{
-                          backgroundColor: "var(--tertiary-color)",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <Carousel.NextBtn
-                        style={{
-                          backgroundColor: "var(--tertiary-color)",
-                          borderRadius: "50%",
-                        }}
-                      />
-                    </Carousel>
-                  )}
+                  <Carousel
+                    scrollLastAuto={true}
+                    total={formData.image.length}
+                    hideWhenCurrentSlide={true}
+                  >
+                    <Carousel.Count />
+                    <Carousel.Track>
+                      {formData.image.map((img, i) => (
+                        <Carousel.Card key={i}>
+                          <ImagePreview
+                            src={URL?.createObjectURL(img)}
+                            alt="Preview"
+                          />
+                        </Carousel.Card>
+                      ))}
+                    </Carousel.Track>
+                    <Carousel.PrevBtn
+                      style={{
+                        backgroundColor: "var(--tertiary-color)",
+                        borderRadius: "50%",
+                      }}
+                    />
+                    <Carousel.NextBtn
+                      style={{
+                        backgroundColor: "var(--tertiary-color)",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </Carousel>
 
                   {isShowDeleteBtn && (
                     <>
                       <ButtonDelete onClick={(e) => handleCancelImage(e)}>
                         <FaTrash />
                       </ButtonDelete>
-
                       <ButtonAdd
                         onClick={(e) => {
                           e.preventDefault();
@@ -240,9 +283,9 @@ function PostForm() {
             onChange={handleChange}
           />
         </FormGroup>
+
         <ActionContainer>
           <ButtonIcon>Post</ButtonIcon>
-
           <ButtonIcon>Save as Draft</ButtonIcon>
         </ActionContainer>
       </FormContainer>
@@ -253,6 +296,7 @@ function PostForm() {
 export default PostForm;
 
 /* ---------- Styled Components ---------- */
+// ... (Your existing styled components remain here)
 const SelectedTopicLabel = styled.div`
   border-radius: 25px;
   background-color: rgb(19, 87, 184);
@@ -277,12 +321,9 @@ const FileInput = styled.input`
 const FileLabel = styled.label`
   display: flex;
   background-color: inherit;
-
   padding: 0.6rem 1rem;
-
   border-radius: 20px;
   cursor: pointer;
-
   border: 1px dashed #ccc;
   font-size: 0.95rem;
   font-weight: 500;
@@ -296,7 +337,6 @@ const FileLabel = styled.label`
     background-color: var(--hover-color, #d6d6d6);
   }
 `;
-
 const SelectCommunity = styled.div`
   border-radius: 25px;
   border: 1px solid var(--hover-color);
@@ -307,6 +347,7 @@ const SelectCommunity = styled.div`
   align-items: center;
   font-size: 0.8rem;
   justify-content: space-between;
+  cursor: pointer;
 `;
 const Layout = styled.div`
   display: flex;
@@ -320,29 +361,18 @@ const FormContainer = styled.form`
   width: 60%;
   max-width: 50rem;
   color: var(--text-color);
-
   @media (max-width: 1000px) {
     width: 100%;
   }
 `;
-
 const Title = styled.h2`
   color: var(--text-color, #333);
-`;
-const ContainerSearch = styled.div`
-  display: flex;
-  justify-content: start;
 `;
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 `;
-
-const Label = styled.label`
-  font-weight: 600;
-`;
-
 const Input = styled.input`
   background-color: inherit;
   color: var(--text-color);
@@ -356,7 +386,6 @@ const Input = styled.input`
     outline: none;
   }
 `;
-
 const Textarea = styled.textarea`
   padding: 0.6rem 0.8rem;
   border-radius: 18px;
@@ -365,25 +394,11 @@ const Textarea = styled.textarea`
   border: 1px solid var(--tertiary-color);
   font-size: 1rem;
   resize: vertical;
-
   &:focus {
     border-color: var(--tertiary-color);
     outline: none;
   }
 `;
-
-const Select = styled.select`
-  padding: 0.6rem 0.9rem;
-  border-radius: 25px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  width: 15rem;
-  &:focus {
-    border-color: var(--primary-color, #6f4e37);
-    outline: none;
-  }
-`;
-
 const ImageContainer = styled.div`
   position: relative;
   overflow-y: hidden;
@@ -396,7 +411,6 @@ const ImagePreview = styled.img`
   object-fit: contain;
   height: 15rem;
 `;
-
 const ButtonDelete = styled.button`
   position: absolute;
   top: 1rem;
@@ -413,12 +427,10 @@ const ButtonDelete = styled.button`
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
   &:hover {
     opacity: 0.8;
   }
 `;
-
 const ButtonAdd = styled.button`
   position: absolute;
   top: 4rem;
@@ -435,12 +447,10 @@ const ButtonAdd = styled.button`
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
   &:hover {
     opacity: 0.8;
   }
 `;
-
 const ErrorMsg = styled.div`
   background: #ffe5e5;
   color: #b30000;

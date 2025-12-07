@@ -94,7 +94,8 @@ const ListContainer = styled.ul`
   z-index: 1000;
   color: var(--text-color);
   text-align: left;
-
+  max-height: 25rem;
+  overflow-y: scroll;
   @media (max-width: 368px) {
     width: 100%;
   }

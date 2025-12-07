@@ -17,6 +17,15 @@ export function useVoteComment() {
       queryClient.invalidateQueries({
         queryKey: ["postComment", variables.post_id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["userCommented"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["postByVote", true],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["postByVote", false],
+      });
     },
     onError: (err) => {
       console.log("ERROR: ", err);

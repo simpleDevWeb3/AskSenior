@@ -1,19 +1,33 @@
 import styled from "styled-components";
 import PostList from "../Post/PostList";
-import forumData from "../../data/post";
+
 import CommentList from "../Comment/CommentList";
 import PostCard from "../Post/PostCard";
+import { useFetchUserComment } from "../Comment/useFetchUserComments";
+
+import Spinner from "../../components/Spinner";
+import { useOutletContext } from "react-router-dom";
 
 function CommentedTab() {
-  const { comments } = forumData;
-  const comment = comments.filter((comment) => comment.authorId == "u101");
-
+  const { userId, isOwnedAcc } = useOutletContext();
+  const { comments, isLoadComments, errorComments } =
+    useFetchUserComment(userId);
+  if (isLoadComments) return <Spinner />;
+  if (errorComments)
+    return (
+      <div>
+        <h1>{errorComments}</h1>
+      </div>
+    );
   return (
     <StyledContainer>
-      {comment.map((c) => (
-        <PostWrapper key={comment.id}>
-          <PostCard variant="userCommented" postData={c} />
-        </PostWrapper>
+      {comments.map((c) => (
+        <>
+          <PostWrapper key={c.comment_id}>
+            <PostCard variant="comment_vote_user" postData={c} />
+          </PostWrapper>
+          <Outline />
+        </>
       ))}
     </StyledContainer>
   );
@@ -24,13 +38,21 @@ const StyledContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
 `;
 
 const PostWrapper = styled.div`
   padding: 1rem;
   border-radius: 25px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-bottom: solid 1px var(--hover-color);
+
+  cursor: pointer;
+  transition: background-color 0.15s;
+  &:hover {
+    background-color: var(--hover-color);
+  }
+`;
+
+const Outline = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: var(--hover-color);
 `;

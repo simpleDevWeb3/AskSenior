@@ -5,11 +5,12 @@ import { useFetchPostByUserVote } from "../Post/useFetchPostByUserVote";
 import VoteTypePostList from "./VoteTypePostList";
 import Spinner from "../../components/Spinner";
 import NoExist from "../../components/NoExist";
+import { useOutletContext } from "react-router-dom";
 
 function Downvoted() {
-  const { user } = useUser();
+  const { userId, isOwnedAcc } = useOutletContext();
   const { posts, isLoadPosts, errorPosts } = useFetchPostByUserVote(
-    user?.id,
+    userId,
     false
   );
   const existPost = Array.isArray(posts) && posts.length > 0;

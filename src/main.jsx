@@ -69,7 +69,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "community/:communityId", element: <CommunityPage /> },
-      { path: "profile/:userId", element: <ProfilePage /> },
+
       { path: "Communities", element: <CommunitiesPage /> },
       { path: "comment/:postId", element: <CommentPage /> },
       { path: "search", element: <SearchPage /> },
@@ -93,7 +93,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "profile",
+        path: "profile/:userId",
         element: (
           <ProtectedRoute>
             <ProfilePage />

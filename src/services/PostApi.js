@@ -53,10 +53,10 @@ async function searchPostApi(current_user, postTitle, page = 1) {
   return await GetReq(`https://localhost:7071/api/Post/getPost?current_user=${current_user}&user_id=null&post_title=${postTitle}&post_id=null&community_id=null&page=${page}&pageSize=3
   `);
 }
-//curl 'https://localhost:7071/api/Vote/all_Vote?user_id=&vote_type=true'
+//curl https://localhost:7071/api/Vote/all_Voted?user_id=&vote_type=true'
 async function getPostByVote(user_id, vote_type) {
   return await GetReq(
-    `https://localhost:7071/api/Vote/all_Vote?user_id=${user_id}&vote_type=${vote_type}`
+    `https://localhost:7071/api/Vote/all_Voted?user_id=${user_id}&vote_type=${vote_type}`
   );
 }
 

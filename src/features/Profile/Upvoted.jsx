@@ -7,11 +7,12 @@ import PostCard from "../Post/PostCard";
 import Spinner from "../../components/Spinner";
 import VoteTypePostList from "./VoteTypePostList";
 import NoExist from "../../components/NoExist";
+import { useOutletContext } from "react-router-dom";
 
 function Upvoted() {
-  const { user } = useUser();
+  const { userId, isOwnedAcc } = useOutletContext();
   const { posts, isLoadPosts, errorPosts } = useFetchPostByUserVote(
-    user?.id,
+    userId,
     true
   );
   const existPost = Array.isArray(posts) && posts.length > 0;

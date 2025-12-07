@@ -1,13 +1,32 @@
 import styled from "styled-components";
 import ButtonIcon from "./ButtonIcon";
+import JoinBtn from "./JoinBtn";
+import { useUser } from "../features/Auth/useUser";
+import { useFetchJoinedCommunity } from "../features/Communities/useFetchJoinedCommunity";
 
 function CommunityList({ communities }) {
+  const { user } = useUser();
+  const user_id = user?.id ?? null;
+
+  const { communities: joinedList = [] } =
+    useFetchJoinedCommunity(user_id) || [];
+  console.log("joined: ", joinedList);
+  const inJoinedFunc = function (community_id) {
+    const { communities } = joinedList;
+    if (!user_id || !Array.isArray(communities)) return false;
+    return communities.find((c) => c.id === community_id);
+  };
+
   return (
     <List>
       {communities?.map((item) => {
         return (
           <>
-            <CommunityItem item={item} />
+            <CommunityItem
+              item={item}
+              user_id={user_id}
+              isJoined={inJoinedFunc(item.id)}
+            />
             <OutLine />
           </>
         );
@@ -16,7 +35,7 @@ function CommunityList({ communities }) {
   );
 }
 
-function CommunityItem({ item }) {
+function CommunityItem({ item, user_id, isJoined }) {
   return (
     <ListItem key={item.id}>
       {/* Avatar Section */}
@@ -40,7 +59,7 @@ function CommunityItem({ item }) {
       </InfoColumn>
 
       {/* Action Button */}
-      <ButtonIcon>join</ButtonIcon>
+      <JoinBtn community_id={item.id} user_id={user_id} isJoined={isJoined} />
     </ListItem>
   );
 }

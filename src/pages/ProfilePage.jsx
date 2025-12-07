@@ -3,14 +3,21 @@ import useSidebar from "../hook/useSidebar";
 import { useScrollRestore } from "../hook/useScrollRestore";
 import Avatar from "../components/Avatar";
 import Tabs from "../components/Tabs";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { useUser } from "../features/Auth/useUser";
+import { useFetchUser } from "../features/Users/useFetchUser";
+import Spinner from "../components/Spinner";
 
 function ProfilePage() {
+  const { userId } = useParams();
+  const { userById, isLoadUser, errorUser } = useFetchUser(userId);
   const { $isSidebarOpen } = useSidebar();
   const { user } = useUser();
-
-  const encodedBannerUrl = user.banner_url ? encodeURI(user.banner_url) : null;
+  const basePath = `/profile/${userId}`;
+  const isOwnedAcc = userId === user?.id;
+  const encodedBannerUrl = userById?.banner_url
+    ? encodeURI(userById?.banner_url)
+    : null;
   useScrollRestore();
   const links = [
     { key: "POST", label: "Post", index: true },
@@ -19,31 +26,32 @@ function ProfilePage() {
     { key: "UPVOTED", label: "Upvoted" },
     { key: "DOWNVOTED", label: "Downvoted" },
   ];
-
+  if (isLoadUser) return <Spinner />;
+  console.log("own: ", isOwnedAcc, " ", userId, user?.id);
   return (
     <PageContainer $isSidebarOpen={$isSidebarOpen}>
       <ProfileHeader>
         <Banner $image={encodedBannerUrl}>
           <AvatarContainer>
-            <Avatar src={user.avatar_url} />
+            <Avatar src={userById?.avatar_url} />
           </AvatarContainer>
         </Banner>
         <div style={{ display: "flex", gap: "1rem" }}>
           <ReservedEl />
           <InfoContainer>
             <div>
-              <UsernameBig>{user.name}</UsernameBig>
-              <UsernameSmall>@{user.name}</UsernameSmall>
+              <UsernameBig>{userById?.name}</UsernameBig>
+              <UsernameSmall>@{userById?.name}</UsernameSmall>
             </div>
           </InfoContainer>
         </div>
       </ProfileHeader>
       <OperationContainer>
-        <Tabs links={links} basePath={"/profile"} />
+        <Tabs links={links} basePath={basePath} />
       </OperationContainer>
       <br />
       <Content>
-        <Outlet />
+        <Outlet context={{ userId, isOwnedAcc }} />
       </Content>
     </PageContainer>
   );

@@ -15,7 +15,7 @@ function Tabs({ links, basePath }) {
   const activeValue = pathAfterBase || indexLink.key;
   console.log(activeValue);
 
-  //1.append params 
+  //1.append params
 
   return (
     <TabContainer>

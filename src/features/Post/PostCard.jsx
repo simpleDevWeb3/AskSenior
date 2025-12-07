@@ -57,9 +57,10 @@ function PostCard({
   return (
     <PostContext.Provider value={contextValue}>
       <StyledPost
-        onClick={(e) =>
-          variant !== "post" ? "" : handleClickPost(e, postData.id)
-        }
+        onClick={(e) => {
+          if (postData.id ||postData.post_id) 
+          handleClickPost(e, postData.id || postData.post_id);
+        }}
       >
         {variant === "comment" && (
           <CommentPost children={children} postData={postData} />
@@ -94,11 +95,13 @@ function PostCard({
             <Tag>{postData.topic_name}</Tag>
 
             <PostContent />
-            <PostSocialFeatures />
+            <PostSocialFeatures post_id={postData?.id || postData?.post_id} />
           </PostBody>
         )}
-        {variant === "user_post" && <User_Post data={postData} />}
-        {variant === "post_vote_user" && <PostByUserVote />}
+        {variant === "user_post" && (
+          <User_Post data={postData} postData={postData} />
+        )}
+
         {variant === "comment_vote_user" && (
           <CommentPostByVote postData={postData} />
         )}
@@ -256,7 +259,7 @@ function UserCommented() {
   );
 }
 
-function User_Post({ data }) {
+function User_Post({ data, postData }) {
   const { openModal } = useModal();
 
   return (
@@ -266,7 +269,7 @@ function User_Post({ data }) {
       </PostHeader>
       <PostContent />
       <StyledAction>
-        <PostSocialFeatures />
+        <PostSocialFeatures post_id={postData?.id} />
         <div style={{}}>
           <ButtonIcon
             style={{ marginTop: "0.5rem" }}
@@ -280,22 +283,10 @@ function User_Post({ data }) {
   );
 }
 
-function PostByUserVote() {
-  return (
-    <PostBody>
-      <PostHeader>
-        <PostProfile />
-      </PostHeader>
-      <PostContent />
-      <StyledAction></StyledAction>
-    </PostBody>
-  );
-}
-
 function CommentPostByVote({ children, postData }) {
-  const { user, isAuthenticated } = useUser();
+  const { user } = useUser();
   //const { createComment } = useCreateComment();
-  const { postId } = useParams();
+
   //const id = postId;
 
   const { user_id: op_id } = postData;
@@ -313,7 +304,7 @@ function CommentPostByVote({ children, postData }) {
       <PostBody>
         <PostHeader>
           <UserName style={{ gap: "0.5rem" }}>
-            {isOP(postData.user_id) && (
+            {isOP(user?.id) && (
               <label
                 style={{
                   background: "var(--hover-color)",
@@ -334,7 +325,7 @@ function CommentPostByVote({ children, postData }) {
                 alignItems: "center",
               }}
             >
-              {/*  <LuDot /> {formatTimeAgo(postData.created_at)} */}
+             <LuDot /> {formatTimeAgo(postData.created_at)} 
             </span>
           </UserName>
         </PostHeader>
@@ -354,7 +345,7 @@ function CommentPostByVote({ children, postData }) {
             <>
               <span style={{ fontWeight: "700" }}>
                 replies to{" "}
-                {isOP(postData.reply_to_id) && (
+                {isOP(postData.reply_to_user_Id) && (
                   <label
                     style={{
                       background: "var(--hover-color)",
@@ -390,9 +381,10 @@ function CommentPostByVote({ children, postData }) {
               wordBreak: "break-word",
             }}
           >
-            {postData.comment_content}
+            {postData.comment_content || postData.content}
           </p>
         </div>
+        <PostSocialFeatures post_id={postData.post_id} />
       </PostBody>
     </>
   );

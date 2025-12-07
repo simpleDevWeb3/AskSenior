@@ -8,7 +8,7 @@ export function useFetchPostByUserVote(user_id, vote_type) {
     isLoading: isLoadPosts,
     error: errorPosts,
   } = useQuery({
-    queryKey: ["postByVote", vote_type],
+    queryKey: ["postByVote", vote_type, user_id],
     queryFn: () => getPostByVote(user_id, vote_type),
 
     refetchOnWindowFocus: false,

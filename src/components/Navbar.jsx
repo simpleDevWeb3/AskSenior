@@ -261,7 +261,9 @@ function Navbar() {
                   />
                 </Dropdown.Trigger>
                 <Dropdown.List position="right">
-                  <Dropdown.Item onClick={() => navigate("/profile")}>
+                  <Dropdown.Item
+                    onClick={() => navigate(`/profile/${user?.id}`)}
+                  >
                     <AvatarWrapper
                       style={{ width: "2.5rem", height: "2.5rem" }}
                     >

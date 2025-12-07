@@ -9,9 +9,10 @@ import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { Mosaic } from "react-loading-indicators";
 import NoExist from "../../components/NoExist";
+import { useOutletContext } from "react-router-dom";
 
 function PostsTab() {
-  const { user } = useUser();
+  const { userId, isOwnedAcc } = useOutletContext();
   const {
     posts,
     isLoadPost,
@@ -19,7 +20,7 @@ function PostsTab() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useFetchCurrUserPost(user.id);
+  } = useFetchCurrUserPost(userId);
 
   const { ref, inView } = useInView();
   const existPost = posts.length > 0;
@@ -29,6 +30,7 @@ function PostsTab() {
     }
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
   if (isLoadPost) return <Spinner />;
+
   return (
     <Container style={{ position: "relative" }}>
       {isLoadPost && <Spinner />}
@@ -36,9 +38,13 @@ function PostsTab() {
       {!existPost && <NoExist name={"post "} />}
       {posts &&
         posts.map((post) => (
-          <PostWrapper>
-            <PostCard postData={post} variant="user_post" />
+          <PostWrapper key={post.id}>
+            <PostCard
+              postData={post}
+              variant={isOwnedAcc ? "user_post" : "post"}
+            />
             <br />
+            <Outline />
           </PostWrapper>
         ))}
       <div
@@ -64,11 +70,24 @@ function PostsTab() {
   );
 }
 const PostWrapper = styled.div`
-  border-bottom: solid 1px var(--hover-color);
+  padding: 0.5rem 1rem;
+
   margin-bottom: 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  &:hover {
+    background-color: var(--hover-color);
+  }
+  border-radius: 18px;
 `;
 
 const Container = styled.div`
   max-width: 700px;
+`;
+
+const Outline = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: var(--hover-color);
 `;
 export default PostsTab;

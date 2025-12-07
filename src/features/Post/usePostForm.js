@@ -1,26 +1,66 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useOutsideClick } from "../../hook/useOutsideClick";
+import { useOutsideClick } from "../../hook/useOutsideClick"; // Adjust path as needed
+import { validImgFile } from "../../helpers/formHelper"; // Adjust path as needed
 
-export function usePostForm(onSubmit, data) {
+export function usePostForm(onSubmit, initialData = {}) {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type") || "TEXT";
 
   const [displaySearch, setDisplaySearch] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isShowDeleteBtn, setShowDeleteBtn] = useState(false);
+  
+  // centralized error state
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
-    title: data?.title || "",
-    text: data?.text || "",
-    topic_id: data?.topic || "",
-    image: data?.image || null,
+    title: initialData?.title || "",
+    text: initialData?.text || "",
+    // Ensure image is always an array to handle multiple uploads consistently
+    image: initialData?.image || [], 
   });
+
   const postOptions = [
     { key: "TEXT", label: "Text" },
     { key: "IMAGE", label: "Image" },
   ];
+
+  /* ---------------------- HELPERS ---------------------- */
+
+  // Internal helper to process files from Drop or Input
+  const processFiles = (files) => {
+    if (!files || files.length === 0) return;
+
+    const validFiles = [];
+    let validationError = "";
+
+    files.forEach((file) => {
+      const { isValid, error: fileError } = validImgFile(file);
+      if (isValid) {
+        validFiles.push(file);
+      } else {
+        validationError = fileError;
+      }
+    });
+
+    // If there is an error, set it and stop (or continue with valid ones)
+    if (validationError) {
+      setError(validationError);
+      // Optional: If you want to reject ALL files if one is bad, return here.
+      // Currently, we proceed with the valid ones but warn the user.
+    } else {
+      setError(""); // Clear error if successful
+    }
+
+    if (validFiles.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        image: [...(prev.image || []), ...validFiles],
+      }));
+    }
+  };
+
   /* ---------------------- HANDLERS ---------------------- */
 
   function closeSearchBar() {
@@ -31,28 +71,27 @@ export function usePostForm(onSubmit, data) {
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user types to improve UX
+    if (error) setError(""); 
   }
 
+  // 1. INPUT CHANGE HANDLER
   function handleImageChange(e) {
-    const file = Array.from(e.target.files);
-    if (file) {
-      setFormData((prev) => {
-        const currentImg = prev.image || [];
-        return {
-          ...prev,
-          image: [...currentImg, ...file],
-        };
-      });
-    }
+    const files = Array.from(e.target.files);
+    processFiles(files);
+    
+    // Reset input value so the same file can be selected again if deleted
+    e.target.value = ""; 
   }
 
+  // 2. DROP HANDLER
   function handleDrop(e) {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setFormData((prev) => ({ ...prev, image: file }));
-      setIsDragging(false);
-    }
+    setIsDragging(false);
+    
+    // Support multiple files in drop
+    const files = Array.from(e.dataTransfer.files);
+    processFiles(files);
   }
 
   function handleDragOver(e) {
@@ -73,39 +112,68 @@ export function usePostForm(onSubmit, data) {
     setShowDeleteBtn(false);
   }
 
-  function handleCancelImage(e) {
+  // Handle deleting specific image or all
+  function handleCancelImage(e, index = null) {
     e.preventDefault();
-    setFormData((prev) => ({ ...prev, image: null }));
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    if (!formData.title || !formData.text) {
-      setError("Title and content are required");
-      return;
-    }
-
-    setError("");
-    console.log(formData);
-    if (onSubmit) onSubmit(formData);
-
-    // Reset form
-    setFormData({
-      title: "",
-      text: "",
-      topic_id: "",
-      image: null,
+    
+    setFormData((prev) => {
+      // If index is provided, remove specific image
+      if (index !== null && Array.isArray(prev.image)) {
+        const updatedImages = prev.image.filter((_, i) => i !== index);
+        return { ...prev, image: updatedImages };
+      }
+      // Otherwise clear all (fallback)
+      return { ...prev, image: [] };
     });
   }
 
-  /* ---------------------- EXPORT ---------------------- */
+  // 3. SUBMIT HANDLER
+  // We accept `externalValidators` (like community/topic) that live in the Component
+  function handleSubmit(e, externalContext = {}) {
+    e.preventDefault();
+    setError("");
+
+    // A. Validate Title
+    if (!formData.title || !formData.title.trim()) {
+      setError("Post title cannot be empty.");
+      return;
+    }
+
+ 
+
+    // C. Validate Topic (Passed from component)
+    if (!externalContext.selectedTopic) {
+      setError("Please select a topic.");
+      return;
+    }
+
+    // D. Validate Body (Only for Text posts)
+    if (type === "TEXT" && (!formData.text || !formData.text.trim())) {
+      setError("Post body cannot be empty.");
+      return;
+    }
+
+    // E. Validate Image (Only for Image posts)
+    if (type === "IMAGE" && (!formData.image || formData.image.length === 0)) {
+       setError("Please upload at least one image.");
+       return;
+    }
+
+    // If we pass all checks, call the parent onSubmit
+    if (onSubmit) {
+      onSubmit(formData);
+      // We don't clear form here usually, strictly speaking, 
+      // because we wait for API success. But if you want to:
+      // setFormData({ title: "", text: "", image: [] });
+    }
+  }
 
   return {
     type,
     formData,
     setFormData,
     error,
+    setError, // Expose this in case component needs to set custom errors
 
     displaySearch,
     setDisplaySearch,
@@ -113,6 +181,7 @@ export function usePostForm(onSubmit, data) {
     isShowDeleteBtn,
     ref,
     postOptions,
+    
     handleChange,
     handleImageChange,
     handleDrop,

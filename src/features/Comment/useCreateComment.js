@@ -17,6 +17,9 @@ export function useCreateComment() {
         queryClient.invalidateQueries({
           queryKey: ["postComment", variables.postId],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["userCommented"],
+        });
       },
       onError: (err) => {
         console.log("Creation error: ", err);
