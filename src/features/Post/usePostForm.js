@@ -10,15 +10,21 @@ export function usePostForm(onSubmit, initialData = {}) {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isShowDeleteBtn, setShowDeleteBtn] = useState(false);
-  
+
   // centralized error state
   const [error, setError] = useState("");
+  const initialFormState = {
+    title: "",
+    text: "",
+    image: [],
+    // add other fields if necessary
+  };
 
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     text: initialData?.text || "",
     // Ensure image is always an array to handle multiple uploads consistently
-    image: initialData?.image || [], 
+    image: initialData?.postImage_url || [],
   });
 
   const postOptions = [
@@ -31,7 +37,7 @@ export function usePostForm(onSubmit, initialData = {}) {
   // Internal helper to process files from Drop or Input
   const processFiles = (files) => {
     if (!files || files.length === 0) return;
-
+    console.log(files);
     const validFiles = [];
     let validationError = "";
 
@@ -72,23 +78,23 @@ export function usePostForm(onSubmit, initialData = {}) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear error when user types to improve UX
-    if (error) setError(""); 
+    if (error) setError("");
   }
 
   // 1. INPUT CHANGE HANDLER
   function handleImageChange(e) {
     const files = Array.from(e.target.files);
     processFiles(files);
-    
+
     // Reset input value so the same file can be selected again if deleted
-    e.target.value = ""; 
+    e.target.value = "";
   }
 
   // 2. DROP HANDLER
   function handleDrop(e) {
     e.preventDefault();
     setIsDragging(false);
-    
+
     // Support multiple files in drop
     const files = Array.from(e.dataTransfer.files);
     processFiles(files);
@@ -115,7 +121,7 @@ export function usePostForm(onSubmit, initialData = {}) {
   // Handle deleting specific image or all
   function handleCancelImage(e, index = null) {
     e.preventDefault();
-    
+
     setFormData((prev) => {
       // If index is provided, remove specific image
       if (index !== null && Array.isArray(prev.image)) {
@@ -139,8 +145,6 @@ export function usePostForm(onSubmit, initialData = {}) {
       return;
     }
 
- 
-
     // C. Validate Topic (Passed from component)
     if (!externalContext.selectedTopic) {
       setError("Please select a topic.");
@@ -155,17 +159,21 @@ export function usePostForm(onSubmit, initialData = {}) {
 
     // E. Validate Image (Only for Image posts)
     if (type === "IMAGE" && (!formData.image || formData.image.length === 0)) {
-       setError("Please upload at least one image.");
-       return;
+      setError("Please upload at least one image.");
+      return;
     }
 
     // If we pass all checks, call the parent onSubmit
     if (onSubmit) {
       onSubmit(formData);
-      // We don't clear form here usually, strictly speaking, 
+      // We don't clear form here usually, strictly speaking,
       // because we wait for API success. But if you want to:
       // setFormData({ title: "", text: "", image: [] });
     }
+  }
+
+  function empty() {
+    setFormData(initialFormState);
   }
 
   return {
@@ -181,7 +189,7 @@ export function usePostForm(onSubmit, initialData = {}) {
     isShowDeleteBtn,
     ref,
     postOptions,
-    
+
     handleChange,
     handleImageChange,
     handleDrop,
@@ -191,5 +199,7 @@ export function usePostForm(onSubmit, initialData = {}) {
     handleMouseLeave,
     handleCancelImage,
     handleSubmit,
+    processFiles,
+    empty,
   };
 }

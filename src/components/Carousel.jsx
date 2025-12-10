@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import ButtonIcon from "./ButtonIcon";
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi2";
 import styled, { css } from "styled-components";
@@ -16,8 +22,18 @@ function Carousel({
   onSlideChange,
   style,
   scrollLastAuto = false,
+  ref,
 }) {
   const [index, setIndex] = useState(0);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        getIndex: () => index,
+      };
+    },
+    [index]
+  );
 
   useEffect(() => {
     if (scrollLastAuto && total > 0) {

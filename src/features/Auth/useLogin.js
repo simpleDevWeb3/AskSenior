@@ -18,7 +18,7 @@ export function useLogin(handleSuccess) {
 
       // Update React Query cache
       queryClient.setQueryData(["user"], data.profile);
-
+      queryClient.invalidateQueries(["posts"]);
       toast.success("Login Succesfully");
       handleSuccess?.();
     },

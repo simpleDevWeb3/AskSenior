@@ -17,6 +17,12 @@ import { AuthProvider } from "./features/Auth/AuthContext";
 import { Toaster } from "react-hot-toast";
 import Spinner from "./components/Spinner";
 import RegisterPreference from "./features/Auth/RegisterPreference";
+import ConfirmDelete from "./components/ConfirmDelete";
+import EditCommentForm from "./features/Comment/EditCommentForm";
+import { useDeletePost } from "./features/Post/useDeletePost";
+import { useUser } from "./features/Auth/useUser";
+import { useModal } from "./context/ModalContext";
+import { useDeleteComment } from "./features/Comment/useDelComment";
 
 //import { Menus } from "./components/Menus";
 
@@ -75,6 +81,10 @@ const Content = styled.main`
 
 function App() {
   const { $isSidebarOpen } = useSidebar();
+  const { user } = useUser();
+  const { closeModal, modalData } = useModal();
+  const { deletePost, isDeletingPost } = useDeletePost(user?.id, closeModal);
+  const { deleteComment, isDeletingComment } = useDeleteComment(closeModal);
 
   return (
     <>
@@ -95,9 +105,33 @@ function App() {
               <CommunityForm />
             </Modal>
           </Selector>
-         
+
           <Modal id={"Edit Post"}>
             <EditForm />
+          </Modal>
+          <Modal id={"Edit Comment"}>
+            <EditCommentForm />
+          </Modal>
+          <Modal id={"Delete Post"}>
+            <ConfirmDelete
+              onConfirm={() => deletePost(modalData?.id)}
+              onClose={closeModal}
+              disabled={isDeletingPost}
+            />
+          </Modal>
+          <Modal id={"Delete Comment"}>
+            <ConfirmDelete
+              resourceName="comment"
+              onConfirm={() =>
+                deleteComment({
+                  comment_id: modalData?.comment_id,
+                  user_id: modalData?.user_id,
+                  post_id: modalData?.post_id,
+                })
+              }
+              onClose={closeModal}
+              disabled={isDeletingComment}
+            />
           </Modal>
           <Menus>
             <Content>

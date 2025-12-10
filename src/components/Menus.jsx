@@ -80,13 +80,14 @@ function MenuList({ id, children, placement }) {
     document.body
   );
 }
-function MenuBtn({ children }) {
+function MenuBtn({ children,onClickAction }) {
   const { close } = useMenus();
 
   return (
     <StyledItem
       onClick={(e) => {
         e.stopPropagation();
+        onClickAction?.();
         close();
       }}
     >

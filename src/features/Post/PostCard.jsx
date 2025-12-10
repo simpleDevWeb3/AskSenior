@@ -13,7 +13,7 @@ import { usePostNavigation } from "./usePostNavigation";
 import Avatar from "../../components/Avatar";
 import TextFields from "../../components/TextFields";
 import { useFieldText } from "../../hook/useFieldText";
-import { HiChatAlt, HiDotsCircleHorizontal } from "react-icons/hi";
+import { HiChatAlt, HiDotsCircleHorizontal, HiTrash } from "react-icons/hi";
 import {
   HiMiniCircleStack,
   HiMiniInformationCircle,
@@ -38,6 +38,7 @@ import { formatTimeAgo } from "../../helpers/dateHelper";
 import { LuDot } from "react-icons/lu";
 import { useCallback } from "react";
 import { truncateText } from "../../helpers/stringHelper";
+import TimeTag from "../../components/TimeTag";
 
 function PostCard({
   postData,
@@ -47,19 +48,23 @@ function PostCard({
   children,
 }) {
   const { handleClickPost } = usePostNavigation();
+  const { user } = useUser();
+  const owner = postData?.user_id === user?.id;
   const contextValue = {
     postData,
     variant,
     avatarSize,
     onClickComment,
+    owner,
+    user
   };
 
   return (
     <PostContext.Provider value={contextValue}>
       <StyledPost
         onClick={(e) => {
-          if (postData.id ||postData.post_id) 
-          handleClickPost(e, postData.id || postData.post_id);
+          if (postData.id || postData.post_id)
+            handleClickPost(e, postData.id || postData.post_id);
         }}
       >
         {variant === "comment" && (
@@ -84,13 +89,10 @@ function PostCard({
                     marginBottom: "0.5rem",
                   }}
                 >
-                  <LuDot />
-                  <span style={{ fontSize: "0.8rem" }}>
-                    {formatTimeAgo(postData.created_at)}
-                  </span>
+                  <TimeTag created_at={postData?.created_at} />
                 </span>
               </div>
-              <PostMenusOther />
+              {owner && <PostMenusOther />}
             </PostHeader>
             <Tag>{postData.topic_name}</Tag>
 
@@ -153,7 +155,7 @@ function CommentPost({ children, postData }) {
                 alignItems: "center",
               }}
             >
-              <LuDot /> {formatTimeAgo(postData.created_at)}
+              <TimeTag created_at={postData.created_at} />
             </span>
           </UserName>
         </PostHeader>
@@ -262,20 +264,45 @@ function UserCommented() {
 function User_Post({ data, postData }) {
   const { openModal } = useModal();
 
+  const post_data = data;
   return (
     <PostBody>
       <PostHeader>
-        <PostProfile />
+        <div
+          style={{
+            display: "flex",
+            alignItems: postData.community_id ? "start" : "center",
+          }}
+        >
+          <PostProfile />
+          <span
+            style={{
+              fontWeight: "500",
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "0.5rem",
+            }}
+          >
+            <TimeTag created_at={postData?.created_at} />
+          </span>
+        </div>
       </PostHeader>
       <PostContent />
       <StyledAction>
         <PostSocialFeatures post_id={postData?.id} />
-        <div style={{}}>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
           <ButtonIcon
             style={{ marginTop: "0.5rem" }}
             size="rounded"
             icon={<HiPencil />}
-            action={() => openModal("Edit Post", data)}
+            action={() => openModal("Edit Post", post_data)}
+          ></ButtonIcon>
+
+          <ButtonIcon
+            style={{ marginTop: "0.5rem" }}
+            size="rounded"
+            icon={<HiTrash />}
+            action={() => openModal("Delete Post", post_data)}
           ></ButtonIcon>
         </div>
       </StyledAction>
@@ -325,7 +352,7 @@ function CommentPostByVote({ children, postData }) {
                 alignItems: "center",
               }}
             >
-             <LuDot /> {formatTimeAgo(postData.created_at)} 
+              <TimeTag created_at={postData.created_at} />
             </span>
           </UserName>
         </PostHeader>

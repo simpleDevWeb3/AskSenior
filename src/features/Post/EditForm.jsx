@@ -1,64 +1,151 @@
 import styled from "styled-components";
 import Search from "../../components/Search";
 import { Dropdown } from "../../components/Dropdown";
-import { HiArrowDown } from "react-icons/hi2";
+import { HiArrowDown, HiPencil } from "react-icons/hi2";
 import { HiChevronDown } from "react-icons/hi";
 import Filter from "../../components/Filter";
 import { BsTrashFill, BsUpload } from "react-icons/bs";
-import { FaTrash } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import ButtonIcon from "../../components/ButtonIcon";
 import { usePostForm } from "./usePostForm";
 import { useModal } from "../../context/ModalContext";
+import Avatar from "../../components/Avatar";
+import Carousel from "../../components/Carousel";
+import { useRef, useMemo, useState } from "react"; // Added useMemo for performance
+import { PiPencil } from "react-icons/pi";
+import { useEditPost } from "./useEditPost";
+import SpinnerMini from "../../components/SpinnerMini";
 
-function EditForm({ onSubmit }) {
-  const { modalData } = useModal();
+function EditForm() {
+  // data passed from modal
+  const { modalData, closeModal } = useModal();
+  const { editPost, isLoadEditPost, errorEditPost } = useEditPost(
+    modalData?.id,
+    modalData?.user_id,
+    closeModal
+  );
+  // index for determine which image to be edit
+  const [editingIndex, setEditingIndex] = useState(null);
+  // carousel ref for retrieving current image slide to edit
+  const carouselRef = useRef(null);
+
+  // image input ref to trigger open folder
+  const fileInputRef = useRef(null);
+
   const {
-    type,
     formData,
     error,
-    displaySearch,
-    setDisplaySearch,
-    isDragging,
     isShowDeleteBtn,
-    ref,
-    postOptions,
     handleChange,
-    handleImageChange,
-    handleDrop,
-    handleDragOver,
-    handleDragLeave,
     handleMouseEnter,
     handleMouseLeave,
-    handleCancelImage,
     handleSubmit,
-  } = usePostForm(onSubmit, modalData);
+    setFormData,
+  } = usePostForm(onFormSuccess, modalData);
 
+  function onFormSuccess(validatedFormData) {
+    // 1. Get the list of all original IDs in order (derived from the object keys)
+    // Assumption: The order of keys in postImage_url matches the order of images displayed
+    const allOriginalIds = modalData?.postImage_url
+      ? Object.keys(modalData.postImage_url)
+      : [];
+
+    const idsToSend = [];
+    const filesToSend = [];
+
+    // 2. Loop through the CURRENT form state (which has mixed Strings and Files)
+    if (formData.image && Array.isArray(formData.image)) {
+      formData.image.forEach((imgItem, index) => {
+        // CHECK: Is this item a newly selected FILE?
+        if (imgItem instanceof File) {
+          // Push the File to the list
+          filesToSend.push(imgItem);
+
+          // Find the matching ID based on the index and push it
+          if (allOriginalIds[index]) {
+            idsToSend.push(allOriginalIds[index]);
+          }
+        }
+        // If it is a String (URL), we do nothing. We don't need to send it to the backend.
+      });
+    }
+
+    // 3. Construct the payload
+    // Your useEditPost hook or API service MUST convert this to FormData
+    const finalData = {
+      ...validatedFormData,
+      post_id: modalData?.id,
+      topic_id: modalData?.topic_id,
+      community_id: modalData?.community_id,
+
+      // SEND ONLY THE MATCHING PAIRS
+      original_image_id: idsToSend,
+      new_image: filesToSend,
+    };
+
+    console.log("Submitting Clean Data:", finalData);
+    editPost(finalData);
+
+    console.log("Submitting:", finalData);
+    editPost(finalData);
+  }
+  // 1. Convert the image data (Object or Array) into a consistent Array for the UI
+  const imagesToDisplay = useMemo(() => {
+    if (!formData.image) return [];
+    // If it's the object from Supabase logs { key: url }
+    if (typeof formData.image === "object" && !Array.isArray(formData.image)) {
+      return Object.values(formData.image);
+    }
+    // If it's an array (e.g. after adding new files)
+    return formData.image;
+  }, [formData.image]);
+
+  console.log(modalData);
+  console.log("from form: ", formData);
+
+  const handleEditImageClick = () => {
+    if (carouselRef.current) {
+      //1. get index from carousel
+      const currentIndex = carouselRef.current.getIndex();
+      console.log("Current image index is:", currentIndex);
+
+      //2. set the index for the input to replace the image
+      setEditingIndex(currentIndex);
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileImageEditChange = (e) => {
+    console.log("editingIndex ", editingIndex);
+
+    // store new image
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // replace the current index image
+    const updatedImages = [...imagesToDisplay];
+
+    updatedImages[editingIndex] = file;
+    console.log("images: ", updatedImages);
+
+    setFormData((prev) => ({
+      ...prev,
+      image: updatedImages,
+    }));
+    // Reset the tracking index
+    setEditingIndex(null);
+  };
   return (
     <Layout>
-      <FormContainer onSubmit={handleSubmit}>
-        <Title>Edit Post</Title>
-
+      <FormContainer
+        onSubmit={(e) =>
+          handleSubmit(e, { selectedTopic: modalData?.topic_id })
+        }
+      >
         {error && <ErrorMsg>{error}</ErrorMsg>}
+
         <FormGroup>
-          {displaySearch ? (
-            <Dropdown position="left">
-              <SearchBarContainer ref={ref}>
-                <Search />
-              </SearchBarContainer>
-            </Dropdown>
-          ) : (
-            <SelectCommunity onClick={() => setDisplaySearch((show) => !show)}>
-              Select Community
-              <HiChevronDown />
-            </SelectCommunity>
-          )}
-        </FormGroup>
-        <Filter
-          filterField="type"
-          options={postOptions}
-          startingOption="TEXT"
-        />
-        <FormGroup>
+          <Label>Title</Label>
           <Input
             id="title"
             name="title"
@@ -69,53 +156,77 @@ function EditForm({ onSubmit }) {
           />
         </FormGroup>
 
-        {type === "IMAGE" && (
+        {/* --- FIX: Use imagesToDisplay.length instead of formData.image.length --- */}
+        {imagesToDisplay.length > 0 && (
           <>
             <FormGroup>
-              {!formData.image && (
-                <>
-                  <FileLabel
-                    onDragOver={(e) => handleDragOver(e)}
-                    onDragLeave={(e) => handleDragLeave(e)}
-                    onDrop={(e) => handleDrop(e)}
-                    htmlFor="image"
-                  >
-                    {isDragging ? "Drop Image Here" : "Drag and Drop Image"}
-                    <BsUpload />
-                  </FileLabel>
-                  <FileInput
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                  />
-                </>
-              )}
-
-              {formData.image && (
-                <ImageContainer
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
+              <FileInput
+                ref={fileInputRef}
+                type="file"
+                multiple
+                id="image"
+                accept="image/*"
+                onChange={handleFileImageEditChange}
+              />
+              <ImageContainer
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <Carousel
+                  scrollLastAuto={true}
+                  total={imagesToDisplay.length} // Fix: Use array length
+                  hideWhenCurrentSlide={true}
+                  ref={carouselRef}
                 >
-                  <ImagePreview
-                    src={URL.createObjectURL(formData.image)}
-                    alt="Preview"
+                  <Carousel.Count />
+                  <Carousel.Track>
+                    {/* Fix: Map over the normalized array */}
+                    {imagesToDisplay.map((img, i) => (
+                      <Carousel.Card key={i}>
+                        <ImagePreview
+                          // Fix: Check if 'img' is a String (URL) or File Object
+                          src={
+                            typeof img === "string"
+                              ? img
+                              : URL?.createObjectURL(img)
+                          }
+                          alt="Preview"
+                        />
+                      </Carousel.Card>
+                    ))}
+                  </Carousel.Track>
+                  <Carousel.PrevBtn
+                    style={{
+                      backgroundColor: "var(--tertiary-color)",
+                      borderRadius: "50%",
+                    }}
                   />
-                  {isShowDeleteBtn && (
-                    <ButtonDelete onClick={(e) => handleCancelImage(e)}>
-                      <FaTrash />
-                    </ButtonDelete>
-                  )}
-                </ImageContainer>
-              )}
+                  <Carousel.NextBtn
+                    style={{
+                      backgroundColor: "var(--tertiary-color)",
+                      borderRadius: "50%",
+                    }}
+                  />
+                </Carousel>
+
+                {isShowDeleteBtn && (
+                  <ButtonEdit
+                    type="button"
+                    onClick={() => handleEditImageClick()}
+                  >
+                    <HiPencil />
+                  </ButtonEdit>
+                )}
+              </ImageContainer>
             </FormGroup>
           </>
         )}
 
         <FormGroup>
+          <Label>Text</Label>
           <Textarea
             id="content"
-            name="content"
+            name="text"
             placeholder="Body Text"
             rows="5"
             value={formData.text}
@@ -123,9 +234,26 @@ function EditForm({ onSubmit }) {
           />
         </FormGroup>
         <ActionContainer>
-          <ButtonIcon>Post</ButtonIcon>
-
-          <ButtonIcon>Save as Draft</ButtonIcon>
+          <ButtonIcon
+            disabled={isLoadEditPost}
+            action={() => console.log("edit")}
+            style={{
+              backgroundColor: "rgba(20, 108, 223, 0.904)",
+              color: "white",
+            }}
+          >
+            {isLoadEditPost ? <SpinnerMini /> : "Save"}
+          </ButtonIcon>
+          <ButtonIcon
+            disabled={isLoadEditPost}
+            action={() => console.log("cancel")}
+            style={{
+              backgroundColor: "rgba(223, 20, 20, 0.904)",
+              color: "white",
+            }}
+          >
+            Cancel
+          </ButtonIcon>
         </ActionContainer>
       </FormContainer>
     </Layout>
@@ -135,54 +263,36 @@ function EditForm({ onSubmit }) {
 export default EditForm;
 
 /* ---------- Styled Components ---------- */
+/* (Keep all your existing styled components below here, unchanged) */
+const ButtonAdd = styled.button`
+  position: absolute;
+  top: 4rem;
+  right: 0.5rem;
+  background-color: var(--hover-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
 const ActionContainer = styled.div`
   display: flex;
   justify-content: right;
   width: 100%;
   gap: 0.5rem;
 `;
-const SearchBarContainer = styled.div`
-  width: 50%;
-  @media (max-width: 1000px) {
-    width: 70%;
-  }
-`;
+// ... (rest of your styles)
 const FileInput = styled.input`
   display: none;
-`;
-const FileLabel = styled.label`
-  display: flex;
-  background-color: inherit;
-
-  padding: 0.6rem 1rem;
-
-  border-radius: 20px;
-  cursor: pointer;
-
-  border: 1px dashed #ccc;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  height: 10rem;
-  &:hover {
-    background-color: var(--hover-color, #d6d6d6);
-  }
-`;
-
-const SelectCommunity = styled.div`
-  border-radius: 25px;
-  border: 1px solid var(--hover-color);
-  width: 16rem;
-  padding: 0.7rem 1rem;
-  background-color: var(--hover-color);
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  justify-content: space-between;
 `;
 const Layout = styled.div`
   display: flex;
@@ -193,35 +303,22 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-
   width: 30rem;
-  min-width: 20rem;
-  max-width: 50rem;
-
+  min-width: 40rem;
+  max-width: 80rem;
   color: var(--text-color);
-
   @media (max-width: 1000px) {
     width: 100%;
   }
-`;
-
-const Title = styled.h2`
-  color: var(--text-color, #333);
-`;
-const ContainerSearch = styled.div`
-  display: flex;
-  justify-content: start;
 `;
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 `;
-
 const Label = styled.label`
   font-weight: 600;
 `;
-
 const Input = styled.input`
   background-color: inherit;
   color: var(--text-color);
@@ -235,7 +332,6 @@ const Input = styled.input`
     outline: none;
   }
 `;
-
 const Textarea = styled.textarea`
   padding: 0.6rem 0.8rem;
   border-radius: 18px;
@@ -244,27 +340,15 @@ const Textarea = styled.textarea`
   border: 1px solid var(--tertiary-color);
   font-size: 1rem;
   resize: vertical;
-
   &:focus {
     border-color: var(--tertiary-color);
     outline: none;
   }
 `;
-
-const Select = styled.select`
-  padding: 0.6rem 0.9rem;
-  border-radius: 25px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  width: 15rem;
-  &:focus {
-    border-color: var(--primary-color, #6f4e37);
-    outline: none;
-  }
-`;
-
 const ImageContainer = styled.div`
   position: relative;
+  overflow-y: hidden;
+  border: solid 1px var(--hover-color);
 `;
 const ImagePreview = styled.img`
   margin-top: 0.5rem;
@@ -272,10 +356,8 @@ const ImagePreview = styled.img`
   border-radius: 8px;
   object-fit: contain;
   height: 15rem;
-  border: solid 1px var(--hover-color);
 `;
-
-const ButtonDelete = styled.button`
+const ButtonEdit = styled.button`
   position: absolute;
   top: 1rem;
   right: 0.5rem;
@@ -291,12 +373,10 @@ const ButtonDelete = styled.button`
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
   &:hover {
     background-color: #444;
   }
 `;
-
 const ErrorMsg = styled.div`
   background: #ffe5e5;
   color: #b30000;

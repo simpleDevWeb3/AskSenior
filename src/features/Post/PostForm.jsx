@@ -24,7 +24,7 @@ import Avatar from "../../components/Avatar";
 function PostForm() {
   const { openModal, closeModal } = useModal();
   const { user } = useUser();
-  const { createPost, isLoadCreatePost, errorCreatePost } = useCreatePost();
+
   const { communities } = useFetchJoinedCommunity(user?.id);
 
   // 1. Local State (UI Only)
@@ -55,8 +55,10 @@ function PostForm() {
     handleMouseLeave,
     handleCancelImage,
     handleSubmit,
+    empty,
   } = usePostForm(onFormSuccess);
-
+  const { createPost, isLoadCreatePost, errorCreatePost } =
+    useCreatePost(empty);
   // 3. Success Callback (Executed by the hook after validation)
   function onFormSuccess(validatedFormData) {
     const finalData = {
@@ -95,7 +97,7 @@ function PostForm() {
     setDisplaySearch(false);
     setFilterQuery("");
   }
-
+  console.log("from form: ", formData);
   return (
     <Layout>
       {isLoadCreatePost && <Spinner />}
@@ -286,7 +288,6 @@ function PostForm() {
 
         <ActionContainer>
           <ButtonIcon>Post</ButtonIcon>
-          <ButtonIcon>Save as Draft</ButtonIcon>
         </ActionContainer>
       </FormContainer>
     </Layout>

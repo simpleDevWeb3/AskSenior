@@ -1,14 +1,15 @@
 import axios from "axios";
 
-export async function DeleteReq(apiUrl, data = {}) {
+export async function DeleteReq(apiUrl, data = {}, content_type) {
   try {
     const token = localStorage.getItem("token");
 
     const res = await axios.delete(apiUrl, {
       headers: {
         ...(token && { Authorization: `Bearer ${token}` }),
+        "Content-Type": content_type,
       },
-      data: data, 
+      data: data,
     });
 
     return res.data;
@@ -48,6 +49,23 @@ export async function PostReq(apiUrl, data) {
       "Unknown error";
 
     throw backendMsg;
+  }
+}
+export async function PutReq(apiUrl, data, content_type) {
+  const options = {
+    method: "PUT",
+    url: apiUrl,
+    headers: {
+      "Content-Type": content_type ?? "multipart/form-data",
+    },
+    data: data,
+  };
+
+  try {
+    const { data } = await axios.request(options);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
   }
 }
 

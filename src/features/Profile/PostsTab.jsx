@@ -10,9 +10,15 @@ import { useEffect } from "react";
 import { Mosaic } from "react-loading-indicators";
 import NoExist from "../../components/NoExist";
 import { useOutletContext } from "react-router-dom";
+import Modal from "../../components/Modal";
+import ConfirmDelete from "../../components/ConfirmDelete";
+import { useModal } from "../../context/ModalContext";
+import { useDeletePost } from "../Post/useDeletePost";
 
 function PostsTab() {
   const { userId, isOwnedAcc } = useOutletContext();
+  const { modalData, closeModal } = useModal();
+  const { deletePost, isDeletingPost } = useDeletePost(userId, closeModal);
   const {
     posts,
     isLoadPost,
@@ -66,6 +72,10 @@ function PostsTab() {
           />
         )}
       </div>
+
+      <Modal id={"Delete Post"}>
+        <ConfirmDelete onConfirm={() => deletePost(modalData?.id)} onClose={closeModal} disabled={isDeletingPost} />
+      </Modal>
     </Container>
   );
 }

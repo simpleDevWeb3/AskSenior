@@ -8,7 +8,7 @@ import { usePostHandler } from "./usePostHandler";
 import { useFetchPostComment } from "./useFetchPostComment";
 
 function PostSocialFeatures({ post_id }) {
-  const { postData, variant, onClickComment } = usePost();
+  const { postData, variant, onClickComment, owner } = usePost();
 
   const { comment_id } = postData;
   const { handleVote, handleShare } = usePostHandler();
@@ -27,12 +27,8 @@ function PostSocialFeatures({ post_id }) {
         }}
       />
 
-      <PostMenusShare
-        variant={variant}
-        onClickShare={() => handleShare(post_id)}
-        id={post_id}
-      />
-      {variant === "comment" && <PostMenusOther variant={"comment"} />}
+   
+      {owner && variant === "comment" && <PostMenusOther variant={"comment"} />}
     </SocialFeatures>
   );
 }

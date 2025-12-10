@@ -91,6 +91,33 @@ async function getIsDupEmailApi(email) {
   }
 }
 
+/**
+ * curl 'https://localhost:7071/api/Auth/editAccount/{user_id}' \
+  --request POST \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'name=' \
+  --data-urlencode 'Password=' \
+  --data-urlencode 'bio=' \
+  --data-urlencode 'AvatarFile=' \
+  --data-urlencode 'BannerFile=' \
+  --data-urlencode 'Preference='
+ */
+
+async function editAccountApi(user_id, formData) {
+  const encodedParams = new URLSearchParams();
+  encodedParams.set("name", formData?.name || null);
+  encodedParams.set("Password", formData?.Password || null);
+  encodedParams.set("bio", formData?.bio || null);
+  encodedParams.set("AvatarFile", formData?.AvatarFile || null);
+  encodedParams.set("BannerFile", formData?.BannerFile || null);
+  encodedParams.set("Preference", "");
+
+  return await PostReq(
+    `https://localhost:7071/api/Auth/editAccount/${user_id}`,
+    encodedParams
+  );
+}
+
 export {
   loginApi,
   registerApi,
@@ -98,4 +125,5 @@ export {
   getCurrentUserApi,
   getIsDupEmailApi,
   getIsDupUsernameApi,
+  editAccountApi,
 };

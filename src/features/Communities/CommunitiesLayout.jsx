@@ -15,7 +15,7 @@ function CommunitiesLayout() {
   const navigate = useNavigate();
 
   const notOwnedCommunities =
-    communities?.filter((community) => community.adminId !== user?.id) || [];
+    communities?.filter((community) => community?.adminId !== user?.id) || [];
   if (isLoadCommunities)
     return (
       <FullPageLoader>

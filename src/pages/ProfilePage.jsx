@@ -7,9 +7,13 @@ import { Outlet, useParams } from "react-router-dom";
 import { useUser } from "../features/Auth/useUser";
 import { useFetchUser } from "../features/Users/useFetchUser";
 import Spinner from "../components/Spinner";
+import Modal from "../components/Modal";
+import ConfirmDelete from "../components/ConfirmDelete";
+
 
 function ProfilePage() {
   const { userId } = useParams();
+ 
   const { userById, isLoadUser, errorUser } = useFetchUser(userId);
   const { $isSidebarOpen } = useSidebar();
   const { user } = useUser();
@@ -50,8 +54,10 @@ function ProfilePage() {
         <Tabs links={links} basePath={basePath} />
       </OperationContainer>
       <br />
+
+   
       <Content>
-        <Outlet context={{ userId, isOwnedAcc }} />
+        <Outlet context={{ userId, isOwnedAcc, user }} />
       </Content>
     </PageContainer>
   );
