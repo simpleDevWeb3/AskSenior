@@ -7,9 +7,12 @@ import Error from "../../components/Error";
 import { useEditAccount } from "../Settings/useEditAccount";
 import { useUser } from "./useUser";
 import SpinnerMini from "../../components/SpinnerMini";
+import { useModal } from "../../context/ModalContext";
 
 function EditAccount() {
-  const { editAccount, isLoadEditAccount, errorEditAccount } = useEditAccount();
+  const { closeModal } = useModal();
+  const { editAccount, isLoadEditAccount, errorEditAccount } =
+    useEditAccount(closeModal);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);

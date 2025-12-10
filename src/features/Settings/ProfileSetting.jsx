@@ -20,7 +20,10 @@ function ProfileSetting() {
         description
       </Input>
       <BtnContainer>
-        <ButtonIcon action={() => openModal("Setting_Profile")} icon={<Edit />}>
+        <ButtonIcon
+          action={() => openModal("Setting_Profile", user)}
+          icon={<Edit />}
+        >
           {" "}
           Edit
         </ButtonIcon>

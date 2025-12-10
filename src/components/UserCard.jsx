@@ -1,35 +1,56 @@
 import styled from "styled-components";
 import { useUser } from "../features/Auth/useUser";
-import { useState } from "react";
+import { useImperativeHandle, useState, forwardRef } from "react";
 import Avatar from "./Avatar";
 
-function UserCard() {
+const UserCard = forwardRef(({ editAvatarEl, editBannerEl }, ref) => {
   const { user } = useUser();
 
-  // Encode spaces for existing URLs
-  const encodedBannerUrl = user.banner_url ? encodeURI(user.banner_url) : null;
-  const encodedAvatarUrl = user.avatar_url ? encodeURI(user.avatar_url) : null;
+  // 1. Initialize local state with data from the database
+  const [bannerImage, setBannerImage] = useState(
+    user.banner_url ? encodeURI(user.banner_url) : null
+  );
+  const [iconImage, setIconImage] = useState(
+    user.avatar_url ? encodeURI(user.avatar_url) : null
+  );
 
-  const [bannerImage, setBannerImage] = useState(encodedBannerUrl);
-  const [iconImage, setIconImage] = useState(encodedAvatarUrl);
+  // 2. Local state for text (allows live typing preview)
+  const [previewName, setPreviewName] = useState(user.name);
+  const [previewBio, setPreviewBio] = useState(user.bio);
+
+  // 3. Expose update functions to parent
+  useImperativeHandle(ref, () => ({
+    updateBanner: (newUrl) => setBannerImage(newUrl),
+    updateAvatar: (newUrl) => setIconImage(newUrl),
+    updateName: (newName) => setPreviewName(newName),
+    updateBio: (newBio) => setPreviewBio(newBio),
+  }));
+
   return (
     <PreviewCard>
-      <Banner $image={bannerImage} $fallbackColor="rgba(11, 111, 242, 0.9)" />
+      <Banner $image={bannerImage} $fallbackColor="rgba(11, 111, 242, 0.9)">
+        {editBannerEl}
+      </Banner>
       <ProfileContent>
         <AvatarContainer>
+          {editAvatarEl}
           <Avatar src={iconImage} />
         </AvatarContainer>
 
         <ProfileDetails>
-          <h3>u/{user.name}</h3>
+          {/* Use previewName instead of user.name */}
+          <h3>u/{previewName}</h3>
           <p>1 follows</p>
         </ProfileDetails>
       </ProfileContent>
 
-      <Description>{user.bio}</Description>
+      {/* Use previewBio instead of user.bio */}
+      <Description>{previewBio}</Description>
     </PreviewCard>
   );
-}
+});
+
+// --- YOUR ORIGINAL STYLES ---
 
 const PreviewCard = styled.div`
   border: 1px solid var(--hover-color);
@@ -39,6 +60,7 @@ const PreviewCard = styled.div`
 `;
 
 const Banner = styled.div`
+  position: relative;
   height: 5rem;
   background-color: ${(props) => props.$fallbackColor || "#0b6ff2"};
   background-image: ${(props) =>
@@ -55,6 +77,7 @@ const ProfileContent = styled.div`
 `;
 
 const AvatarContainer = styled.div`
+  position: relative;
   height: 3rem;
   width: 3rem;
   border-radius: 50%;
