@@ -10,7 +10,6 @@ function VoteTypePostList({ posts }) {
           <PostCard postData={p} variant="comment_vote_user" />
         )}
       </PostWrapper>
-      <BreakLine />
     </>
   ));
 }
@@ -18,12 +17,12 @@ function VoteTypePostList({ posts }) {
 export default VoteTypePostList;
 const PostWrapper = styled.div`
   width: 100%;
-
+  background-color: var(--background-glass);
   display: flex;
   flex-direction: column;
   align-items: start;
   border-radius: 25px;
-
+  margin-bottom: 1rem;
   padding: 1rem 1rem 0rem 1rem;
   &:hover {
     background-color: rgba(160, 158, 158, 0.1);

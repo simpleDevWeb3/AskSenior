@@ -6,12 +6,8 @@ import Carousel from "../../components/Carousel";
 
 function PostContent() {
   const { postData, variant } = usePost();
-
   const { title, text, postImage_url, content } = postData;
 
-  // --- THE FIX ---
-  // Convert the object into an array of entries: [[id, url], [id, url]]
-  // This allows us to check .length and map over it easily.
   const imageEntries = postImage_url ? Object.entries(postImage_url) : [];
 
   return (
@@ -20,40 +16,44 @@ function PostContent() {
       <Text variant={variant}>{text ?? content}</Text>
 
       {/* 1. Single Image Logic */}
-      {/* We check imageEntries.length now, which works! */}
       {imageEntries.length === 1 && (
         <ImageContainer>
-          {/* imageEntries[0] gives ["ID", "URL"], so we take the second item [1] */}
-          <Image src={imageEntries[0][1]} alt={title || "Post image"} />
+          {/* Apply a blurred background effect or solid color */}
+          <ImageBackground>
+            <Image src={imageEntries[0][1]} alt={title || "Post image"} />
+          </ImageBackground>
         </ImageContainer>
       )}
 
-      {/* 2. Carousel Logic (More than 1 image) */}
+      {/* 2. Carousel Logic */}
       {imageEntries.length > 1 && (
         <Carousel
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            width: "100%", // Ensure carousel takes full width
           }}
           hideWhenCurrentSlide={true}
           total={imageEntries.length}
         >
           <Carousel.Count />
           <Carousel.Track>
-            {/* We map over the array we created at the top */}
-            {imageEntries.map(([key, url], index) => (
+            {imageEntries.map(([key, url]) => (
               <Carousel.Card
-                key={key} // distinct key from backend
+                key={key}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundSize: "cover",
+                  // Remove backgroundSize cover here, handled by internal Image
+                  width: "100%",
                 }}
               >
                 <ImageContainer>
-                  <Image src={url} alt={title || "Post image"} />
+                  <ImageBackground>
+                    <Image src={url} alt={title || "Post image"} />
+                  </ImageBackground>
                 </ImageContainer>
               </Carousel.Card>
             ))}
@@ -61,14 +61,14 @@ function PostContent() {
 
           <Carousel.PrevBtn
             style={{
-              backgroundColor: "var(--tertiary-color)",
+              backgroundColor: "var(--background-glass)",
               borderRadius: "50%",
             }}
             positionY="center"
           />
           <Carousel.NextBtn
             style={{
-              backgroundColor: "var(--tertiary-color)",
+              backgroundColor: "var(--background-glass)",
               borderRadius: "50%",
             }}
             positionY="center"
@@ -83,7 +83,8 @@ function PostContent() {
 
 export default PostContent;
 
-// ... (Your styled components remain the same) ...
+// --- STYLED COMPONENTS ---
+
 const TextWrapper = styled.div`
   overflow-y: hidden;
   display: flex;
@@ -93,22 +94,50 @@ const TextWrapper = styled.div`
   ${({ $variant }) => variantSize[$variant] || ""}
   overflow-wrap: break-word;
   word-break: break-word;
+  width: 100%; /* Ensure wrapper fills space */
 `;
 
+// 1. The Container defines the "Frame"
 const ImageContainer = styled.div`
   margin-top: 0.75rem;
-  border-radius: 25px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 16px;
   overflow: hidden;
+
+  /* Reddit-style consistency: */
+  height: 512px; /* Fixed height for consistency */
+  /* Alternatively use max-height: 512px; if you want small images to stay small */
+
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(
+    --hover-color,
+    #1a1a1b
+  ); /* Dark background for empty space */
 `;
 
-const Image = styled.img`
+// 2. Optional: Helper to center image perfectly
+const ImageBackground = styled.div`
   width: 100%;
-  max-width: 40rem;
-  border-radius: 25px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px); /* Optional: Cool blur effect */
+`;
+
+// 3. The Image itself fits INSIDE the frame
+const Image = styled.img`
+  /* Logic: Fill the container, but don't cut off content */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
-  object-fit: cover;
+
+  /* KEY PROPERTY: contain ensures the whole image is seen */
+  object-fit: contain;
+
   display: block;
 `;

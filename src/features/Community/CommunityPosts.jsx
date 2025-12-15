@@ -184,6 +184,7 @@ const Sidebar = styled.div`
   @media (max-width: 1300px) {
     display: none;
   }
+  background-color: var(--background-glass);
 `;
 
 export default CommunityPosts;

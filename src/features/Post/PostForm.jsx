@@ -360,7 +360,10 @@ const FormContainer = styled.form`
   flex-direction: column;
   gap: 1.2rem;
   width: 60%;
+  border: solid 1px var(--hover-color);
+  background-color: var(--background-glass);
   max-width: 50rem;
+  min-height: 90vh;
   color: var(--text-color);
   @media (max-width: 1000px) {
     width: 100%;

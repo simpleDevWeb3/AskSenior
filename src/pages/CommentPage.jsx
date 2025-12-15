@@ -32,14 +32,6 @@ function CommentPage() {
   return (
     <FieldTextProvider>
       <StyledContainer $isSidebarOpen={$isSidebarOpen}>
-        <NavigateBack>
-          <ButtonIcon
-            action={() => navigate(-1)}
-            variant="primary"
-            size="rounded_small"
-            icon={<HiArrowLeft />}
-          />
-        </NavigateBack>
         <ContentGrid>
           <ContentWrapper>
             <CommentPost />
@@ -63,13 +55,13 @@ const StyledContainer = styled.div`
   display: flex;
   width: 80%;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 1rem;
   transform: ${({ $isSidebarOpen }) =>
     $isSidebarOpen ? "translateX(17rem)" : "translateX(5rem)"};
   transition: all 0.4s ease;
   box-sizing: border-box;
   align-items: flex-start;
-  min-height: 100vh; /* 👈 ensures full screen height */
+  min-height: 100vh; 
 
   @media (max-width: 1300px) {
     justify-content: left;
@@ -121,6 +113,6 @@ const Sidebar = styled.div`
   @media (max-width: 1000px) {
     display: none;
   }
-  background-color: var(--hover-color);
+  background-color: var(--background-glass);
 `;
 export default CommentPage;

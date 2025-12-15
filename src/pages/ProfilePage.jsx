@@ -33,25 +33,34 @@ function ProfilePage() {
   console.log("own: ", isOwnedAcc, " ", userId, user?.id);
   return (
     <PageContainer $isSidebarOpen={$isSidebarOpen}>
-      <ProfileHeader>
-        <Banner $image={encodedBannerUrl}>
-          <AvatarContainer>
-            <Avatar src={userById?.avatar_url} />
-          </AvatarContainer>
-        </Banner>
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <ReservedEl />
-          <InfoContainer>
-            <div>
-              <UsernameBig>{userById?.name}</UsernameBig>
-              <UsernameSmall>@{userById?.name}</UsernameSmall>
-            </div>
-          </InfoContainer>
-        </div>
-      </ProfileHeader>
-      <OperationContainer>
-        <Tabs links={links} basePath={basePath} />
-      </OperationContainer>
+      <div
+        style={{
+          backgroundColor: "var(--background-glass)",
+          paddingBottom: "1rem",
+          border: "solid 1px var(--hover-color)",
+          borderRadius: "18px",
+        }}
+      >
+        <ProfileHeader>
+          <Banner $image={encodedBannerUrl}>
+            <AvatarContainer>
+              <Avatar src={userById?.avatar_url} />
+            </AvatarContainer>
+          </Banner>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <ReservedEl />
+            <InfoContainer>
+              <div>
+                <UsernameBig>{userById?.name}</UsernameBig>
+                <UsernameSmall>@{userById?.name}</UsernameSmall>
+              </div>
+            </InfoContainer>
+          </div>
+        </ProfileHeader>
+        <OperationContainer>
+          <Tabs links={links} basePath={basePath} />
+        </OperationContainer>
+      </div>
       <br />
 
       <Content>
@@ -124,4 +133,6 @@ const Banner = styled.div`
   position: relative;
   border-radius: 8px;
 `;
-const OperationContainer = styled.div``;
+const OperationContainer = styled.div`
+  margin-left: 1rem;
+`;

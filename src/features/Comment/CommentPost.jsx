@@ -69,6 +69,7 @@ function CommentPost() {
         onClickComment={() => toggleTextField(postData.id)}
       >
         {/* Now this is INSIDE the PostCard's layout */}
+        <br />
         {isAuthenticated && isShowTextField === postData.id ? (
           <TextFields
             onSubmit={(content) =>
@@ -98,6 +99,8 @@ function CommentPost() {
 const Wrapper = styled.div`
   background-color: var(--background-glass);
   padding: 2rem 2rem;
-  border-radius: 8px;
+  border-radius: 25px;
+  border: solid 1px var(--hover-color);
+  box-shadow: 1px 5px 5px var(--hover-color);
 `;
 export default CommentPost;

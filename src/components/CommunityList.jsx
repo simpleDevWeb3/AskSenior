@@ -3,8 +3,10 @@ import ButtonIcon from "./ButtonIcon";
 import JoinBtn from "./JoinBtn";
 import { useUser } from "../features/Auth/useUser";
 import { useFetchJoinedCommunity } from "../features/Communities/useFetchJoinedCommunity";
+import { useNavigate } from "react-router-dom";
 
 function CommunityList({ communities }) {
+  const navigate = useNavigate();
   const { user } = useUser();
   const user_id = user?.id ?? null;
 
@@ -23,11 +25,11 @@ function CommunityList({ communities }) {
         return (
           <>
             <CommunityItem
+              action={() => navigate(`/community/${item?.id}`)}
               item={item}
               user_id={user_id}
               isJoined={inJoinedFunc(item.id)}
             />
-            <OutLine />
           </>
         );
       })}
@@ -35,9 +37,9 @@ function CommunityList({ communities }) {
   );
 }
 
-function CommunityItem({ item, user_id, isJoined }) {
+function CommunityItem({ item, user_id, isJoined, action }) {
   return (
-    <ListItem key={item.id}>
+    <ListItem key={item.id} onClick={() => action?.()}>
       {/* Avatar Section */}
       <AvatarWrapper>
         {item.avatarUrl ? (
@@ -80,7 +82,7 @@ const ListItem = styled.div`
   display: flex;
   align-items: flex-start;
   padding: 16px;
-
+  background-color: var(--background-glass);
   cursor: pointer;
   transition: background-color 0.2s;
   border-radius: 16px;
@@ -92,6 +94,8 @@ const ListItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
+  border: solid 1px var(--hover-color);
+  margin-bottom: 1rem;
 `;
 
 const AvatarWrapper = styled.div`

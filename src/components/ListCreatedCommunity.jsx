@@ -3,12 +3,12 @@ import Accordian from "./Accordian";
 import styled from "styled-components";
 
 function ListCreatedCommunity({ communities }) {
-  const existCommunity = communities.length > 0;
-
+  const existCommunity = communities.communities.length > 0;
+  console.log("communities: ", communities);
   if (existCommunity)
     return (
       <Accordian title={"Created"}>
-        {communities?.map((c) => (
+        {communities?.communities?.map((c) => (
           <StyledNavLink StyledNavLink key={c.id} to={`community/${c.id}`}>
             <div>
               <Avatar src={c.avatarUrl} />

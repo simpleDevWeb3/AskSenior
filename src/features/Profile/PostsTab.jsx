@@ -50,7 +50,6 @@ function PostsTab() {
               variant={isOwnedAcc ? "user_post" : "post"}
             />
             <br />
-            <Outline />
           </PostWrapper>
         ))}
       <div
@@ -74,13 +73,18 @@ function PostsTab() {
       </div>
 
       <Modal id={"Delete Post"}>
-        <ConfirmDelete onConfirm={() => deletePost(modalData?.id)} onClose={closeModal} disabled={isDeletingPost} />
+        <ConfirmDelete
+          onConfirm={() => deletePost(modalData?.id)}
+          onClose={closeModal}
+          disabled={isDeletingPost}
+        />
       </Modal>
     </Container>
   );
 }
 const PostWrapper = styled.div`
   padding: 0.5rem 1rem;
+  background-color: var(--background-glass);
 
   margin-bottom: 1rem;
   cursor: pointer;

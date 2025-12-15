@@ -106,7 +106,10 @@ const CommentWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   position: relative;
-
+  border: ${({ $commentLvl }) =>
+    $commentLvl === 0 && `solid 1px var(--hover-color)`};
+  box-shadow: ${({ $commentLvl }) =>
+    $commentLvl === 0 && `1px 5px 5px var(--hover-color)`};
   /* Only add background to the very root comment */
   background-color: ${({ $commentLvl }) =>
     $commentLvl === 0 ? "var(--background-glass)" : "transparent"};
@@ -114,7 +117,7 @@ const CommentWrapper = styled.div`
   padding-top: ${({ $commentLvl }) => ($commentLvl === 0 ? "2rem" : "0")};
   padding-bottom: ${({ $commentLvl }) => ($commentLvl === 0 ? "2rem" : "0")};
   border-radius: ${({ $commentLvl }) => ($commentLvl === 0 ? "25px" : "0")};
-  margin-bottom: ${({ $commentLvl }) => ($commentLvl === 0 ? "0.5rem" : "0")};
+  margin-bottom: ${({ $commentLvl }) => ($commentLvl === 0 ? "1rem" : "0")};
   //mobile
   @media (max-width: 800px) {
     padding: 0;

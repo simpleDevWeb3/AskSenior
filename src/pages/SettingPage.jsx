@@ -40,7 +40,9 @@ function SettingPage() {
 }
 
 const StyledPage = styled.div`
-  height: 100vh;
+  background-color: var(--background-glass);
+  padding: 4rem;
+  max-width: 60%;
   padding-left: 4rem;
   & * {
     color: var(--text-color);

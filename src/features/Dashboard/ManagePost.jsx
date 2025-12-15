@@ -1,13 +1,15 @@
 import styled from "styled-components";
-import forumData from "../../data/post";
-import PostList from "../Post/PostList";
+import PostTable from "./Features/Posts/PostTable";
+import Modal from "../../components/Modal";
+import BanPostForm from "./Features/Posts/BanPostForm";
 
 function ManagePost() {
-  const { posts } = forumData;
   return (
     <Container>
-      <h1>ManagePost</h1>
-      <PostList postData={posts} />
+      <Modal id={"ban-post"}>
+        <BanPostForm />
+      </Modal>
+      <PostTable />
     </Container>
   );
 }

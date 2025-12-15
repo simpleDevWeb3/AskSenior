@@ -240,7 +240,6 @@ function Navbar() {
                 <IconText>Create</IconText>
               </ButtonIcon>
 
-          
               <Dropdown>
                 <Dropdown.Trigger>
                   <ButtonIcon
@@ -299,13 +298,14 @@ function Navbar() {
                     />
                     Log out
                   </Dropdown.Item>
-
-                  <Dropdown.Item onClick={() => navigate("/dashboard")}>
-                    <MdDashboard
-                      style={{ fontSize: "1.4rem", cursor: "pointer" }}
-                    />
-                    Dashboard
-                  </Dropdown.Item>
+                  {user?.role === "admin" && (
+                    <Dropdown.Item onClick={() => navigate("/dashboard")}>
+                      <MdDashboard
+                        style={{ fontSize: "1.4rem", cursor: "pointer" }}
+                      />
+                      Dashboard
+                    </Dropdown.Item>
+                  )}
                 </Dropdown.List>
               </Dropdown>
             </>

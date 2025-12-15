@@ -4,14 +4,13 @@ import styled from "styled-components";
 function UserList({ users }) {
   const navigate = useNavigate();
   if (!users) return null;
-  
+
   return (
     <List>
       {users.map((item) => {
         return (
-          <div key={item.id} onClick={()=>navigate()}>
-            <UserItem item={item}  />
-            <OutLine />
+          <div key={item.id} onClick={() => navigate(`/profile/${item?.id}`)}>
+            <UserItem item={item} />
           </div>
         );
       })}
@@ -64,8 +63,10 @@ const ListItem = styled.div`
 
   cursor: pointer;
   transition: background-color 0.2s;
-  border-radius: 8px; /* Slightly smaller radius */
-
+  border-radius: 18px; /* Slightly smaller radius */
+  background-color: var(--background-glass);
+  margin-bottom: 1rem;
+  border: solid 1px var(--hover-color);
   &:hover {
     background-color: var(--hover-color);
   }

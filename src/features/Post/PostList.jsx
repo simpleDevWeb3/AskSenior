@@ -25,7 +25,7 @@ const PostWrapper = styled.div`
   @media (max-width: 800px) {
     border-radius: 0px;
   }
-
+  box-shadow: 1px 5px 5px var(--hover-color);
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 `;

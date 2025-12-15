@@ -4,7 +4,7 @@ import CommunityTable from "./Features/Community/CommunityTable";
 function ManageCommutiy() {
   return (
     <Container>
-      <h2>Manage Community</h2>
+    
       <CommunityTable />
     </Container>
   );
@@ -16,5 +16,5 @@ const Container = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
-  height: 100vh;
+
 `;

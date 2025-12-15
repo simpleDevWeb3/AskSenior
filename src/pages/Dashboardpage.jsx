@@ -15,6 +15,8 @@ function Dashboardpage() {
 
 export default Dashboardpage;
 const PageContainer = styled.div`
+  background-color: var(--background-color);
+  min-height: 100vh;
   transform: ${({ $isSidebarOpen }) =>
     $isSidebarOpen ? "translateX(17rem)" : "translateX(0rem)"};
   transition: transform 0.4s ease;

@@ -14,7 +14,7 @@
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
-  --background-glass:rgb(255, 255, 255);
+  --background-glass: rgb(255, 255, 255);
   --hover-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -27,7 +27,7 @@
   --background-color: #141414;
   --text-color: #d7dadc;
   --hover-color: rgba(255, 255, 255, 0.1);
-   --background-glass:rgb(34, 34, 34);
+  --background-glass: rgb(34, 34, 34);
 }
 
 * {
@@ -50,6 +50,8 @@
   html,
   body {
     overflow-x: hidden; /* hide horizontal scroll */
+    height: 100%;
+    margin: 0;
   }
 }
 

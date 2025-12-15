@@ -16,3 +16,12 @@ export function formatTimeAgo(dateUTC) {
 
   return timeAgo;
 }
+
+export function formatDate_DD_MM_YYY(isoString) {
+  if (!isoString) return "";
+
+  const date = new Date(isoString);
+
+  // "en-GB" ensures the format is DD/MM/YYYY
+  return date.toLocaleDateString("en-GB");
+}

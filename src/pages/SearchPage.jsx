@@ -33,7 +33,7 @@ function SearchPage() {
           variant={"tabs"}
         />
       </OperationRow>
-
+      <br />
       <Wrapper>
         {type === "POST" && <SearchPostResult query={query} />}
         {type === "COMMUNITY" && <SearchCommunityResult query={query} />}

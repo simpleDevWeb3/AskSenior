@@ -16,7 +16,7 @@ function Modal({ children, id }) {
         style={{ display: isModalOpen === id ? "block" : "none" }}
       >
         <CloseButtonWrapper>
-          <ButtonIcon
+        <ButtonIcon
             variant="text"
             size="rounded"
             icon={<CrossIcon />}

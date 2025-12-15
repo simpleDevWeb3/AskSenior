@@ -109,7 +109,31 @@ async function getPostByVote(user_id, vote_type) {
     `https://localhost:7071/api/Vote/all_Voted?user_id=${user_id}&vote_type=${vote_type}`
   );
 }
+/*
+curl https://localhost:7071/api/Post/banPost \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "post_id": null,
+  "reason": ""
+}' */
 
+async function banPostApi(data) {
+  const formatedData = {
+    post_id: data?.post_id,
+    reason: data?.reason,
+  };
+  return await PostReq(`https://localhost:7071/api/Post/banPost`, formatedData);
+}
+/**
+ * curl 'https://localhost:7071/api/Post/getAllPostsAdmin?current_user=null&user_id=null&post_title=null&post_id=null&community_id=null'
+ */
+
+async function getAllPostAdminApi() {
+  return await GetReq(
+    `https://localhost:7071/api/Post/getAllPostsAdmin?current_user=null&user_id=null&post_title=null&post_id=null&community_id=null`
+  );
+}
 export {
   createPostApi,
   getAllPostApi,
@@ -118,4 +142,6 @@ export {
   getPostByVote,
   editPostApi,
   deletePostApi,
+  banPostApi,
+  getAllPostAdminApi,
 };

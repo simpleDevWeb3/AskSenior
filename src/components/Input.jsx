@@ -8,7 +8,7 @@ function Input({
   initialValue = "",
   required = true,
   viewOnly = false,
-  icon=""
+  icon = "",
 }) {
   const [isFocus, setIsFocus] = useState(false);
   const [value, setValue] = useState(initialValue);
@@ -63,17 +63,21 @@ const InputContainer = styled.div`
   @media (max-width: 800px) {
     width: 70%;
   }
+
+  & * {
+    color: var(--text-color);
+  }
 `;
 
 const StyledInput = styled.input`
   width: 100%;
-
+  color: var(--text-color);
   background: inherit;
   border: none;
   height: 3rem;
   outline: none;
   font-size: 1.2rem;
-  color: var(--text-primary);
+
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -89,7 +93,7 @@ const InputLabel = styled.label`
     $isFocus || $isValue ? "0.5rem" : "1.5rem"};
   font-size: ${({ $isFocus, $isValue }) =>
     $isFocus || $isValue ? "0.8rem" : "1.2rem"};
-  color: var(--text-secondary);
+  color: var(--text-color);
   pointer-events: none;
   transform-origin: left top;
   transition: all 0.25s ease;

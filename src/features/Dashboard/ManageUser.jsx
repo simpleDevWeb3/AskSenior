@@ -2,13 +2,17 @@ import styled from "styled-components";
 import forumData from "../../data/post";
 
 import UserTable from "./Features/Users/UserTable";
+import Modal from "../../components/Modal";
+import BanUserForm from "./Features/Users/BanUserForm";
 
 function ManageUser() {
   const { users } = forumData;
   console.log(users);
   return (
     <Container>
-      <h2>All User</h2>
+      <Modal id={"ban-user"}>
+        <BanUserForm />
+      </Modal>
       <br />
       <UserTable />
     </Container>
@@ -21,5 +25,4 @@ const Container = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
-  height: 100vh;
 `;

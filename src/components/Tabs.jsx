@@ -43,6 +43,7 @@ const TabContainer = styled.div`
 const Tab = styled.div`
   padding: 0.5rem 1rem;
   border-radius: 25px;
+
   background-color: ${(props) =>
     props.$active ? "var(--tertiary-color)" : ""};
   font-weight: 600;

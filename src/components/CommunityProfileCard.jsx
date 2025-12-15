@@ -120,6 +120,9 @@ const StyledContainer = styled.div`
   color: var(--text-color);
   flex-direction: column;
   width: 100%;
+  background-color: var(--background-glass);
+  padding-bottom: 1rem;
+  border-radius: 18px;
 `;
 
 const ReservedContainer = styled.div`
@@ -156,7 +159,7 @@ const BannerContainer = styled.div`
 const FeatureRows = styled.div`
   display: flex;
   gap: 0.5rem;
-
+  margin-right: 1rem;
   margin-top: 1rem;
 
   & span {

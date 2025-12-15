@@ -448,7 +448,6 @@ const AvatarContainer = styled.div`
 `;
 const StyledPost = styled.div`
   width: 100%;
-  height: 100%;
 
   display: flex;
   flex-direction: ${({ $variant }) =>

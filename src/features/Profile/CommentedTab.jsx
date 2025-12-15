@@ -26,7 +26,6 @@ function CommentedTab() {
           <PostWrapper key={c.comment_id}>
             <PostCard variant="comment_vote_user" postData={c} />
           </PostWrapper>
-          <Outline />
         </>
       ))}
     </StyledContainer>
@@ -41,9 +40,10 @@ const StyledContainer = styled.div`
 `;
 
 const PostWrapper = styled.div`
+  margin-bottom: 1rem;
   padding: 1rem;
   border-radius: 25px;
-
+  background-color: var(--background-glass);
   cursor: pointer;
   transition: background-color 0.15s;
   &:hover {
