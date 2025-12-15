@@ -47,7 +47,14 @@ const Layout = styled.div`
 `;
 
 // Added onSelect prop
-function Search({ onSearch, onInput, placeholder, initialData, onSelect }) {
+function Search({
+  onSearch,
+  onInput,
+  placeholder,
+  initialData,
+  onSelect,
+  dropdown = true,
+}) {
   const [query, setQuery] = useState("");
   const { close } = useDropdown();
 
@@ -88,7 +95,7 @@ function Search({ onSearch, onInput, placeholder, initialData, onSelect }) {
         </Layout>
       </Dropdown.Trigger>
 
-      {initialData && initialData.length > 0 && (
+      {dropdown && initialData && initialData.length > 0 && (
         <Dropdown.List>
           {initialData.map((data) => (
             // Added onClick handler here
