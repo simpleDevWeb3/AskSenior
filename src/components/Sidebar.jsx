@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import Accordian from "./Accordian";
 import { useModal } from "../context/ModalContext";
 import { BiPieChart } from "react-icons/bi";
-import { TbReportAnalytics } from "react-icons/tb";
+import { TbHeartRateMonitor, TbReportAnalytics } from "react-icons/tb";
 import { SiDatabricks } from "react-icons/si";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { useDashboard } from "../hook/useDashboard";
@@ -194,7 +194,7 @@ function Sidebar() {
             }}
           >
             <StyledNavLink onClick={handleNavigate} to="/dashboard/overview">
-              <SiDatabricks />
+              <TbHeartRateMonitor />
               <span>Overview</span>
             </StyledNavLink>
             <StyledNavLink onClick={handleNavigate} to="/dashboard/groups">
@@ -217,7 +217,7 @@ function Sidebar() {
             <HiOutlineHome />
             <span>Home</span>
           </StyledNavLink>
-       
+
           <StyledNavLink onClick={handleNavigate} to="/communities">
             <HiOutlineUserGroup />
             <span>Communities</span>

@@ -79,3 +79,30 @@ export async function GetReq(apiUrl) {
     throw backendMsg || err.message || "Unknown error";
   }
 }
+export async function PatchReq(apiUrl, data, content_type) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.patch(apiUrl, data, {
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+        // If content_type is provided (e.g., 'multipart/form-data'), use it.
+        // Otherwise, axios defaults to 'application/json'
+        ...(content_type && { "Content-Type": content_type }),
+      },
+    });
+
+    return res.data;
+  } catch (err) {
+    const errorData = err.response?.data;
+
+    const backendMsg =
+      errorData?.error ||
+      errorData?.msg ||
+      errorData?.message ||
+      err.message ||
+      "Unknown error";
+
+    throw backendMsg;
+  }
+}

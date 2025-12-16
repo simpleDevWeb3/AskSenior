@@ -18,10 +18,12 @@ const PageContainer = styled.div`
   background-color: var(--background-color);
   min-height: 100vh;
   transform: ${({ $isSidebarOpen }) =>
-    $isSidebarOpen ? "translateX(20rem)" : "translateX(0rem)"};
+    $isSidebarOpen ? "translateX(8rem)" : "translateX(0rem)"};
   transition: transform 0.4s ease;
   @media (max-width: 800px) {
     padding-top: 4rem;
     transform: none;
   }
+  display: flex;
+  justify-content: center;
 `;

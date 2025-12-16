@@ -54,7 +54,7 @@ function PostTable() {
   const optionSort = [
     { value: "created_at-desc", label: "Date (Newest first)" },
     { value: "created_at-asc", label: "Date (Oldest first)" },
-    // UPDATE THESE TO MATCH YOUR DATA KEYS:
+    
     { value: "total_upVote-desc", label: "Most Upvotes" },
     { value: "total_upVote-asc", label: "Least Upvotes" },
     { value: "total_downVote-desc", label: "Most Downvotes" },
@@ -113,7 +113,7 @@ function PostTable() {
 
     // B. Handle Number Sorting (Upvotes/Downvotes)
     // We default to 0 to prevent errors if a post has no votes yet
-  
+
     const valA = a[field] || 0;
     const valB = b[field] || 0;
 
@@ -128,9 +128,7 @@ function PostTable() {
       setSearchParams(searchParams);
     }
 
-    // Note: your original logic used exact word matching via split/includes.
-    // If you want partial matches (e.g. searching "hello" matches "hello world"),
-    // consider using .includes(query) directly.
+ 
     const result = posts.filter((post) =>
       post.text.toLowerCase().includes(query.toLowerCase())
     );

@@ -25,7 +25,7 @@ function BanUserForm() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px" }}>
+    <div style={{ padding: "20px", width: "100%" }}>
       <h3 style={{ color: "var(--text-color)" }}>Ban A User</h3>
       <form onSubmit={handleSubmit}>
         <br />

@@ -1,4 +1,10 @@
-import { DeleteReq, GetReq, PostReq, PutReq } from "../helpers/apiHelper";
+import {
+  DeleteReq,
+  GetReq,
+  PatchReq,
+  PostReq,
+  PutReq,
+} from "../helpers/apiHelper";
 
 //curl 'https://localhost:7071/api/Community/adminCommunities/{adminId}'
 
@@ -124,6 +130,22 @@ async function editCommunityProfileApi(formData) {
   );
 }
 
+//curl 'https://localhost:7071/api/Community/adminCommunities/all/{adminId}'
+
+async function getCommunityByAdminApi(adminId) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/adminCommunities/all/${adminId}`
+  );
+}
+/*curl 'https://localhost:7071/api/Community/ban?communityId=&adminId=' \
+  --request PATCH */
+async function banCommunityApi(formData) {
+  const { communityId, adminId } = formData;
+  return await PatchReq(
+    `https://localhost:7071/api/Community/ban?communityId=${communityId}&adminId=${adminId}`
+  );
+}
+
 export {
   getAllCommunityApi,
   getCommunityApi,
@@ -135,4 +157,6 @@ export {
   getCreatedCommunityApi,
   leaveCommunityApi,
   editCommunityProfileApi,
+  getCommunityByAdminApi,
+  banCommunityApi,
 };

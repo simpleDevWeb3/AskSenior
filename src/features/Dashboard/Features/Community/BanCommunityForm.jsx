@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { useModal } from "../../../../context/ModalContext";
+
 import Input from "../../../../components/Input";
 import ButtonIcon from "../../../../components/ButtonIcon";
-import { useBanPost } from "./useBanPost";
-import SpinnerMini from "../../../../components/SpinnerMini";
 
-function BanPostForm() {
-  const { closeModal } = useModal();
-  const { banPost, isLoadBanPost, errorBanPost } = useBanPost(closeModal);
+import SpinnerMini from "../../../../components/SpinnerMini";
+import { useBanCommunity } from "./useBanCommunity";
+import { useModal } from "../../../../context/ModalContext";
+
+function BanCommunityForm() {
+  const { closeModal, modalData } = useModal();
+  const { banCommunity, isLoadbanCommunity, errorbanCommunity } =
+    useBanCommunity(closeModal);
   const [reason, setReason] = useState("");
-  const { modalData } = useModal();
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stop the page from reloading
 
@@ -20,7 +23,7 @@ function BanPostForm() {
       reason: reason,
     };
 
-    banPost(data);
+    banCommunity(data);
   };
 
   return (
@@ -32,17 +35,17 @@ function BanPostForm() {
         <br />
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <ButtonIcon
-            disabled={isLoadBanPost}
+            disabled={isLoadbanCommunity}
             type="submit"
             style={{
               backgroundColor: "rgba(17, 132, 247, 0.947)",
               color: "white",
             }}
           >
-            {isLoadBanPost ? <SpinnerMini /> : "Confirm"}
+            {isLoadbanCommunity ? <SpinnerMini /> : "Confirm"}
           </ButtonIcon>
           <ButtonIcon
-            disabled={isLoadBanPost}
+            disabled={isLoadbanCommunity}
             action={closeModal}
             type="button"
             style={{ padding: "10px 20px", cursor: "pointer" }}
@@ -55,4 +58,4 @@ function BanPostForm() {
   );
 }
 
-export default BanPostForm;
+export default BanCommunityForm;

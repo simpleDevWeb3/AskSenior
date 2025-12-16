@@ -21,8 +21,7 @@ function ManageUser() {
 
 export default ManageUser;
 const Container = styled.div`
-  max-width: 1000px;
-  display: flex;
+  width: 70%;
+
   gap: 0.5rem;
-  flex-direction: column;
 `;
