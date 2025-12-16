@@ -1,28 +1,45 @@
 import styled from "styled-components";
 import CommonOverview from "./Features/Overview/CommonOverview";
 import ChartMostDiscussCat from "./Features/Overview/ChartMostDiscussCat";
-import ModerateLogs from "./Features/Overview/ModerateLogs";
+import ModerateLogs from "./Features/Overview/ChartMostGrowingCommunities";
 import ChartUserGrowth from "./Features/Overview/ChartUserGrowth";
+import Filter from "../../components/Filter";
+import ChartMostGrowingCommunities from "./Features/Overview/ChartMostGrowingCommunities";
+
+const options = [
+  { key: "7", label: "Last 7 days" },
+  { key: "30", label: "Last 30 days" },
+  { key: "90", label: "Last 90 days" },
+];
 
 function Overview() {
   return (
     <Container>
+      <div
+        style={{ marginTop: "1rem", display: "flex", justifyContent: "end" }}
+      >
+        <Filter
+          filterField="last"
+          options={options}
+          startingOption={"7"}
+          variant={"tabs"}
+        />
+      </div>
       {/* Top Section: Stats Cards */}
       <CommonOverview />
 
       {/* Bottom Section: Table (Left) + Chart (Right) */}
       <GridLayout>
-        <div style={{ width: "100%" }}>
-          <ModerateLogs />
+        <div>
+          <ChartMostGrowingCommunities />
         </div>
 
         <div>
           <ChartMostDiscussCat />
         </div>
       </GridLayout>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr" }}>
-        <ChartUserGrowth />
-      </div>
+
+      <ChartUserGrowth />
     </Container>
   );
 }
@@ -42,11 +59,9 @@ const Container = styled.div`
 
 const GridLayout = styled.div`
   display: grid;
-
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 25rem;
   gap: 1.5rem;
-
   @media (max-width: 1200px) {
     grid-template-columns: 1fr; /* Stack one on top of another */
   }

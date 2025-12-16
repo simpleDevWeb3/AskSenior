@@ -25,3 +25,18 @@ export function formatDate_DD_MM_YYY(isoString) {
   // "en-GB" ensures the format is DD/MM/YYYY
   return date.toLocaleDateString("en-GB");
 }
+
+export function filterDataByDays(data, days) {
+  if (!data) return [];
+  // If days is 0, null, or undefined, return all data (All Time)
+  if (!days || days === 0) return data;
+
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+
+  return data.filter((item) => {
+    // Assumes your DB has a 'created_at' field. Change this string if yours is different.
+    const itemDate = new Date(item.created_at || item.createdAt);
+    return itemDate >= cutoffDate;
+  });
+}

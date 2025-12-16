@@ -13,6 +13,8 @@ import {
 import styled from "styled-components";
 import { useFetchUsers } from "../Users/useFetchUsers"; // Assuming you have this hook
 import SpinnerMini from "../../../../components/SpinnerMini";
+import { filterDataByDays } from "../../../../helpers/dateHelper";
+import { useSearchParams } from "react-router-dom";
 
 // Register ChartJS components
 ChartJS.register(
@@ -28,7 +30,8 @@ ChartJS.register(
 
 function ChartUserGrowth() {
   const { users, isLoadUsers } = useFetchUsers();
-
+  const [searchParam] = useSearchParams();
+  const lastDay = Number(searchParam.get("last")) || 7;
   // --- HELPER: Process Data by Month ---
   const processData = () => {
     if (!users) return { labels: [], counts: [] };
@@ -44,7 +47,7 @@ function ChartUserGrowth() {
     }
 
     // 2. Count users for each bucket
-    users.forEach((user) => {
+    filterDataByDays(users, lastDay).forEach((user) => {
       const userDate = new Date(user.created_at);
       // Calculate month difference from today
       const monthDiff =
@@ -117,7 +120,7 @@ function ChartUserGrowth() {
 
   return (
     <StyledSection>
-      <Header>User Growth</Header>
+      <Header>User Growth In Last {lastDay || 7} Day</Header>
       <ChartBox>
         <Line data={data} options={options} />
       </ChartBox>

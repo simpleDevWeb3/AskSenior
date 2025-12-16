@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 function Filter({ filterField, options, startingOption, variant }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const type = searchParams.get("type") || startingOption;
+  const type = searchParams.get(filterField) || startingOption;
   function handleClick(val, e) {
     e.preventDefault();
     searchParams.set(filterField, val);

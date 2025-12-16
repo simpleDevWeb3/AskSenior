@@ -1,86 +1,170 @@
 import { HiChat } from "react-icons/hi";
-import { HiUser, HiUserGroup } from "react-icons/hi2";
-import { FaBan } from "react-icons/fa"; // Imported FaBan for better context
+import { HiUser, HiUserGroup, HiArrowTrendingUp } from "react-icons/hi2";
+import { FaBan } from "react-icons/fa";
 import styled from "styled-components";
 import { useFetchUsers } from "../Users/useFetchUsers";
 import SpinnerMini from "../../../../components/SpinnerMini";
 import { useFetchPostsAdmin } from "../Posts/useFetchPostsAdmin";
 import { useFetchCommunityAdmin } from "../Community/useFetchCommunityAdmin";
 import { useUser } from "../../../Auth/useUser";
+import { useSearchParams } from "react-router-dom";
+import { filterDataByDays } from "../../../../helpers/dateHelper";
 
 function CommonOverview() {
   const { user } = useUser();
   const { users, isLoadUsers } = useFetchUsers();
   const { posts, isLoadPosts } = useFetchPostsAdmin();
   const { community, isLoadCommunity } = useFetchCommunityAdmin(user?.id);
+  const [searchParams] = useSearchParams();
 
-  // --- CALCULATION LOGIC ---
+  const lastDay = Number(searchParams.get("last")) || 7;
 
-  const calcUserBanRate = () => {
-    if (!users || users.length === 0) return 0;
+  // --- 1. GET FILTERED DATA (New Items) ---
+  const filteredUsers = filterDataByDays(users, lastDay);
+  const filteredPosts = filterDataByDays(posts, lastDay);
+  const filteredCommunities = filterDataByDays(
+    community?.communities || [],
+    lastDay
+  );
 
-    // Count users where is_banned is true
-    const bannedCount = users.filter((u) => u.is_banned).length;
+  // --- 2. GET BANNED DATA SPECIFICALLY ---
 
-    // (Banned / Total) * 100
-    return ((bannedCount / users.length) * 100).toFixed(1); // 1 decimal place
+  // A. Total Banned (All Time)
+  const totalBannedUsers = users?.filter((u) => u.is_banned) || [];
+  const totalBannedComm =
+    community?.communities?.filter((c) => c.isBanned) || [];
+
+  // B. New Banned (Filtered by Date)
+  // Note: This assumes we want to see how many were created AND banned recently,
+  // or you might need a separate 'banned_at' date field.
+  // For now, we will assume we are counting bans among the *newly joined* users/communities.
+  const newBannedUsers = filteredUsers.filter((u) => u.is_banned);
+  const newBannedComm = filteredCommunities.filter((c) => c.isBanned);
+
+  // --- 3. CALCULATION LOGIC ---
+
+  const calcGrowth = (totalList, filteredList) => {
+    if (lastDay === 0 || !totalList || !filteredList) return null;
+
+    const newCount = filteredList.length;
+    const previousCount = totalList.length - newCount;
+
+    if (previousCount === 0) return newCount > 0 ? 100 : 0;
+
+    const growth = (newCount / previousCount) * 100;
+    return growth > 100 ? growth.toFixed(0) : growth.toFixed(1);
   };
 
-  const calcCommunityBanRate = () => {
-    const communitiesList = community?.communities || [];
-    if (!communitiesList || communitiesList.length === 0) return 0;
+  // Calculate Growth Trends
+  const userGrowth = calcGrowth(users, filteredUsers);
+  const postGrowth = calcGrowth(posts, filteredPosts);
+  const communityGrowth = calcGrowth(
+    community?.communities || [],
+    filteredCommunities
+  );
 
-    // Count communities where is_banned is true
-    const bannedCount = communitiesList.filter((c) => c.isBanned).length;
-
-    return ((bannedCount / communitiesList.length) * 100).toFixed(1);
-  };
+  // Calculate Ban Trends
+  const bannedUserGrowth = calcGrowth(totalBannedUsers, newBannedUsers);
+  const bannedCommGrowth = calcGrowth(totalBannedComm, newBannedComm);
 
   return (
     <TagContainer>
-      {/* 1. TOTAL USERS */}
+      {/* 1. USERS */}
       <Tag>
         <TagTitle>
-          Total Users <HiUser />
-        </TagTitle>
-        <TagData>{!isLoadUsers ? users?.length : <SpinnerMini />}</TagData>
-      </Tag>
-
-      {/* 2. TOTAL POSTS */}
-      <Tag>
-        <TagTitle>
-          Total Posts <HiChat />
-        </TagTitle>
-        <TagData>{!isLoadPosts ? posts?.length : <SpinnerMini />}</TagData>
-      </Tag>
-
-      {/* 3. TOTAL COMMUNITIES */}
-      <Tag>
-        <TagTitle>
-          Total Community <HiUserGroup />
+          {lastDay ? `New Users (${lastDay}d)` : "Total Users"} <HiUser />
         </TagTitle>
         <TagData>
-          {!isLoadCommunity ? community?.communities?.length : <SpinnerMini />}
+          {!isLoadUsers ? filteredUsers.length : <SpinnerMini />}
+          {userGrowth && (
+            <GrowthBadge>
+              <HiArrowTrendingUp /> +{userGrowth}%
+            </GrowthBadge>
+          )}
         </TagData>
       </Tag>
 
-      {/* 4. USER BAN RATE */}
+      {/* 2. POSTS */}
       <Tag>
         <TagTitle>
-          User Ban Rate <FaBan style={{ color: "var(--color-red-700)" }} />
+          {lastDay ? `New Posts (${lastDay}d)` : "Total Posts"} <HiChat />
         </TagTitle>
         <TagData>
-          {!isLoadUsers ? `${calcUserBanRate()}%` : <SpinnerMini />}
+          {!isLoadPosts ? filteredPosts.length : <SpinnerMini />}
+          {postGrowth && (
+            <GrowthBadge>
+              <HiArrowTrendingUp /> +{postGrowth}%
+            </GrowthBadge>
+          )}
         </TagData>
       </Tag>
 
-      {/* 5. COMMUNITY BAN RATE */}
+      {/* 3. COMMUNITIES */}
       <Tag>
         <TagTitle>
-          Community Ban Rate <FaBan style={{ color: "var(--color-red-700)" }} />
+          {lastDay ? `New Comm. (${lastDay}d)` : "Total Comm."} <HiUserGroup />
         </TagTitle>
         <TagData>
-          {!isLoadCommunity ? `${calcCommunityBanRate()}%` : <SpinnerMini />}
+          {!isLoadCommunity ? filteredCommunities.length : <SpinnerMini />}
+          {communityGrowth && (
+            <GrowthBadge>
+              <HiArrowTrendingUp /> +{communityGrowth}%
+            </GrowthBadge>
+          )}
+        </TagData>
+      </Tag>
+
+      {/* 4. BANNED USERS (Updated Format) */}
+      <Tag>
+        <TagTitle>
+          {lastDay ? `Banned Users (${lastDay}d)` : "Total Banned Users"}{" "}
+          <FaBan style={{ color: "var(--color-red-700)" }} />
+        </TagTitle>
+        <TagData>
+          {/* Main Number: Count of Banned Users */}
+          {!isLoadUsers ? (
+            lastDay ? (
+              newBannedUsers.length
+            ) : (
+              totalBannedUsers.length
+            )
+          ) : (
+            <SpinnerMini />
+          )}
+
+          {/* Badge: Growth Rate of Bans */}
+          {bannedUserGrowth && (
+            <DangerBadge>
+              <HiArrowTrendingUp /> +{bannedUserGrowth}%
+            </DangerBadge>
+          )}
+        </TagData>
+      </Tag>
+
+      {/* 5. BANNED COMMUNITIES (Updated Format) */}
+      <Tag>
+        <TagTitle>
+          {lastDay ? `Banned Comm. (${lastDay}d)` : "Total Banned Comm."}{" "}
+          <FaBan style={{ color: "var(--color-red-700)" }} />
+        </TagTitle>
+        <TagData>
+          {/* Main Number: Count of Banned Communities */}
+          {!isLoadCommunity ? (
+            lastDay ? (
+              newBannedComm.length
+            ) : (
+              totalBannedComm.length
+            )
+          ) : (
+            <SpinnerMini />
+          )}
+
+          {/* Badge: Growth Rate of Bans */}
+          {bannedCommGrowth && (
+            <DangerBadge>
+              <HiArrowTrendingUp /> +{bannedCommGrowth}%
+            </DangerBadge>
+          )}
         </TagData>
       </Tag>
     </TagContainer>
@@ -89,43 +173,70 @@ function CommonOverview() {
 
 export default CommonOverview;
 
+// --- STYLES ---
+
 const TagContainer = styled.div`
   display: grid;
-  /* 5 Columns match the 5 Tags above */
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
-  max-width: 70rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
 `;
 
 const Tag = styled.div`
   border-radius: 25px;
   border: solid 1px var(--hover-color);
   background-color: var(--background-glass);
-  padding: 1rem 1.5rem; /* Reduced padding slightly to fit 5 cols */
+  padding: 1rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 `;
 
 const TagData = styled.div`
-  font-size: 30px; /* Adjusted size slightly */
+  font-size: 30px;
   font-weight: 600;
   color: var(--text-color);
   margin-top: 0.5rem;
+
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 `;
 
 const TagTitle = styled.p`
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Pushes icon to the right */
-  font-size: 14px;
+  justify-content: space-between;
+  font-size: 13px;
   font-weight: 600;
   color: rgba(176, 176, 176, 0.984);
+  white-space: nowrap;
 
   & svg {
     color: rgba(176, 176, 176, 0.984);
     font-size: 1.2rem;
   }
+`;
+
+// Green Badge for Positive Growth (Users, Posts)
+const GrowthBadge = styled.span`
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  & svg {
+    font-size: 0.8rem;
+    stroke-width: 1px;
+  }
+`;
+
+// Red Badge for Negative Growth (Bans)
+const DangerBadge = styled(GrowthBadge)`
+  color: #ef4444; /* Red Text */
+  background-color: rgba(239, 68, 68, 0.1); /* Red Background */
 `;

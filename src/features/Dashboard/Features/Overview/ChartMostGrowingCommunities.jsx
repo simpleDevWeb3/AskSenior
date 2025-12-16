@@ -2,68 +2,95 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import styled from "styled-components";
 import { useFetchPostsAdmin } from "../Posts/useFetchPostsAdmin";
+import { useFetchCommunityAdmin } from "../Community/useFetchCommunityAdmin"; // Fetch community names
 import SpinnerMini from "../../../../components/SpinnerMini";
+import { HiArrowTrendingUp, HiHashtag } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
-import { filterDataByDays } from "../../../../helpers/dateHelper";
-import { HiArrowTrendingUp, HiHashtag } from "react-icons/hi2"; // Optional icon for aesthetics
+import { filterDataByDays } from "../../../../helpers/dateHelper"; // Assuming you have this helper
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// --- 1. COLORS ---
-const TOPIC_COLORS = {
-  React: "#61DAFB",
-  JavaScript: "#F7DF1E",
-  CSS: "#264DE4",
-  HTML: "#E34F26",
-  "Node.js": "#68A063",
-  Design: "#FF61F6",
+const COMMUNITY_COLORS = {
+  "React Developers": "#61DAFB",
+  "JavaScript Pros": "#F7DF1E",
+  "UI/UX Design": "#FF61F6",
+  "Python Users": "#3776AB",
+  Webflow: "#4353FF",
+  "Backend Eng": "#68A063",
 };
 
 const FALLBACK_COLORS = [
-  "rgba(255, 99, 132, 1)",
-  "rgba(54, 162, 235, 1)",
-  "rgba(255, 206, 86, 1)",
-  "rgba(75, 192, 192, 1)",
-  "rgba(153, 102, 255, 1)",
+  "#FF6384",
+  "#36A2EB",
+  "#FFCE56",
+  "#4BC0C0",
+  "#9966FF",
+  "#FF9F40",
 ];
 
-function ChartMostDiscussCat() {
+function ChartMostGrowingCommunities() {
+  const [searchParams] = useSearchParams();
+  const lastDay = Number(searchParams.get("last")) || 7;
+
+  // 1. Fetch BOTH Data Sources
   const { posts, isLoadPosts } = useFetchPostsAdmin();
-  const [SearchParam] = useSearchParams();
-  const lastDay = Number(SearchParam.get("last")) || 7;
+  const { community: communityData, isLoadCommunity } =
+    useFetchCommunityAdmin();
 
-  if (isLoadPosts) return <SpinnerMini />;
+  if (isLoadPosts || isLoadCommunity) return <SpinnerMini />;
 
-  // 1. Logic
+  // --- LOGIC START ---
+
+  // A. Filter posts by date (Last X Days)
   const filteredPosts = filterDataByDays(posts, lastDay);
-  const topics = filteredPosts?.map((post) => post.topic_name) || [];
 
-  const allTopicsCount = topics.reduce((acc, curr) => {
-    acc[curr] = (acc[curr] || 0) + 1;
+  // B. Count Posts per Community ID
+  // Result: { "101": 5, "102": 12, "103": 0 }
+  const countsById = filteredPosts.reduce((acc, post) => {
+    // Check if post has a community_id. If not, ignore or label "General"
+    const id = post.community_id;
+    if (id) {
+      acc[id] = (acc[id] || 0) + 1;
+    }
     return acc;
   }, {});
 
-  const top5Topics = Object.entries(allTopicsCount)
-    .sort((a, b) => b[1] - a[1])
+  // C. Map IDs to Names & Format Data
+  const communitiesList = communityData?.communities || [];
+
+  const chartDataRaw = Object.entries(countsById).map(([id, count]) => {
+    // Find the community object to get the Name
+    const foundComm = communitiesList.find((c) => String(c.id) === String(id));
+    return {
+      name: foundComm ? foundComm.name : `Unknown (${id})`,
+      count: count,
+    };
+  });
+
+  // D. Sort (High to Low) & Take Top 5
+  const topCommunities = chartDataRaw
+    .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
-  const chartLabels = top5Topics.map((entry) => entry[0]);
-  const chartValues = top5Topics.map((entry) => entry[1]);
+  // --- LOGIC END ---
 
-  // Calculate Total (of the top 5) for percentage display
-  const totalDisplayed = chartValues.reduce((a, b) => a + b, 0);
+  // Prepare Chart Data
+  const labels = topCommunities.map((c) => c.name);
+  const values = topCommunities.map((c) => c.count);
+  const totalPosts = values.reduce((a, b) => a + b, 0);
 
-  // 2. Assign Colors
-  const bgColors = chartLabels.map((label, index) => {
-    if (TOPIC_COLORS[label]) return TOPIC_COLORS[label];
-    return FALLBACK_COLORS[index % FALLBACK_COLORS.length];
+  // Generate Colors
+  const bgColors = labels.map((label, index) => {
+    return (
+      COMMUNITY_COLORS[label] || FALLBACK_COLORS[index % FALLBACK_COLORS.length]
+    );
   });
 
   const data = {
-    labels: chartLabels,
+    labels: labels,
     datasets: [
       {
-        data: chartValues,
+        data: values,
         backgroundColor: bgColors,
         borderColor: bgColors,
         borderWidth: 1,
@@ -83,23 +110,27 @@ function ChartMostDiscussCat() {
   return (
     <StyledSection>
       <Header>
-        <Title>Most Discussed Topics</Title>
+        <Title>Top Active Communities</Title>
         <SubTitle>
-          {lastDay === 0 ? "All time" : `Last ${lastDay} days`} volume
+          {lastDay === 0 ? "All time" : `Last ${lastDay} days`} post volume
         </SubTitle>
       </Header>
 
       <ContentRow>
         {/* LEFT: Chart */}
         <ChartContainer>
-          <Pie data={data} options={options} />
+          {totalPosts === 0 ? (
+            <NoDataText>No activity found</NoDataText>
+          ) : (
+            <Pie data={data} options={options} />
+          )}
         </ChartContainer>
 
-        {/* RIGHT: Detailed Legend */}
+        {/* RIGHT: Custom Legend */}
         <CustomLegend>
-          {chartLabels.map((label, i) => {
-            const count = chartValues[i];
-           
+          {labels.map((label, i) => {
+            const count = values[i];
+
             return (
               <LegendItem key={label}>
                 <Rank>
@@ -110,8 +141,6 @@ function ChartMostDiscussCat() {
                   <LabelText>{label}</LabelText>
                   <StatsRow>
                     <CountText>{count} posts</CountText>
-                    {/* Using Badge for Percentage Share */}
-                
                   </StatsRow>
                 </LegendInfo>
               </LegendItem>
@@ -123,7 +152,7 @@ function ChartMostDiscussCat() {
   );
 }
 
-export default ChartMostDiscussCat;
+export default ChartMostGrowingCommunities;
 
 // --- STYLES ---
 const Rank = styled.div`
@@ -173,6 +202,12 @@ const ChartContainer = styled.div`
   align-items: center;
 `;
 
+const NoDataText = styled.div`
+  color: var(--color-grey-500);
+  font-size: 0.9rem;
+  font-style: italic;
+`;
+
 const CustomLegend = styled.div`
   display: flex;
   flex-direction: column;
@@ -191,7 +226,7 @@ const ColorBox = styled.div`
   height: 12px;
   border-radius: 3px;
   background-color: ${(props) => props.color};
-  margin-top: 5px; /* Align with text top */
+  margin-top: 5px;
   flex-shrink: 0;
 `;
 
