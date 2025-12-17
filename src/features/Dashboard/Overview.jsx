@@ -5,6 +5,8 @@ import ModerateLogs from "./Features/Overview/ChartMostGrowingCommunities";
 import ChartUserGrowth from "./Features/Overview/ChartUserGrowth";
 import Filter from "../../components/Filter";
 import ChartMostGrowingCommunities from "./Features/Overview/ChartMostGrowingCommunities";
+import ChartMostBannedReason from "./Features/Overview/ChartMostBannedReason";
+import ChartMostDiscussPost from "./Features/Overview/ChartMostDiscussPost";
 
 const options = [
   { key: "7", label: "Last 7 days" },
@@ -37,6 +39,13 @@ function Overview() {
         <div>
           <ChartMostDiscussCat />
         </div>
+
+        <div>
+          <ChartMostBannedReason />
+        </div>
+        <div>
+          <ChartMostDiscussPost />
+        </div>
       </GridLayout>
 
       <ChartUserGrowth />
@@ -54,13 +63,13 @@ const Container = styled.div`
   gap: 1.5rem; /* Increased gap for better breathing room */
   height: 100%; /* Use % to fit parent, vh can cause double scrollbars */
   padding-bottom: 2rem;
-  width: 70%;
+
 `;
 
 const GridLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 25rem;
+
   gap: 1.5rem;
   @media (max-width: 1200px) {
     grid-template-columns: 1fr; /* Stack one on top of another */

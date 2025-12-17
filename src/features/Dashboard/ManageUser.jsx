@@ -4,6 +4,7 @@ import forumData from "../../data/post";
 import UserTable from "./Features/Users/UserTable";
 import Modal from "../../components/Modal";
 import BanUserForm from "./Features/Users/BanUserForm";
+import UserInsight from "./Features/Users/UserInsight";
 
 function ManageUser() {
   const { users } = forumData;
@@ -12,6 +13,9 @@ function ManageUser() {
     <Container>
       <Modal id={"ban-user"}>
         <BanUserForm />
+      </Modal>
+      <Modal id={"user-insight"} background={false}>
+        <UserInsight />
       </Modal>
       <br />
       <UserTable />

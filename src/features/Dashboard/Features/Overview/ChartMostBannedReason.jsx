@@ -6,6 +6,9 @@ import SpinnerMini from "../../../../components/SpinnerMini";
 import { useSearchParams } from "react-router-dom";
 import { filterDataByDays } from "../../../../helpers/dateHelper";
 import { HiArrowTrendingUp, HiHashtag } from "react-icons/hi2"; // Optional icon for aesthetics
+import { useFetchAllBanned } from "./useFetchAllBanned";
+import { useUser } from "../../../Auth/useUser";
+import { truncateText } from "../../../../helpers/stringHelper";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -17,30 +20,29 @@ const LABEL_COLORS = [
   "rgba(153, 102, 255, 1)",
 ];
 
-function ChartMostDiscussCat() {
-  const { posts, isLoadPosts } = useFetchPostsAdmin();
+function ChartMostBannedReason() {
+  const { user } = useUser();
+  const { banned, isLoadBanned, errorBanned } = useFetchAllBanned(user?.id);
   const [SearchParam] = useSearchParams();
   const lastDay = Number(SearchParam.get("last")) || 7;
 
-  if (isLoadPosts) return <SpinnerMini />;
+  if (isLoadBanned) return <SpinnerMini />;
 
-  // 1. Logic
-  const filteredPosts = filterDataByDays(posts, lastDay);
-  const topics = filteredPosts?.map((post) => post.topic_name) || [];
+  // 1. get the banned data based on the last day.
+  const filteredBanned = filterDataByDays(banned?.data || [], lastDay);
+  const reason = filteredBanned?.map((ban) => ban?.reason) || [];
 
-  const allTopicsCount = topics.reduce((acc, curr) => {
+  const allReasonCount = reason.reduce((acc, curr) => {
     acc[curr] = (acc[curr] || 0) + 1;
     return acc;
   }, {});
 
-  const top5Topics = Object.entries(allTopicsCount)
+  const top5Reason = Object.entries(allReasonCount)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
-  const chartLabels = top5Topics.map((entry) => entry[0]);
-  const chartValues = top5Topics.map((entry) => entry[1]);
-
-
+  const chartLabels = top5Reason.map((entry) => entry[0]);
+  const chartValues = top5Reason.map((entry) => entry[1]);
 
   // 2. Assign Colors
   const bgColors = chartLabels.map((label, index) => {
@@ -71,7 +73,7 @@ function ChartMostDiscussCat() {
   return (
     <StyledSection>
       <Header>
-        <Title>Most Discussed Topics</Title>
+        <Title>Most Banned Reasons</Title>
         <SubTitle>
           {lastDay === 0 ? "All time" : `Last ${lastDay} days`} volume
         </SubTitle>
@@ -95,7 +97,7 @@ function ChartMostDiscussCat() {
                 </Rank>
                 <ColorBox color={bgColors[i]} />
                 <LegendInfo>
-                  <LabelText>{label}</LabelText>
+                  <LabelText>{truncateText(label, 50)}</LabelText>
                   <StatsRow>
                     <CountText>{count} posts</CountText>
                     {/* Using Badge for Percentage Share */}
@@ -110,7 +112,7 @@ function ChartMostDiscussCat() {
   );
 }
 
-export default ChartMostDiscussCat;
+export default ChartMostBannedReason;
 
 // --- STYLES ---
 const Rank = styled.div`

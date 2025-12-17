@@ -135,34 +135,23 @@ function UserTable() {
       </Header>
       <Table>
         <Table.Row style={{ backgroundColor: "var(--background-color)" }}>
-          <Table.Col>Avatar</Table.Col>
           <Table.Col>Username</Table.Col>
+          <Table.Col>Status</Table.Col>
           <Table.Col>Email</Table.Col>
           <Table.Col>Joined At</Table.Col>
-          <Table.Col>Status</Table.Col>
+
           <Table.Col />
         </Table.Row>
 
         {sliceUser.map((user) => (
           <Table.Row key={user.id}>
-            <Table.Data>
-              <div
-                style={{
-                  borderRadius: "50%",
-                  height: "4rem",
-                  width: "4rem",
-                  overflow: "hidden",
-                }}
-              >
-                <Avatar src={user.avatar_url} />
-              </div>
-            </Table.Data>
             <Table.Data>{user.name}</Table.Data>
-            <Table.Data>{user.email}</Table.Data>
-            <Table.Data>{formatDate_DD_MM_YYY(user.created_at)}</Table.Data>
             <Table.Data>
               <Status isBanned={user?.is_banned} notBan="Active" />
             </Table.Data>
+            <Table.Data>{user.email}</Table.Data>
+            <Table.Data>{formatDate_DD_MM_YYY(user.created_at)}</Table.Data>
+
             <Table.Data>
               <Menus.MenuToggle id={`user-${user.id}`}>
                 <ButtonIcon
@@ -172,7 +161,9 @@ function UserTable() {
                 />
               </Menus.MenuToggle>
               <Menus.MenuList id={`user-${user.id}`}>
-                <Menus.MenuBtn>
+                <Menus.MenuBtn
+                  onClickAction={() => openModal("user-insight", user)}
+                >
                   <MenuTxt>
                     <ImProfile />
                     <span>insight</span>

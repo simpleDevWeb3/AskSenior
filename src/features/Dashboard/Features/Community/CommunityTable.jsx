@@ -84,10 +84,8 @@ function CommunityTable() {
     { value: "createdAt-desc", label: "Date (Newest first)" },
     { value: "createdAt-asc", label: "Date (Oldest first)" },
 
-    { value: "total_upVote-desc", label: "Most Upvotes" },
-    { value: "total_upVote-asc", label: "Least Upvotes" },
-    { value: "total_downVote-desc", label: "Most Downvotes" },
-    { value: "total_downVote-asc", label: "Least Downvotes" },
+    { value: "memberCount-desc", label: "Most Joined" },
+    { value: "memberCount-asc", label: "Least Joined" },
   ];
 
   // 1. Get the sort value from URL (default to Newest)
@@ -155,33 +153,20 @@ function CommunityTable() {
 
       <Table>
         <Table.Row style={{ backgroundColor: "var(--background-color)" }}>
-          <Table.Col></Table.Col>
           <Table.Col>Name</Table.Col>
           <Table.Col>Status</Table.Col>
-          <Table.Col>Admin</Table.Col>
+          <Table.Col>MemberCount</Table.Col>
           <Table.Col>Created At</Table.Col>
           <Table.Col />
         </Table.Row>
 
         {sliceCommunities.map((item) => (
           <Table.Row key={item.id}>
-            <Table.Data>
-              <div
-                style={{
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  height: "4rem",
-                  width: "4rem",
-                }}
-              >
-                <Avatar src={item.avatarUrl} />
-              </div>
-            </Table.Data>
             <Table.Data>{item.name}</Table.Data>
             <Table.Data>
               <Status isBanned={item.isBanned} />
             </Table.Data>
-            <Table.Data>Admin</Table.Data>
+            <Table.Data>{item.memberCount}</Table.Data>
             <Table.Data>{formatDate_DD_MM_YYY(item.createdAt)}</Table.Data>
             <Table.Data>
               <Menus.MenuToggle id={`community-${item.id}`}>
@@ -192,7 +177,9 @@ function CommunityTable() {
                 />
               </Menus.MenuToggle>
               <Menus.MenuList id={`community-${item.id}`}>
-                <Menus.MenuBtn>
+                <Menus.MenuBtn
+                  onClickAction={() => openModal("community-insight", item)}
+                >
                   <MenuTxt>
                     <ImProfile />
                     <span>insight</span>
@@ -204,12 +191,6 @@ function CommunityTable() {
                   <MenuTxt>
                     <FaBan />
                     <span>Ban</span>
-                  </MenuTxt>
-                </Menus.MenuBtn>
-                <Menus.MenuBtn>
-                  <MenuTxt>
-                    <FaTrash />
-                    <span>Delete</span>
                   </MenuTxt>
                 </Menus.MenuBtn>
               </Menus.MenuList>

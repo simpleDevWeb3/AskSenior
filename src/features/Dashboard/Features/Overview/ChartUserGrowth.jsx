@@ -8,13 +8,13 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler, // Required for the "Area" fill effect
+  Filler,
 } from "chart.js";
 import styled from "styled-components";
-import { useFetchUsers } from "../Users/useFetchUsers"; // Assuming you have this hook
+import { useFetchUsers } from "../Users/useFetchUsers";
 import SpinnerMini from "../../../../components/SpinnerMini";
-import { filterDataByDays } from "../../../../helpers/dateHelper";
 import { useSearchParams } from "react-router-dom";
+import { filterDataByDays } from "../../../../helpers/dateHelper";
 
 // Register ChartJS components
 ChartJS.register(
@@ -31,38 +31,49 @@ ChartJS.register(
 function ChartUserGrowth() {
   const { users, isLoadUsers } = useFetchUsers();
   const [searchParam] = useSearchParams();
+
   const lastDay = Number(searchParam.get("last")) || 7;
-  // --- HELPER: Process Data by Month ---
+
+  // --- HELPER: Process Data ---
   const processData = () => {
     if (!users) return { labels: [], counts: [] };
 
     const today = new Date();
-    const last6Months = [];
-    const counts = [0, 0, 0, 0, 0, 0];
+    const dateMap = {};
+    const labels = [];
 
-    // 1. Generate labels for the last 6 months (e.g., "Jan", "Feb")
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      last6Months.push(d.toLocaleString("default", { month: "short" }));
+    // 1. Generate all dates (Standard Logic)
+    for (let i = lastDay - 1; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+
+      const label = d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+
+      labels.push(label);
+      dateMap[label] = 0;
     }
 
-    // 2. Count users for each bucket
-    filterDataByDays(users, lastDay).forEach((user) => {
-      const userDate = new Date(user.created_at);
-      // Calculate month difference from today
-      const monthDiff =
-        (today.getFullYear() - userDate.getFullYear()) * 12 +
-        (today.getMonth() - userDate.getMonth());
+    // 2. Count Users
+    const filteredUsers = filterDataByDays(users, lastDay);
 
-      // If user joined within last 6 months (0 to 5), increment that slot
-      if (monthDiff >= 0 && monthDiff < 6) {
-        // monthDiff 0 is this month (last index), 5 is 6 months ago (first index)
-        const index = 5 - monthDiff;
-        counts[index] += 1;
+    filteredUsers.forEach((user) => {
+      const userDate = new Date(user.created_at);
+      const label = userDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+
+      if (dateMap[label] !== undefined) {
+        dateMap[label] += 1;
       }
     });
 
-    return { labels: last6Months, counts };
+    const counts = labels.map((label) => dateMap[label]);
+
+    return { labels, counts };
   };
 
   const { labels, counts } = processData();
@@ -74,14 +85,17 @@ function ChartUserGrowth() {
       {
         label: "New Users",
         data: counts,
-        borderColor: "rgb(53, 162, 235)", // Blue Line
-        backgroundColor: "rgba(53, 162, 235, 0.2)", // Blue Fill
-        tension: 0.4, // Makes the line curved (smooth)
-        fill: true, // Fills the area under the line
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.2)",
+        tension: 0.3,
+        fill: true,
         pointBackgroundColor: "rgb(53, 162, 235)",
         pointBorderColor: "#fff",
         pointHoverBackgroundColor: "#fff",
         pointHoverBorderColor: "rgb(53, 162, 235)",
+        // Only show dots if we have less than 30 data points, otherwise it looks cluttered
+        pointRadius: lastDay > 30 ? 0 : 4,
+        pointHoverRadius: 6,
       },
     ],
   };
@@ -90,27 +104,54 @@ function ChartUserGrowth() {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: {
-        display: false, // Hide legend for cleaner look
-      },
-      title: {
-        display: false,
-      },
+      legend: { display: false },
+      title: { display: false },
       tooltip: {
         mode: "index",
         intersect: false,
+        callbacks: {
+          label: function (context) {
+            return ` ${context.parsed.y} New Users`;
+          },
+        },
       },
     },
     scales: {
       y: {
-        beginAtZero: true, // Start Y axis at 0
+        beginAtZero: true,
         ticks: {
-          precision: 0, // Avoid decimals (e.g., 1.5 users)
+          precision: 0,
         },
       },
       x: {
-        grid: {
-          display: false, // Remove vertical grid lines for cleaner look
+        grid: { display: false },
+        ticks: {
+          // --- THE LOGIC FOR LEAP 5 ---
+          maxRotation: 0,
+          autoSkip: false, // We will manually handle skipping via callback
+
+          callback: function (val, index) {
+            // 'val' is the index in Category scales, but we use 'this.getLabelForValue' to be safe
+            const label = this.getLabelForValue(val);
+
+            // 1. If viewing small range (e.g. 7 days), show ALL labels
+            if (lastDay <= 10) {
+              return label;
+            }
+
+            // 2. If viewing large range, show every 5th label ("Leap 5")
+            if (index % 5 === 0) {
+              return label;
+            }
+
+            // 3. Always show the very last date (Today) so the chart has an endpoint
+            if (index === labels.length - 1) {
+              return label;
+            }
+
+            // Hide the rest
+            return null;
+          },
         },
       },
     },
@@ -120,7 +161,7 @@ function ChartUserGrowth() {
 
   return (
     <StyledSection>
-      <Header>User Growth In Last {lastDay || 7} Day</Header>
+      <Header>User Growth (Last {lastDay} Days)</Header>
       <ChartBox>
         <Line data={data} options={options} />
       </ChartBox>
@@ -130,7 +171,7 @@ function ChartUserGrowth() {
 
 export default ChartUserGrowth;
 
-// --- STYLES (Reusable) ---
+// --- STYLES ---
 const StyledSection = styled.div`
   background-color: var(--background-glass);
   border: 1px solid var(--hover-color);
@@ -149,7 +190,7 @@ const Header = styled.h2`
 `;
 
 const ChartBox = styled.div`
-  flex-grow: 1; /* Fills remaining space */
+  flex-grow: 1;
   width: 100%;
-  min-height: 250px; /* Ensures chart is visible */
+  min-height: 250px;
 `;

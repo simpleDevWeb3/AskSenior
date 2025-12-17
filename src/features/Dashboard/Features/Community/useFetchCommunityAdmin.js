@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 
-
 import { getCommunityByAdminApi } from "../../../../services/CommunityApi";
 
 export function useFetchCommunityAdmin(adminId) {
@@ -9,7 +8,7 @@ export function useFetchCommunityAdmin(adminId) {
     isLoading: isLoadCommunity,
     error: errorCommunity,
   } = useQuery({
-    queryKey: ["CommuntiyGetByAdmin"],
+    queryKey: ["CommunityGetByAdmin"],
     queryFn: () => getCommunityByAdminApi(adminId),
 
     refetchOnWindowFocus: false,

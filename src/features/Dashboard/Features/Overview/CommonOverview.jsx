@@ -9,12 +9,15 @@ import { useFetchCommunityAdmin } from "../Community/useFetchCommunityAdmin";
 import { useUser } from "../../../Auth/useUser";
 import { useSearchParams } from "react-router-dom";
 import { filterDataByDays } from "../../../../helpers/dateHelper";
+import { useFetchAllBanned } from "./useFetchAllBanned";
 
 function CommonOverview() {
   const { user } = useUser();
   const { users, isLoadUsers } = useFetchUsers();
   const { posts, isLoadPosts } = useFetchPostsAdmin();
   const { community, isLoadCommunity } = useFetchCommunityAdmin(user?.id);
+  const { banned, isLoadBanned, errorBanned } = useFetchAllBanned(user?.id);
+
   const [searchParams] = useSearchParams();
 
   const lastDay = Number(searchParams.get("last")) || 7;
@@ -26,20 +29,21 @@ function CommonOverview() {
     community?.communities || [],
     lastDay
   );
+  const filteredBannedData = filterDataByDays(banned?.data || [], lastDay);
 
   // --- 2. GET BANNED DATA SPECIFICALLY ---
 
   // A. Total Banned (All Time)
-  const totalBannedUsers = users?.filter((u) => u.is_banned) || [];
-  const totalBannedComm =
-    community?.communities?.filter((c) => c.isBanned) || [];
+  const totalBannedUsers = banned?.data?.filter((u) => u.userId) || [];
+
+  const totalBannedComm = banned?.data?.filter((c) => c.communityId) || [];
 
   // B. New Banned (Filtered by Date)
   // Note: This assumes we want to see how many were created AND banned recently,
   // or you might need a separate 'banned_at' date field.
   // For now, we will assume we are counting bans among the *newly joined* users/communities.
-  const newBannedUsers = filteredUsers.filter((u) => u.is_banned);
-  const newBannedComm = filteredCommunities.filter((c) => c.isBanned);
+  const newBannedUsers = filteredBannedData.filter((u) => u.userId);
+  const newBannedComm = filteredBannedData.filter((c) => c.communityId);
 
   // --- 3. CALCULATION LOGIC ---
 
@@ -48,8 +52,10 @@ function CommonOverview() {
 
     const newCount = filteredList.length;
     const previousCount = totalList.length - newCount;
+    console.log(totalList, filteredList);
 
     if (previousCount === 0) return newCount > 0 ? 100 : 0;
+    console.log(newCount, previousCount);
 
     const growth = (newCount / previousCount) * 100;
     return growth > 100 ? growth.toFixed(0) : growth.toFixed(1);
@@ -208,11 +214,10 @@ const TagTitle = styled.p`
   justify-content: space-between;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(176, 176, 176, 0.984);
+
   white-space: nowrap;
 
   & svg {
-    color: rgba(176, 176, 176, 0.984);
     font-size: 1.2rem;
   }
 `;

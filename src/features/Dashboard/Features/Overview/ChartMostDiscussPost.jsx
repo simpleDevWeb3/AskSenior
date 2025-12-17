@@ -5,7 +5,8 @@ import { useFetchPostsAdmin } from "../Posts/useFetchPostsAdmin";
 import SpinnerMini from "../../../../components/SpinnerMini";
 import { useSearchParams } from "react-router-dom";
 import { filterDataByDays } from "../../../../helpers/dateHelper";
-import { HiArrowTrendingUp, HiHashtag } from "react-icons/hi2"; // Optional icon for aesthetics
+import { HiHashtag } from "react-icons/hi2";
+import { useFetchAllComments } from "./useFetchAllComment";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -17,33 +18,56 @@ const LABEL_COLORS = [
   "rgba(153, 102, 255, 1)",
 ];
 
-function ChartMostDiscussCat() {
+function ChartMostDiscussPost() {
+  const { comments, isLoadComments } = useFetchAllComments();
   const { posts, isLoadPosts } = useFetchPostsAdmin();
   const [SearchParam] = useSearchParams();
   const lastDay = Number(SearchParam.get("last")) || 7;
 
-  if (isLoadPosts) return <SpinnerMini />;
+  if (isLoadPosts || isLoadComments) return <SpinnerMini />;
 
-  // 1. Logic
-  const filteredPosts = filterDataByDays(posts, lastDay);
-  const topics = filteredPosts?.map((post) => post.topic_name) || [];
+  // 1. Filter Data by Date
+  const filteredPost = filterDataByDays(posts || [], lastDay);
+  const filteredComment = filterDataByDays(comments || [], lastDay);
 
-  const allTopicsCount = topics.reduce((acc, curr) => {
-    acc[curr] = (acc[curr] || 0) + 1;
-    return acc;
-  }, {});
+  // 2. Map Comments to Posts (Group by ID, not Title)
+  const postsMap = {};
 
-  const top5Topics = Object.entries(allTopicsCount)
-    .sort((a, b) => b[1] - a[1])
+  // Initialize map with posts
+  filteredPost.forEach((post) => {
+    postsMap[post.id] = {
+      title: post.title,
+      id: post.id,
+      comments: [],
+    };
+  });
+
+  // Push comments into specific post buckets
+  filteredComment.forEach((comment) => {
+    const postId = comment.post_id;
+    if (postsMap[postId]) {
+      postsMap[postId].comments.push(comment);
+    }
+  });
+
+  // 3. Convert to Array and Sort
+  const finalData = Object.values(postsMap).filter(
+    (post) => post.comments.length > 0
+  );
+
+  const TopCommentCountPost = finalData
+    .sort((a, b) => b.comments.length - a.comments.length)
     .slice(0, 5);
 
-  const chartLabels = top5Topics.map((entry) => entry[0]);
-  const chartValues = top5Topics.map((entry) => entry[1]);
+  const chartLabels = TopCommentCountPost.map((post) => post.title);
 
+  const chartValues = TopCommentCountPost.map((post) => post.comments.length);
 
+  // Calculate total for percentage badge
+  const totalTopComments = chartValues.reduce((acc, cur) => acc + cur, 0);
 
-  // 2. Assign Colors
-  const bgColors = chartLabels.map((label, index) => {
+  // Assign Colors
+  const bgColors = chartLabels.map((_, index) => {
     return LABEL_COLORS[index % LABEL_COLORS.length];
   });
 
@@ -65,13 +89,27 @@ function ChartMostDiscussCat() {
     plugins: {
       legend: { display: false },
       title: { display: false },
+    
     },
   };
+
+  // 5. Handle Empty State
+  if (totalTopComments === 0) {
+    return (
+      <StyledSection>
+        <Header>
+          <Title>Most Discussed Posts</Title>
+          <SubTitle>No comments found in the last {lastDay} days.</SubTitle>
+        </Header>
+        <EmptyState>No data available</EmptyState>
+      </StyledSection>
+    );
+  }
 
   return (
     <StyledSection>
       <Header>
-        <Title>Most Discussed Topics</Title>
+        <Title>Most Discussed Posts</Title>
         <SubTitle>
           {lastDay === 0 ? "All time" : `Last ${lastDay} days`} volume
         </SubTitle>
@@ -89,17 +127,15 @@ function ChartMostDiscussCat() {
             const count = chartValues[i];
 
             return (
-              <LegendItem key={label}>
+              <LegendItem key={`${label}-${i}`}>
                 <Rank>
                   <HiHashtag /> {i + 1}
                 </Rank>
                 <ColorBox color={bgColors[i]} />
                 <LegendInfo>
-                  <LabelText>{label}</LabelText>
-                  <StatsRow>
-                    <CountText>{count} posts</CountText>
-                    {/* Using Badge for Percentage Share */}
-                  </StatsRow>
+                  <LabelText title={label}>{label}</LabelText>
+
+                  <CountText>{count} comments</CountText>
                 </LegendInfo>
               </LegendItem>
             );
@@ -110,13 +146,10 @@ function ChartMostDiscussCat() {
   );
 }
 
-export default ChartMostDiscussCat;
+export default ChartMostDiscussPost;
 
 // --- STYLES ---
-const Rank = styled.div`
-  display: "flex";
-  font-size: 0.8rem;
-`;
+
 const StyledSection = styled.div`
   background-color: var(--background-glass);
   border: 1px solid var(--hover-color);
@@ -173,18 +206,28 @@ const LegendItem = styled.div`
   gap: 10px;
 `;
 
+const Rank = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--color-grey-400);
+  margin-top: 5px;
+  width: 30px;
+`;
+
 const ColorBox = styled.div`
   width: 12px;
   height: 12px;
   border-radius: 3px;
   background-color: ${(props) => props.color};
-  margin-top: 5px; /* Align with text top */
+  margin-top: 6px;
   flex-shrink: 0;
 `;
 
 const LegendInfo = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Ensures text truncation works */
 `;
 
 const LabelText = styled.span`
@@ -194,7 +237,7 @@ const LabelText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 120px;
+  max-width: 140px; /* Adjusted width */
 `;
 
 const StatsRow = styled.div`
@@ -209,19 +252,11 @@ const CountText = styled.span`
   color: var(--color-grey-500);
 `;
 
-const TrendBadge = styled.div`
+const EmptyState = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 2px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #22c55e;
-  background-color: rgba(34, 197, 94, 0.1);
-  padding: 1px 6px;
-  border-radius: 4px;
-
-  svg {
-    width: 10px;
-    height: 10px;
-  }
+  flex: 1;
+  color: var(--color-grey-400);
+  font-size: 0.9rem;
 `;

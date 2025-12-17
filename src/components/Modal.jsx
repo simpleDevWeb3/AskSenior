@@ -5,7 +5,7 @@ import { HiOutlineXCircle } from "react-icons/hi2";
 import ButtonIcon from "./ButtonIcon";
 import { createPortal } from "react-dom";
 
-function Modal({ children, id }) {
+function Modal({ children, id, background = true }) {
   const { isModalOpen, closeModal } = useModal(null);
   if (isModalOpen !== id) return null;
   return createPortal(
@@ -13,10 +13,13 @@ function Modal({ children, id }) {
       {isModalOpen === id && <OverlayDiv onClick={closeModal} />}
 
       <ModalContainer
-        style={{ display: isModalOpen === id ? "block" : "none" }}
+        $showBackground={background}
+        style={{
+          display: isModalOpen === id ? "block" : "none",
+        }}
       >
         <CloseButtonWrapper>
-        <ButtonIcon
+          <ButtonIcon
             variant="text"
             size="rounded"
             icon={<CrossIcon />}
@@ -34,6 +37,7 @@ export default Modal;
 const CrossIcon = styled(HiOutlineXCircle)`
   color: red;
   font-size: 1.5rem;
+  z-index: 500;
 `;
 const OverlayDiv = styled.div`
   position: fixed;
@@ -70,6 +74,8 @@ const ModalContainer = styled.div`
   }
 
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  background: ${({ $showBackground }) => !$showBackground && "none"};
+  box-shadow: ${({ $showBackground }) => !$showBackground && "none"};
 `;
 
 const CloseButtonWrapper = styled.div`

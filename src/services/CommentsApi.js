@@ -62,4 +62,18 @@ async function delCommentApi(comment_id, user_id, post_id) {
   );
 }
 
-export { postCommentApi, getUserCommentApi, editCommentApi, delCommentApi };
+//curl 'https://localhost:7071/api/Comment/all?userId=null&postId=null'
+
+async function getAllCommentApi() {
+  return await GetReq(
+    "https://localhost:7071/api/Comment/all?userId=null&postId=null"
+  );
+}
+
+export {
+  postCommentApi,
+  getUserCommentApi,
+  editCommentApi,
+  delCommentApi,
+  getAllCommentApi,
+};

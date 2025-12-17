@@ -35,7 +35,7 @@ export function filterDataByDays(data, days) {
   cutoffDate.setDate(cutoffDate.getDate() - days);
 
   return data.filter((item) => {
-    // Assumes your DB has a 'created_at' field. Change this string if yours is different.
+   
     const itemDate = new Date(item.created_at || item.createdAt);
     return itemDate >= cutoffDate;
   });

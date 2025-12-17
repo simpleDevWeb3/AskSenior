@@ -6,8 +6,10 @@ import ButtonIcon from "../../../../components/ButtonIcon";
 import SpinnerMini from "../../../../components/SpinnerMini";
 import { useBanCommunity } from "./useBanCommunity";
 import { useModal } from "../../../../context/ModalContext";
+import { useUser } from "../../../Auth/useUser";
 
 function BanCommunityForm() {
+  const { user } = useUser();
   const { closeModal, modalData } = useModal();
   const { banCommunity, isLoadbanCommunity, errorbanCommunity } =
     useBanCommunity(closeModal);
@@ -19,7 +21,8 @@ function BanCommunityForm() {
     if (!reason) return;
 
     const data = {
-      post_id: modalData?.postId,
+      adminId: user?.id,
+      communityId: modalData?.id,
       reason: reason,
     };
 
@@ -28,7 +31,7 @@ function BanCommunityForm() {
 
   return (
     <div style={{ padding: "20px", width: "100%" }}>
-      <h3 style={{ color: "var(--text-color)" }}>Ban A Post</h3>
+      <h3 style={{ color: "var(--text-color)" }}>Ban A Community</h3>
       <form onSubmit={handleSubmit}>
         <br />
         <Input handleInput={(e) => setReason(e.target.value)}>Reason</Input>

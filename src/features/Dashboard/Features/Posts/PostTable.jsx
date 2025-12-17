@@ -26,13 +26,17 @@ import Search from "../../../../components/Search";
 import { Dropdown } from "../../../../components/Dropdown";
 import { useState, useEffect, useRef } from "react"; // 1. Import useEffect
 import SortBy from "../../../../components/SortBy";
+import { truncateText } from "../../../../helpers/stringHelper";
 
 function PostTable() {
+  //Modal
+  const { openModal } = useModal();
+
   // 2. Destructure setSearchParams
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
-  const { openModal } = useModal();
+
   const { unbanPost, isLoadUnbanPost, errorUnbanPost } = useUnbanPost();
 
   const { posts, isLoadPosts, errorPosts } = useFetchPostsAdmin();
@@ -54,7 +58,7 @@ function PostTable() {
   const optionSort = [
     { value: "created_at-desc", label: "Date (Newest first)" },
     { value: "created_at-asc", label: "Date (Oldest first)" },
-    
+
     { value: "total_upVote-desc", label: "Most Upvotes" },
     { value: "total_upVote-asc", label: "Least Upvotes" },
     { value: "total_downVote-desc", label: "Most Downvotes" },
@@ -128,7 +132,6 @@ function PostTable() {
       setSearchParams(searchParams);
     }
 
- 
     const result = posts.filter((post) =>
       post.text.toLowerCase().includes(query.toLowerCase())
     );
@@ -162,38 +165,23 @@ function PostTable() {
       </Header>
       <Table>
         <Table.Row style={{ backgroundColor: "var(--background-color)" }}>
-          <Table.Col>Author</Table.Col>
+          <Table.Col>Title</Table.Col>
+          <Table.Col>Status</Table.Col>
           <Table.Col>Post Content</Table.Col>
           <Table.Col>Created At</Table.Col>
-          <Table.Col>Status</Table.Col>
           <Table.Col />
         </Table.Row>
 
         {slicePosts.map((post) => (
           <Table.Row key={post.id}>
             <Table.Data>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "1rem" }}
-              >
-                <div
-                  style={{
-                    borderRadius: "50%",
-                    height: "3rem",
-                    width: "3rem",
-                    overflow: "hidden",
-                  }}
-                >
-                  <Avatar src={post?.avatar_url || "default-avatar.png"} />
-                </div>
-                <span>{post?.user_name || "Unknown"}</span>
-              </div>
+              {truncateText(post?.title, 40) || "Unknown"}
             </Table.Data>
-
-            <Table.Data>{post.text?.substring(0, 50)}...</Table.Data>
-            <Table.Data>{formatDate_DD_MM_YYY(post.created_at)}</Table.Data>
             <Table.Data>
               <Status isBanned={post?.is_banned} />
             </Table.Data>
+            <Table.Data>{truncateText(post?.text, 10)}</Table.Data>
+            <Table.Data>{formatDate_DD_MM_YYY(post.created_at)}</Table.Data>
 
             <Table.Data>
               <Menus.MenuToggle id={`post-${post.id}`}>
@@ -205,7 +193,9 @@ function PostTable() {
               </Menus.MenuToggle>
 
               <Menus.MenuList id={`post-${post.id}`}>
-                <Menus.MenuBtn>
+                <Menus.MenuBtn
+                  onClickAction={() => openModal("post-insight", post)}
+                >
                   <MenuTxt>
                     <ImProfile />
                     <span>Details</span>

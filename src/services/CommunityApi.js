@@ -137,12 +137,12 @@ async function getCommunityByAdminApi(adminId) {
     `https://localhost:7071/api/Community/adminCommunities/all/${adminId}`
   );
 }
-/*curl 'https://localhost:7071/api/Community/ban?communityId=&adminId=' \
-  --request PATCH */
+/*curl 'https://localhost:7071/api/Community/ban?communityId=&adminId=&reason=' \
+  --request PATCH*/
 async function banCommunityApi(formData) {
-  const { communityId, adminId } = formData;
+  const { communityId, adminId, reason } = formData;
   return await PatchReq(
-    `https://localhost:7071/api/Community/ban?communityId=${communityId}&adminId=${adminId}`
+    `https://localhost:7071/api/Community/ban?communityId=${communityId}&adminId=${adminId}&reason=${reason}`
   );
 }
 

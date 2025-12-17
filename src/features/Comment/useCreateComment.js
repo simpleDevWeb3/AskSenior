@@ -11,15 +11,9 @@ export function useCreateComment() {
         return postCommentApi(formData);
       },
 
-      onSuccess: (_, variables) => {
+      onSuccess: () => {
         toast.success("Comment created successfully!");
-        queryClient.invalidateQueries({ queryKey: ["posts"] });
-        queryClient.invalidateQueries({
-          queryKey: ["postComment", variables.postId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["userCommented"],
-        });
+        queryClient.invalidateQueries();
       },
       onError: (err) => {
         console.log("Creation error: ", err);

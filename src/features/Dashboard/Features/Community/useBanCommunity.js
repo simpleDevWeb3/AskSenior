@@ -14,7 +14,7 @@ export function useBanCommunity(success) {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();
-      toast.success("Communityt has been banned.");
+      toast.success("Community has been banned.");
 
       if (success) success();
     },
