@@ -8,7 +8,7 @@ import BannedReason from "../../../../components/BannedReason";
 // --- Styled Components ---
 
 const CardContainer = styled.div`
-  background-color: #18181b; /* zinc-900 */
+  background-color: var(--background-glass); /* zinc-900 */
   border: 1px solid #27272a; /* zinc-800 */
   border-radius: 0.75rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -18,7 +18,7 @@ const CardContainer = styled.div`
   margin: 0 auto;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #f3f4f6;
+  color: var(--text-color);
 `;
 
 const BannerWrapper = styled.div`
@@ -100,18 +100,18 @@ const UserInfoSection = styled.div`
 const UserName = styled.h1`
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-color);
   margin: 0;
 `;
 
 const UserEmail = styled.p`
-  color: #a1a1aa; /* zinc-400 */
+  color: var(--text-color);
   font-size: 0.875rem;
   margin: 0.25rem 0 0 0;
 `;
 
 const BioCard = styled.div`
-  background-color: rgba(39, 39, 42, 0.5); /* zinc-800/50 */
+  background-color: var(--background-color); /* zinc-800/50 */
   padding: 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
@@ -121,14 +121,14 @@ const BioCard = styled.div`
 const Label = styled.h3`
   font-size: 0.625rem;
   font-weight: 700;
-  color: #71717a; /* zinc-500 */
+  color: var(--text-color);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
 `;
 
 const BioText = styled.p`
-  color: #d4d4d8; /* zinc-300 */
+  color: var(--text-color);
   font-style: italic;
   font-size: 0.875rem;
   line-height: 1.6;
@@ -149,15 +149,15 @@ const MetaGrid = styled.div`
 
 const DataValue = styled.p`
   font-size: 0.875rem;
-  color: #e4e4e7; /* zinc-200 */
+ color: var(--text-color); */
 `;
 
 const CodeBlock = styled.code`
   display: block;
   font-family: monospace;
   font-size: 0.75rem;
-  color: #a1a1aa;
-  background-color: #09090b; /* zinc-950 */
+  color: var(--text-color);
+  background-color: var(--background-color); /* zinc-950 */
   padding: 0.5rem;
   border-radius: 0.25rem;
   border: 1px solid #27272a;
@@ -168,7 +168,7 @@ const CodeBlock = styled.code`
 const EmptyState = styled.div`
   padding: 1rem;
   text-align: center;
-  color: #71717a;
+  color: var(--text-color);
   background-color: #18181b;
   border-radius: 0.75rem;
   border: 1px solid #27272a;

@@ -49,7 +49,13 @@ function CommunityPosts() {
       <ContentContainer>
         <HorizontalContainer>
           <MainSection>
-            <Outlet context={{ communityId, userId: user?.id }} />
+            <Outlet
+              context={{
+                communityId,
+                userId: user?.id,
+                adminId: community?.adminId,
+              }}
+            />
           </MainSection>
         </HorizontalContainer>
       </ContentContainer>

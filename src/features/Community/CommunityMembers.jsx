@@ -1,5 +1,9 @@
 import styled from "styled-components";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import { FaUserTimes, FaExternalLinkAlt } from "react-icons/fa";
@@ -26,14 +30,15 @@ import { useUser } from "../Auth/useUser";
 function CommunityMembers() {
   const { user } = useUser();
   const { kickMember, isLoadKickMember, errorKickMember } = useKickMember();
-  const { communityId } = useOutletContext();
+  const { communityId, adminId } = useOutletContext();
   const {
     members: membersData,
     isLoadMembers,
     errorMembers,
   } = useFetchMembers(communityId);
   const [searchParam, setSearchParam] = useSearchParams();
-  const { openModal } = useModal();
+
+  const navigate = useNavigate();
 
   // --- 1. DATA PREPARATION ---
   // The log shows members is an object { count: 3, members: [...] }
@@ -118,7 +123,7 @@ function CommunityMembers() {
       <Table>
         <Table.Row style={{ backgroundColor: "var(--background-glass)" }}>
           <Table.Col>Member</Table.Col>
-          <Table.Col>Status</Table.Col>
+          <Table.Col>Role</Table.Col>
           <Table.Col>Email</Table.Col>
           <Table.Col>Joined Date</Table.Col>
           <Table.Col></Table.Col>
@@ -144,11 +149,7 @@ function CommunityMembers() {
             {/* 2. Status */}
             <Table.Data>
               {/* Reusing your Status component logic */}
-              <Status
-                isBanned={false} // Assuming member status isn't "banned" in this table yet
-                statusLabel={member.status}
-                notBan={member.status}
-              />
+              {member.user_id === adminId ? "Admin" : "Member"}
             </Table.Data>
 
             {/* 3. Email */}
@@ -169,24 +170,25 @@ function CommunityMembers() {
 
               <Menus.MenuList id={`member-${member.user_id}`}>
                 <Menus.MenuBtn
-                  onClickAction={() => openModal("user-insight", member.user)}
+                  onClickAction={() => navigate(`/profile/${member.user_id}`)}
                 >
                   <MenuTxt>
                     <FaExternalLinkAlt />
                     <span>View Profile</span>
                   </MenuTxt>
                 </Menus.MenuBtn>
-
-                <Menus.MenuBtn
-                  onClickAction={() =>
-                    handleKickMember(user?.id, member.user_id, communityId)
-                  }
-                >
-                  <MenuTxt $isDanger={true}>
-                    <FaUserTimes />
-                    <span>Kick Member</span>
-                  </MenuTxt>
-                </Menus.MenuBtn>
+                {member.user_id !== adminId && (
+                  <Menus.MenuBtn
+                    onClickAction={() =>
+                      handleKickMember(user?.id, member.user_id, communityId)
+                    }
+                  >
+                    <MenuTxt $isDanger={true}>
+                      <FaUserTimes />
+                      <span>Kick Member</span>
+                    </MenuTxt>
+                  </Menus.MenuBtn>
+                )}
               </Menus.MenuList>
             </Table.Data>
           </Table.Row>
