@@ -176,7 +176,15 @@ async function kickMemberApi(data) {
     `https://localhost:7071/api/Community/groupAdminKickMembers?adminId=${adminId}&userId=${userId}&communityId=${communityId}`
   );
 }
+
+//curl 'https://localhost:7071/api/Community/check-name?name='
+async function getIsDupGroupNameApi(group_name) {
+  return await GetReq(
+    `https://localhost:7071/api/Community/check-name?name=${group_name}`
+  );
+}
 export {
+  getIsDupGroupNameApi,
   kickMemberApi,
   unbanCommunityApi,
   getAllCommunityApi,

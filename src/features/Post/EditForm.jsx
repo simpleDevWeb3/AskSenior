@@ -15,6 +15,8 @@ import { useRef, useMemo, useState } from "react"; // Added useMemo for performa
 import { PiPencil } from "react-icons/pi";
 import { useEditPost } from "./useEditPost";
 import SpinnerMini from "../../components/SpinnerMini";
+import { validImgFile } from "../../helpers/formHelper";
+import toast from "react-hot-toast";
 
 function EditForm() {
   // data passed from modal
@@ -83,9 +85,7 @@ function EditForm() {
       new_image: filesToSend,
     };
 
-  
     editPost(finalData);
-
   }
   // 1. Convert the image data (Object or Array) into a consistent Array for the UI
   const imagesToDisplay = useMemo(() => {
@@ -119,7 +119,8 @@ function EditForm() {
     // store new image
     const file = e.target.files[0];
     if (!file) return;
-
+    if (!validImgFile(file).isValid)
+      return toast.error(validImgFile(file).error);
     // replace the current index image
     const updatedImages = [...imagesToDisplay];
 

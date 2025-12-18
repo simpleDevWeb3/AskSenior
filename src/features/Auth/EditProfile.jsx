@@ -2,14 +2,17 @@ import styled from "styled-components";
 import UserCard from "../../components/UserCard";
 import ButtonIcon from "../../components/ButtonIcon";
 import Input from "../../components/Input";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useModal } from "../../context/ModalContext";
-import { handleFileImgUpload } from "../../helpers/formHelper";
+import { handleFileImgUpload, validImgFile } from "../../helpers/formHelper";
 
 // 1. Import the icon you want (ensure you have installed: npm install react-icons)
 import { FaCamera } from "react-icons/fa";
 import { useEditAccount } from "../Settings/useEditAccount";
 import SpinnerMini from "../../components/SpinnerMini";
+import { useIsDupUsername } from "./useIsDupUsername";
+import Error from "../../components/Error";
+import toast from "react-hot-toast";
 
 function EditProfile() {
   const { closeModal, modalData } = useModal();
@@ -20,13 +23,21 @@ function EditProfile() {
   // Refs for triggering hidden inputs
   const bannerInputRef = useRef(null);
   const avatarInputRef = useRef(null);
-
+  const [error, setError] = useState({});
   const [username, setUserName] = useState("");
   const [description, setDescription] = useState("");
-
+  const { isDupUsername, isLoading } = useIsDupUsername(username);
   // Store actual files for submission
   const [bannerFile, setBannerFile] = useState(null);
   const [avatarFile, setAvatarFile] = useState(null);
+
+  useEffect(() => {
+    if (username === modalData?.name) return;
+    setError((prev) => ({
+      ...prev,
+      usernameDup: isDupUsername?.isDuplicate ? "username has been taken" : "",
+    }));
+  }, [isDupUsername, username, modalData]);
 
   function handleUsername(value) {
     setUserName(value);
@@ -53,21 +64,28 @@ function EditProfile() {
 
   // Handle file changes
   function handleBannerChange(e) {
+    const file = e.target.files[0];
+    if (!validImgFile(file).isValid)
+      return toast.error(validImgFile(file).error);
     const setPreview = (fileImg) => refUserCard.current?.updateBanner(fileImg);
     const saveFile = (field, file) => setBannerFile(file); // Save file for submit
     handleFileImgUpload(e, setPreview, saveFile, "banner");
   }
 
   function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    if (!validImgFile(file).isValid)
+      return toast.error(validImgFile(file).error);
     const setPreview = (fileImg) => refUserCard.current?.updateAvatar(fileImg);
 
     const saveFile = (field, file) => setAvatarFile(file); // Save file for submit
     handleFileImgUpload(e, setPreview, saveFile, "avatar");
   }
 
-  function handleSubmit() {
-    console.log(modalData);
-    console.log("Submit:", { username, description, bannerFile, avatarFile });
+  function handleSubmit(e) {
+    e.preventDefault();
+  
+    if (error?.isDupUsername) return;
     editAccount({
       user_id: modalData?.id,
       formData: {
@@ -127,6 +145,13 @@ function EditProfile() {
       >
         username
       </Input>
+      {isLoading && (
+        <span style={{ fontSize: "0.8rem", color: "gray" }}>
+          Checking availability...
+          <SpinnerMini />
+        </span>
+      )}
+      {error?.usernameDup && <Error msg={error.usernameDup} />}
       <br />
       <Input
         handleInput={(e) => handleDescription(e.target.value)}

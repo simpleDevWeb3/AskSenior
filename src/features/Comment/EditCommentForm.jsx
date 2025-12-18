@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { useModal } from "../../context/ModalContext";
 import { useEditComment } from "./useEditComment";
 import SpinnerMini from "../../components/SpinnerMini";
+import toast from "react-hot-toast";
 
 // --- Styled Components Definitions ---
 
@@ -171,7 +172,7 @@ function EditCommentForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!content.trim()) return;
+    if (!content.trim()) return toast.error("input is empty!");
 
     editComment({
       commentId: modalData.comment_id,

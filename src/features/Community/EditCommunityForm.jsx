@@ -3,11 +3,14 @@ import ButtonIcon from "../../components/ButtonIcon";
 import Input from "../../components/Input";
 import SpinnerMini from "../../components/SpinnerMini";
 import Avatar from "../../components/Avatar";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useModal } from "../../context/ModalContext";
-import { handleFileImgUpload } from "../../helpers/formHelper";
+import { handleFileImgUpload, validImgFile } from "../../helpers/formHelper";
 import { FaCamera } from "react-icons/fa";
 import { useEditCommunity } from "../Community/useEditCommunity"; // Adjust path
+import toast from "react-hot-toast";
+import { useIsDupGroupname } from "./useIsDupGroupname";
+import Error from "../../components/Error";
 
 function EditCommunityForm() {
   const { closeModal, modalData } = useModal();
@@ -16,7 +19,10 @@ function EditCommunityForm() {
   const { editCommunity, isEditing } = useEditCommunity(closeModal);
 
   // 2. Local State for Form Data
-  const [name, setName] = useState(modalData?.name || "");
+  const [error, setError] = useState({});
+  const [name, setName] = useState("");
+  const { isDupGroupname, isLoading } = useIsDupGroupname(name);
+
   const [description, setDescription] = useState(modalData?.description || "");
 
   // 3. Local State for Images (Files & Previews)
@@ -35,6 +41,16 @@ function EditCommunityForm() {
   const bannerInputRef = useRef(null);
   const avatarInputRef = useRef(null);
 
+  useEffect(() => {
+    if (name === modalData?.name) return;
+    setError((prev) => ({
+      ...prev,
+      groupNameDup: isDupGroupname?.isDuplicate
+        ? "groupname has been taken"
+        : "",
+    }));
+  }, [isDupGroupname, name, modalData]);
+
   // --- Handlers ---
 
   const onTriggerBannerUpload = (e) => {
@@ -48,6 +64,12 @@ function EditCommunityForm() {
   };
 
   function handleBannerChange(e) {
+    const file = e.target.files[0];
+    console.log("image valid: ", validImgFile(file));
+    if (!validImgFile(file).isValid) {
+      const error = validImgFile(file).error;
+      return toast.error(error);
+    }
     // 1. Update Preview immediately
     const setPreview = (imgSrc) => setPreviewBanner(imgSrc);
     // 2. Store File for upload
@@ -57,6 +79,12 @@ function EditCommunityForm() {
   }
 
   function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    console.log("image valid: ", validImgFile(e.target));
+    if (!validImgFile(file).isValid) {
+      const error = validImgFile(file).error;
+      return toast.error(error);
+    }
     const setPreview = (imgSrc) => setPreviewAvatar(imgSrc);
     const saveFile = (_, file) => setAvatarFile(file);
 
@@ -65,8 +93,9 @@ function EditCommunityForm() {
 
   function handleSubmit() {
     // Check if name is empty
+    if (error.groupNameDup) return;
     if (!name.trim()) return;
-
+    if (!description.trim()) return;
     // Create FormData for file upload
     const formData = new FormData();
     formData.append("name", name);
@@ -78,7 +107,7 @@ function EditCommunityForm() {
 
     editCommunity({
       id: modalData?.id,
-      name,
+      name: name || modalData?.name,
       description,
       bannerUrl: bannerFile,
       avatarUrl: avatarFile,
@@ -114,7 +143,7 @@ function EditCommunityForm() {
             </AvatarWrapper>
 
             <InfoText>
-              <h3>c/{name || "community_name"}</h3>
+              <h3>c/{name || modalData?.name || "community_name"}</h3>
               <p>
                 {modalData?.topics?.length || 0} topics •{" "}
                 {modalData?.isJoined ? "Joined" : "Public"}
@@ -142,11 +171,22 @@ function EditCommunityForm() {
       <br />
       <Input
         label="Community Name"
-        initialValue={name || modalData?.name} // Controlled input
-        handleInput={(e) => setName(e.target.value)}
+        initialValue={modalData?.name} // Controlled input
+        handleInput={(e) =>
+          name === modalData?.name
+            ? console.log("same name")
+            : setName(e.target.value)
+        }
       >
         Community Name
       </Input>
+      {isLoading && (
+        <span style={{ fontSize: "0.8rem", color: "gray" }}>
+          Checking availability...
+          <SpinnerMini />
+        </span>
+      )}
+      {error?.groupNameDup && <Error msg={error?.groupNameDup} />}
 
       <br />
       <Input
