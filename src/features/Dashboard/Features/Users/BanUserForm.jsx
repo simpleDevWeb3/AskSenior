@@ -5,6 +5,7 @@ import ButtonIcon from "../../../../components/ButtonIcon";
 
 import SpinnerMini from "../../../../components/SpinnerMini";
 import { useBanUser } from "./useBanUser";
+import toast from "react-hot-toast";
 
 function BanUserForm() {
   const { closeModal } = useModal();
@@ -14,7 +15,7 @@ function BanUserForm() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stop the page from reloading
 
-    if (!reason) return;
+    if (!reason) return toast.error("Reason is required!");
 
     const data = {
       user_id: modalData?.user_id,

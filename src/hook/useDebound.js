@@ -6,8 +6,6 @@ export function useDebounce(setter, value, delay) {
       setter(value);
     }, delay);
 
-    
     return () => clearTimeout(timerId);
   }, [value, setter, delay]);
 }
- 

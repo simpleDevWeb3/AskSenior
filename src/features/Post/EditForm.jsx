@@ -118,9 +118,13 @@ function EditForm() {
 
     // store new image
     const file = e.target.files[0];
+
     if (!file) return;
+
     if (!validImgFile(file).isValid)
+
       return toast.error(validImgFile(file).error);
+
     // replace the current index image
     const updatedImages = [...imagesToDisplay];
 
@@ -310,14 +314,17 @@ const FormContainer = styled.form`
     width: 100%;
   }
 `;
+
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 `;
+
 const Label = styled.label`
   font-weight: 600;
 `;
+
 const Input = styled.input`
   background-color: inherit;
   color: var(--text-color);
@@ -331,6 +338,7 @@ const Input = styled.input`
     outline: none;
   }
 `;
+
 const Textarea = styled.textarea`
   padding: 0.6rem 0.8rem;
   border-radius: 18px;
@@ -344,11 +352,13 @@ const Textarea = styled.textarea`
     outline: none;
   }
 `;
+
 const ImageContainer = styled.div`
   position: relative;
   overflow-y: hidden;
   border: solid 1px var(--hover-color);
 `;
+
 const ImagePreview = styled.img`
   margin-top: 0.5rem;
   width: 100%;
@@ -356,6 +366,7 @@ const ImagePreview = styled.img`
   object-fit: contain;
   height: 15rem;
 `;
+
 const ButtonEdit = styled.button`
   position: absolute;
   top: 1rem;
@@ -376,6 +387,7 @@ const ButtonEdit = styled.button`
     background-color: #444;
   }
 `;
+
 const ErrorMsg = styled.div`
   background: #ffe5e5;
   color: #b30000;

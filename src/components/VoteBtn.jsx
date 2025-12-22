@@ -13,6 +13,7 @@ import { useAuth } from "../features/Auth/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { useUser } from "../features/Auth/useUser";
 import toast from "react-hot-toast";
+import { useVotePost } from "../features/Vote/useVotePost";
 
 const CountVote = styled.span`
   color: var(--primary-color);
@@ -39,6 +40,7 @@ function VoteBtn({ userVote = null, onVote }) {
   const { isAuthenticated } = useAuth();
   const { openModal } = useModal();
   const { postData, variant } = usePost();
+  const [isDisable, setDisable] = useState(false);
 
   // Calculate base score from props
   const baseScore =
@@ -86,14 +88,28 @@ function VoteBtn({ userVote = null, onVote }) {
       setCurrentVote(type);
       onVote?.(type);
     }
+    setDisable(true);
 
     setTotalVote(newTotal);
   }
+
+  useEffect(() => {
+    let timer;
+
+    if (isDisable) {
+      timer = setTimeout(() => {
+        setDisable(false);
+      }, 1500);
+    }
+
+    return () => clearTimeout(timer);
+  }, [isDisable]);
 
   return (
     <VoteWrapper $center={true} $variant={variant}>
       <ButtonIcon
         action={(e) => handleVote(e, "up")}
+        disabled={isDisable}
         variant={
           variant === "comment" || variant === "userCommented" ? "text" : ""
         }
@@ -107,6 +123,7 @@ function VoteBtn({ userVote = null, onVote }) {
       <CountVote>{totalVote}</CountVote>
 
       <ButtonIcon
+        disabled={isDisable}
         action={(e) => handleVote(e, "down")}
         variant={
           variant === "comment" || variant === "userCommented" ? "text" : ""

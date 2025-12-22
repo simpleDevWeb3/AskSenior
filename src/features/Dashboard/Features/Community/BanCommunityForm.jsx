@@ -7,6 +7,7 @@ import SpinnerMini from "../../../../components/SpinnerMini";
 import { useBanCommunity } from "./useBanCommunity";
 import { useModal } from "../../../../context/ModalContext";
 import { useUser } from "../../../Auth/useUser";
+import toast from "react-hot-toast";
 
 function BanCommunityForm() {
   const { user } = useUser();
@@ -18,7 +19,7 @@ function BanCommunityForm() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stop the page from reloading
 
-    if (!reason) return;
+    if (!reason) return toast.error("Reason is required!");
 
     const data = {
       adminId: user?.id,

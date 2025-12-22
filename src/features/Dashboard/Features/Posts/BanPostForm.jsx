@@ -4,6 +4,7 @@ import Input from "../../../../components/Input";
 import ButtonIcon from "../../../../components/ButtonIcon";
 import { useBanPost } from "./useBanPost";
 import SpinnerMini from "../../../../components/SpinnerMini";
+import toast from "react-hot-toast";
 
 function BanPostForm() {
   const { closeModal } = useModal();
@@ -13,7 +14,7 @@ function BanPostForm() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stop the page from reloading
 
-    if (!reason) return;
+    if (!reason) return toast.error("Reason is required!");
 
     const data = {
       post_id: modalData?.postId,
